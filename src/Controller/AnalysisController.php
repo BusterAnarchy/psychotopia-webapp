@@ -16,8 +16,8 @@ final class AnalysisController extends AbstractController
 
         return $this->render('analysis/molecules.html.twig', [
             'controller_name' => 'Molecule',
+            'page_title' => 'Analyses',
             'results' => $results,
-            'page_title' => 'Analyses'
         ]);
     }
 
