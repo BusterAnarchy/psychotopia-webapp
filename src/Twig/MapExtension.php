@@ -31,12 +31,16 @@ class MapExtension extends AbstractExtension
         return $this->twig->render('components/map.html.twig', [
             'id'         => $id,
             'chart_data' => $chartData,
-            'color_data' => $this->generate_color_map(data: $chartData, mode: "number"),
+            'color_data' => $this->generate_color_map(
+                $chartData, 
+                $options['start_hsl'] ?? [120, 60, 85],
+                $options['end_hsl'] ?? [120, 100, 25],
+                "number"),
             'options'    => $options,
         ]);
     }
 
-    private function generate_color_map($data, $start_hsl = [120, 60, 85], $end_hsl = [120, 100, 25], $mode = "pourcent"): array
+    private function generate_color_map($data, $start_hsl, $end_hsl, $mode = "pourcent"): array
     {
         $values = array_filter(array_values($data), fn ($v) => is_numeric($v));
         
@@ -46,6 +50,8 @@ class MapExtension extends AbstractExtension
         $color_map = [];
 
         foreach ($data as $key => $value) {
+
+            if (!is_numeric($value)) continue;
 
             $t = ($max_val != $min_val) ? ($value - $min_val) / ($max_val - $min_val) : 0;
 

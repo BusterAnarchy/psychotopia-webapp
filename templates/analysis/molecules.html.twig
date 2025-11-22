@@ -65,7 +65,7 @@
                 Évolution temporelle - Nombre d'échantillons
             </div>
             <div class="card-body">
-                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count | json_encode, is_stacked:'true', mode:'absolu' } %}
+                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' } %}
                 <p class="mt-3">Les données sont regroupées par bimestre et montrent l'évolution en nombre d'échantillons par molécule.</p>
             </div>
         </div>
@@ -76,7 +76,7 @@
                 Évolution temporelle - Proportion
             </div>
             <div class="card-body">
-                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count | json_encode, is_stacked:'true', mode:'relatif' } %}
+                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' } %}
                 <p class="mt-3">Les données sont regroupées par bimestre et montrent l'évolution en proportion d'échantillons par molécule.</p>
             </div>
         </div>
@@ -88,18 +88,24 @@
                 Carte - Nombre d'échantillons par région
             </div>
             <div class="card-body">
-                {{ render_map('map_chart_abs', results.geo_count ) }}
+                {{ render_map('map_chart_abs', results.geo_count_abs, options:{
+                    'start_hsl': [120, 60, 85],
+                    'end_hsl': [200, 100, 30],
+                }) }}
                 <p class="mt-3">La carte montre le nombre d'échantillons reçus en fonction de la région d'envoi.</p>
             </div>
         </div>
-
+        
         <!-- Map proportion -->
         <div class="card text-center">
             <div class="card-header">
                 Carte - Échantillons par million d'habitants
             </div>
             <div class="card-body">
-                {{ render_map('map_chart_prop', results.geo_count ) }}
+                {{ render_map('map_chart_prop', results.geo_count_prop, options:{
+                    'start_hsl': [50, 100, 70],
+                    'end_hsl': [0, 100, 40],
+                } ) }}
                 <p class="mt-3">Nombre d'échantillons reçus par région, rapporté à la population (par million d'habitants).</p>
             </div>
         </div>
