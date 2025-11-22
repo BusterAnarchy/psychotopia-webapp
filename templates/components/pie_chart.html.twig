@@ -1,0 +1,22 @@
+<canvas id="{{ id }}" width="400" height="400"></canvas>
+
+<script>
+    (function() {
+        
+        const data = {{ chart_data | raw }};
+        new Chart(document.getElementById('{{ id }}').getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.data,
+                    backgroundColor: Chart.defaults.colorPalette
+                }]
+            },
+            options: {
+                responsive : true,
+            }
+        });
+        
+    })();
+</script>

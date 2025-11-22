@@ -1,0 +1,53 @@
+<canvas id="{{ id }}" width="400" height="400"></canvas>
+ 
+<script>
+    (function() {
+
+        const data = JSON.parse(`{{ chart_data }}`);
+        const mode = '{{mode}}'
+        let y_axis_label = ''
+        if (mode === 'absolu'){y_axis_label="Nombre d'échantillons"}
+        if (mode === 'relatif'){y_axis_label='Proportion (%)'}
+
+            // Assign colors to datasets if not already set
+        data.datasets_area.forEach((dataset, i) => {
+            dataset.borderColor = Chart.defaults.colorPalette[i % Chart.defaults.colorPalette.length];
+            dataset.backgroundColor = Chart.defaults.colorPalette[i % Chart.defaults.colorPalette.length];
+        });
+
+        new Chart(document.getElementById('{{ id }}').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: data.labels_area,
+                datasets: data.datasets_area
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Période'
+                        }
+                    },
+                    y: {
+                        stacked: '{{ is_stacked }}' === 'true',
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: y_axis_label
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                },
+                pointStyle: false,
+            }
+        });
+
+    })();
+</script>

@@ -1,0 +1,59 @@
+<canvas id="{{ id }}" width="400" height="400"></canvas>
+ 
+<script>
+    (function() {
+
+        const data = JSON.parse(`{{ chart_data }}`);
+
+        data.datasets_line.forEach(element => {
+            
+            if (element.label[0] === "borne sup") {
+                element.borderColor = "transparent";
+            } else if (element.label[0] === "borne inf") {
+                element.borderColor = "transparent";
+                element.backgroundColor = pattern.draw('diagonal', 'rgba(128, 128, 128, 0.3)');
+                element.fill = "1";
+            } else {
+                element.borderColor = "blue";
+                element.backgroundColor = "transparent";
+                element.fill = false;
+            }
+        });
+
+        window["{{ id }}_chart"] = new Chart(document.getElementById('{{ id }}').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: data.labels_line,
+                datasets: data.datasets_line,
+                lineColor: Chart.defaults.colorPalette
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Période'
+                        }
+                    },
+                    y: {
+                        stacked: '{{ is_stacked }}' === 'true',
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Pourcentage de pureté'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                pointStyle: false,
+            }
+        });
+
+    })();
+</script>

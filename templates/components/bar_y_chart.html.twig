@@ -1,0 +1,104 @@
+<canvas id="{{ id }}" width="400" height="400"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
+
+<script>
+(function() {
+    const data = JSON.parse(`{{ chart_data }}`);
+    const unit = '{{unit}}'
+    let x_axis_label = ''
+    if (unit === 'pourcent'){x_axis_label='Pourcentage de pureté'}
+    if (unit === 'poids'){x_axis_label='Masse de la substance (mg)'}
+    if (typeof data.ratio_base_sel === 'undefined') {
+    new Chart(document.getElementById('{{ id }}').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Proportion de produits retrouvés',
+                data: data.data,
+                backgroundColor: '#36A2EB',
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: x_axis_label
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Occurences'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+            }
+        }
+    });
+}
+    else {
+    new Chart(document.getElementById('{{ id }}').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Proportion de produits retrouvés',
+                data: data.data,
+                backgroundColor: '#36A2EB',
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: x_axis_label
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Occurences'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                annotation: {
+                    annotations: {
+                        threshold: {
+                            type: 'line',
+                            xMin: data.ratio_base_sel[0]/5,
+                            xMax: data.ratio_base_sel[0]/5,
+                            borderColor: 'red',
+                            borderWidth: 3,              // line thickness
+                            borderDash: [6, 6],          // dashed line pattern
+                            label: {
+                                display: true,
+                                position: 'start',
+                                backgroundColor: 'rgba(255,255,255,0.7)',
+                                color: 'red'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+})();
+</script>
