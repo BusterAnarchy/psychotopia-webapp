@@ -77,7 +77,7 @@
 <script>
 (function() {
     
-    const data = JSON.parse(`{{ table_data }}`);
+    const data = {{ table_data | raw }};
     const tbody = document.querySelector(`#{{ id }} tbody`);
 
     data.data.forEach(item => {

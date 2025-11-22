@@ -3,7 +3,7 @@
 <script>
     (function() {
 
-        const data = JSON.parse(`{{ chart_data }}`);
+        const data = {{ chart_data | raw }};
 
         data.datasets_line.forEach(element => {
             

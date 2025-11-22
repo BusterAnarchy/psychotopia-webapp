@@ -3,7 +3,7 @@
 <script>
     (function() {
 
-        const data = JSON.parse(`{{ chart_data }}`);
+        const data = {{ chart_data | raw }};
         new Chart(document.getElementById('{{ id }}').getContext('2d'), {
             type: 'bar',
             data: {

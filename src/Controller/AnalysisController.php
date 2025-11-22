@@ -12,16 +12,11 @@ final class AnalysisController extends AbstractController
     #[Route('/molecules', name: 'app_molecules')]
     public function app_molecules(RRunner $runner): Response
     {
+        $results = $runner->run([ '--scale abs','count', 'histo_count', 'temporal_count', 'geo_count']);
+
         return $this->render('analysis/molecules.html.twig', [
             'controller_name' => 'Molecule',
-            'all_molecules_data_count' => $runner->run([ 'count' ]),
-            'all_molecules_data'=> $runner->run([ 'histo_count' ]),
-            'area_all_molecules_data' => "[]",
-            'map_data_abs' => "[]",
-            'map_data_abs_color' => "[]",
-            'map_data_prop' => "[]",
-            'map_data_prop_color' => "[]",
-            'conso_all_molecules_data' => "[]",
+            'results' => $results,
             'page_title' => 'Analyses'
         ]);
     }

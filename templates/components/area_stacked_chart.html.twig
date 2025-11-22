@@ -3,7 +3,7 @@
 <script>
     (function() {
 
-        const data = JSON.parse(`{{ chart_data }}`);
+        const data = {{ chart_data | raw }};
         const mode = '{{mode}}'
         let y_axis_label = ''
         if (mode === 'absolu'){y_axis_label="Nombre d'échantillons"}

@@ -6,7 +6,7 @@
 
 <script>
 (function () {
-    const data = JSON.parse(`{{ data }}`);
+    const data = {{ data | raw }};
     const [origin, coef_dir] = data.coef;
 
     const tablet_mass = data.datasets[2].data.map(p => p.x[0])

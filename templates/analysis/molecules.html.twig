@@ -12,7 +12,7 @@
     <!-- Infos sur le nombre d'échantillons -->
     <div>
         <small>Nombre total d'échantillons observés :</small>
-        <p class="display-6 mb-0">{{ all_molecules_data_count }}</p>
+        <p class="display-6 mb-0">{{ results.count }}</p>
     </div>
 
     <!-- Bouton pour ouvrir le panneau -->
@@ -43,7 +43,7 @@
                 Répartition par molécule
             </div>
             <div class="card-body">
-                {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: all_molecules_data | json_encode } %}
+                {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_count | json_encode } %}
                 <p class="mt-3">Le diagramme présente la proportion des échantillons en fonction de la molécule supposée.</p>
             </div>
         </div>
@@ -54,7 +54,7 @@
                 Proportion après première consommation
             </div>
             <div class="card-body">
-                {% include "components/pie_chart.html.twig" with { id:"pie_chart_conso", chart_data:conso_all_molecules_data } %}
+                {% include "components/pie_chart.html.twig" with { id:"pie_chart_conso", chart_data:results.histo_count | json_encode } %}
                 <p class="mt-3">Proportion des échantillons envoyés après une première consommation.</p>
             </div>
         </div>
@@ -65,7 +65,7 @@
                 Évolution temporelle - Nombre d'échantillons
             </div>
             <div class="card-body">
-                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_1", chart_data:all_molecules_data | json_encode | raw, is_stacked:'true', mode:'absolu' } %}
+                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_1", chart_data:results.histo_count | json_encode, is_stacked:'true', mode:'absolu' } %}
                 <p class="mt-3">Les données sont regroupées par bimestre et montrent l'évolution en nombre d'échantillons par molécule.</p>
             </div>
         </div>
@@ -76,7 +76,7 @@
                 Évolution temporelle - Proportion
             </div>
             <div class="card-body">
-                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_2", chart_data:area_all_molecules_data, is_stacked:'true', mode:'relatif' } %}
+                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_2", chart_data:results.histo_count | json_encode, is_stacked:'true', mode:'relatif' } %}
                 <p class="mt-3">Les données sont regroupées par bimestre et montrent l'évolution en proportion d'échantillons par molécule.</p>
             </div>
         </div>
@@ -88,7 +88,7 @@
                 Carte - Nombre d'échantillons par région
             </div>
             <div class="card-body">
-                {% include "components/map.html.twig" with { id:"map_chart_abs", chart_data:map_data_abs, color_data:map_data_abs_color } %}
+                {{ render_map('map_chart_abs', results.geo_count ) }}
                 <p class="mt-3">La carte montre le nombre d'échantillons reçus en fonction de la région d'envoi.</p>
             </div>
         </div>
@@ -99,7 +99,7 @@
                 Carte - Échantillons par million d'habitants
             </div>
             <div class="card-body">
-                {% include "components/map.html.twig" with { id:"map_chart_prop", chart_data:map_data_prop, color_data:map_data_prop_color } %}
+                {{ render_map('map_chart_prop', results.geo_count ) }}
                 <p class="mt-3">Nombre d'échantillons reçus par région, rapporté à la population (par million d'habitants).</p>
             </div>
         </div>

@@ -5,7 +5,7 @@
 
 <script>
 (function() {
-    const data = JSON.parse(`{{ chart_data }}`);
+    const data = {{ chart_data | raw }};
     const unit = '{{unit}}'
     let x_axis_label = ''
     if (unit === 'pourcent'){x_axis_label='Pourcentage de pureté'}
