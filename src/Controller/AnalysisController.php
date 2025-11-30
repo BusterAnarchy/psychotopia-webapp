@@ -130,8 +130,7 @@ final class AnalysisController extends AbstractController
             $molecule = "'Cannabis (THC/CBD)'";
         }
 
-        $results = $this->runner->run([
-            "-m $molecule",
+        $analysis = [
             "-nip", 
             'count', 
             'histo_purity', 
@@ -140,7 +139,14 @@ final class AnalysisController extends AbstractController
             'supply_reg_purity',
             'geo_purity',
             'geo_reg_purity',
-        ]);
+        ];
+
+        $results = match ($molecule) {
+            'THC-resin' => $this->runner->run(array_merge(["-m 'Cannabis (THC/CBD)'", "--form Résine"], $analysis)),
+            'THC-weed' => $this->runner->run(array_merge(["-m 'Cannabis (THC/CBD)'", "--form Herbe"], $analysis)),
+            '2C-B' => $this->runner->run(array_merge(["-m 2C-B", "--form Poudre,Cristal"], $analysis)),
+            default => $this->runner->run(array_merge(["-m $molecule"], $analysis)),
+        };
 
         return $this->render('analysis/purity.html.twig', [
             'molecule_name' => $molecule,
@@ -159,23 +165,18 @@ final class AnalysisController extends AbstractController
         $delta = 15;
         $unit = "pourcent";
 
-        if ($molecule == "Cannabis") {
-            $molecule = "'Cannabis (THC/CBD)'";
-        }
+        $analysis = ["-m $molecule", 'count', 'count_cut_agents', 'histo_cut_agents','temporal_cut_agents'];
 
-        $results = $molecule !== '3-MMC' ? $this->runner->run([
-            "-m $molecule", 
-            'count',
-            'count_cut_agents',
-            'histo_cut_agents',
-            'temporal_cut_agents'
-        ]) : $this->runner->run([
-            "-m $molecule", 
-            'count',
-            'count_cut_agents_3MMC:label=count_cut_agents',
-            'histo_cut_agents_3MMC:label=histo_cut_agents',
-            'temporal_cut_agents_3MMC:label=temporal_cut_agents'
-        ]);
+        $results = match ($molecule) {
+            '3-MMC' => $this->runner->run([
+                "-m 3-MMC", 
+                'count',
+                'count_cut_agents_3MMC:label=count_cut_agents',
+                'histo_cut_agents_3MMC:label=histo_cut_agents',
+                'temporal_cut_agents_3MMC:label=temporal_cut_agents'
+            ]),
+            default => $this->runner->run($analysis),
+        };
 
         return $this->render('analysis/cut_agents.html.twig', [
             'molecule_name' => $molecule,
