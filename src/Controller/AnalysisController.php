@@ -163,15 +163,45 @@ final class AnalysisController extends AbstractController
             $molecule = "'Cannabis (THC/CBD)'";
         }
 
-        $results = $this->runner->run([
+        $results = $molecule !== '3-MMC' ? $this->runner->run([
             "-m $molecule", 
             'count',
             'count_cut_agents',
             'histo_cut_agents',
             'temporal_cut_agents'
+        ]) : $this->runner->run([
+            "-m $molecule", 
+            'count',
+            'count_cut_agents_3MMC:label=count_cut_agents',
+            'histo_cut_agents_3MMC:label=histo_cut_agents',
+            'temporal_cut_agents_3MMC:label=temporal_cut_agents'
         ]);
 
         return $this->render('analysis/cut_agents.html.twig', [
+            'molecule_name' => $molecule,
+            'results' => $results,
+            'presentation' => $this->dict_pres[$molecule] ?? '',
+            'url_wiki' => $this->dict_urls[$molecule] ?? '',
+            'unit' => $unit,
+            'delta' => $delta,
+            'data_reg_dose_poids' => NULL,
+        ]);
+    }
+
+    #[Route('/sub-products-{molecule}', name: 'app_sub_products')]
+    public function app_sub_products(string $molecule): Response
+    {
+        $delta = 15;
+        $unit = "pourcent";
+
+        $results = $this->runner->run([
+            "-m $molecule", 
+            'count',
+            'histo_sub_products',
+            'temporal_sub_products'
+        ]);
+
+        return $this->render('analysis/sub_products.html.twig', [
             'molecule_name' => $molecule,
             'results' => $results,
             'presentation' => $this->dict_pres[$molecule] ?? '',

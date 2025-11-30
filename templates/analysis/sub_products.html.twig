@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Sous produits - {{ molecule_name }} {% endblock %}
+{% block centerText %} Sous produits - {{ molecule_name }} {% endblock %}
+
+{% block body %}
+
+<div class="d-flex align-items-center gap-3 m-3">
+    
+    <!-- Infos sur le nombre total d'observations -->
+    <div>
+        <small>Nombre total d'échantillons observés :</small>
+        <p class="display-6 mb-0">{{ results.count }}</p>
+    </div>
+
+    <!-- Bouton pour ouvrir le panneau -->
+    <button class="btn btn-primary flex-shrink-0" style="width: 200px;" 
+            type="button" data-bs-toggle="offcanvas" data-bs-target="#formOffcanvas" 
+            aria-controls="formOffcanvas">
+        Options de visualisation
+    </button>
+</div>
+
+<div class="info-box">
+    <p>
+        {{ presentation }}
+        Pour plus d'informations, vous pouvez regarder la 
+        <a href="{{ url_wiki }}" target="_blank">page Wiki de cette substance</a>.
+    </p>
+    <p>
+        Un sous-produit est un produit accessoire ou secondaire issu de la fabrication, 
+        la production, la réaction ou la synthèse d'une molécule.
+    </p>
+</div>
+
+<!-- Offcanvas gauche -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="formOffcanvas" aria-labelledby="formOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="formOffcanvasLabel">Formulaire</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+    </div>
+    <div class="offcanvas-body">
+        {% include "components/form_coupe.html.twig" %}
+    </div>
+</div>
+
+<div class="container py-3">
+    <div class="masonry-grid">
+
+        <!-- Carte 1 : Histogramme produits de coupe -->
+        <div class="card text-center">
+            <div class="card-header">
+                Proportion par sous-produit
+            </div>
+            <div class="card-body">
+                {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
+                <p>
+                    L'histogramme suivant montre, parmi les échantillons contenant un ou plusieurs sous-produits, 
+                    la proportion pour chacun des sous-produits.
+                </p>
+            </div>
+        </div>
+
+        <!-- Carte 2 : Évolution temporelle -->
+        <div class="card text-center">
+            <div class="card-header">
+                Évolution temporelle des sous-produits
+            </div>
+            <div class="card-body">
+                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data:results.temporal_sub_products | json_encode, is_stacked:'false', mode:'relatif' } %}
+                <p>
+                    Parmi les échantillons avec un ou plusieurs sous-produits, voici l'évolution temporelle (par bimestre), de la présence de chaque sous-produit.
+                </p>  
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
