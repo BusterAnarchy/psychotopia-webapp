@@ -7,10 +7,10 @@
         new Chart(document.getElementById('{{ id }}').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: data.labels_prod_coupe,
+                labels: data.labels,
                 datasets: [{
                     label: 'Proportion de produits retrouvés',
-                    data: data.data_prod_coupe,
+                    data: data.data,
                     backgroundColor: '#36A2EB',
                 }]
             },

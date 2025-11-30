@@ -131,7 +131,8 @@ final class AnalysisController extends AbstractController
         }
 
         $results = $this->runner->run([
-            "-m $molecule", 
+            "-m $molecule",
+            "-nip", 
             'count', 
             'histo_purity', 
             "temporal_purity:label=temporal_purity_avg,mode=avg,delta=$delta",
@@ -155,8 +156,29 @@ final class AnalysisController extends AbstractController
     #[Route('/cut-{molecule}', name: 'app_cut')]
     public function app_cut(string $molecule): Response
     {
-        return $this->render('analysis/index.html.twig', [
-            'controller_name' => 'Cut ' . $molecule,
+        $delta = 15;
+        $unit = "pourcent";
+
+        if ($molecule == "Cannabis") {
+            $molecule = "'Cannabis (THC/CBD)'";
+        }
+
+        $results = $this->runner->run([
+            "-m $molecule", 
+            'count',
+            'count_cut_agents',
+            'histo_cut_agents',
+            'temporal_cut_agents'
+        ]);
+
+        return $this->render('analysis/cut_agents.html.twig', [
+            'molecule_name' => $molecule,
+            'results' => $results,
+            'presentation' => $this->dict_pres[$molecule] ?? '',
+            'url_wiki' => $this->dict_urls[$molecule] ?? '',
+            'unit' => $unit,
+            'delta' => $delta,
+            'data_reg_dose_poids' => NULL,
         ]);
     }
 }
