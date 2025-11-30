@@ -21,6 +21,7 @@ final class AnalysisController extends AbstractController
             'temporal_count:label=temporal_count_prop,scale=prop', 
             'geo_count:label=geo_count_abs,scale=abs',
             'geo_count:label=geo_count_prop,scale=prop',
+            'pie_consumption'
         ]);
 
         return $this->render('analysis/molecules.html.twig', [
@@ -32,11 +33,16 @@ final class AnalysisController extends AbstractController
     #[Route('/supply', name: 'app_supply')]
     public function app_supply(): Response
     {
-        return $this->render('analysis/index.html.twig', [
-            'controller_name' => 'Supply',
+        $results = $this->runner->run([ 
+            'histo_supply',
+            'temporal_supply',
+        ]);
+
+        return $this->render('analysis/supply.html.twig', [
+            'page_title' => 'Supply',
+            'results' => $results,
         ]);
     }
-
 
     #Dictionary for the titles of each page
     private array $dict_title = [

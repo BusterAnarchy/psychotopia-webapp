@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ page_title }} {% endblock %}
+{% block centerText %} {{ page_title }} {% endblock %}
+
+
+{% block body %} 
+
+<div class="d-flex align-items-center gap-3 m-3">
+    
+    <!-- Infos sur le nombre total d'observations -->
+    <div>
+        <small>Nombre total d'échantillons observés :</small>
+        <p class="display-6 mb-0">{{ results.histo_supply.count }}</p>
+    </div>
+
+    <!-- Bouton pour ouvrir le formulaire -->
+    <button class="btn btn-primary flex-shrink-0" style="width: 200px;" 
+            type="button" data-bs-toggle="offcanvas" data-bs-target="#formOffcanvas" 
+            aria-controls="formOffcanvas">
+        Options de visualisation
+    </button>
+</div>
+
+<!-- Offcanvas gauche -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="formOffcanvas" aria-labelledby="formOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="formOffcanvasLabel">Formulaire</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+    </div>
+    <div class="offcanvas-body">
+        {% include "components/form.html.twig" %}
+    </div>
+</div>
+
+<div class="container py-3">
+    <div class="masonry-grid">
+
+        <!-- Carte 1 : Répartition par voie d'approvisionnement -->
+        <div class="card text-center">
+            <div class="card-header">
+                Répartition par voie d'approvisionnement
+            </div>
+            <div class="card-body">
+                <p>Répartition des échantillons selon les différentes voies d'approvisionnement.</p>
+                {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_supply | json_encode } %}
+            </div>
+        </div>
+
+        <!-- Carte 2 : Évolution temporelle -->
+        <div class="card text-center">
+            <div class="card-header">
+                Évolution temporelle par voie d'approvisionnement
+            </div>
+            <div class="card-body">
+                <p>Proportion des échantillons par voie d'approvisionnement, regroupée par bimestre.</p>
+                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_supply | json_encode, is_stacked:'true', mode:'relatif' }  %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
