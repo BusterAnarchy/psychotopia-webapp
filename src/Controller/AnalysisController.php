@@ -133,7 +133,7 @@ final class AnalysisController extends AbstractController
         $analysis = [
             "-nip", 
             'count', 
-            'histo_purity', 
+            "histo_purity:label=histo_purity,unit=$unit", 
             "temporal_purity:label=temporal_purity_avg,mode=avg,delta=$delta",
             "temporal_purity:label=temporal_purity_med,mode=med,delta=$delta", 
             'supply_reg_purity',
@@ -155,7 +155,34 @@ final class AnalysisController extends AbstractController
             'url_wiki' => $this->dict_urls[$molecule] ?? '',
             'unit' => $unit,
             'delta' => $delta,
-            'data_reg_dose_poids' => NULL,
+        ]);
+    }
+
+    #[Route('/purity-tablets-{molecule}', name: 'app_purity_tablets', priority: 1)]
+    public function app_purity_tablets(string $molecule): Response
+    {
+        $delta = 15;
+        $unit = "poids";
+
+        $results = $this->runner->run([
+            "-m $molecule",
+            "--form comprimé",
+            "-pt",
+            "--tablet_mass",
+            'count',
+            "histo_purity:unit=$unit",
+            "temporal_purity:label=temporal_purity_avg,mode=avg,delta=$delta",
+            "temporal_purity:label=temporal_purity_med,mode=med,delta=$delta",
+            'mass_reg_purity',
+        ]);
+
+        return $this->render('analysis/purity_tablets.html.twig', [
+            'molecule_name' => $molecule,
+            'results' => $results,
+            'presentation' => $this->dict_pres[$molecule] ?? '',
+            'url_wiki' => $this->dict_urls[$molecule] ?? '',
+            'unit' => $unit,
+            'delta' => $delta,
         ]);
     }
 

@@ -34,7 +34,7 @@
 
 <div class="info-box">
     <p>
-        {{ presentation }}
+        {{ presentation | raw }}
         Pour plus d'informations, vous pouvez regarder la 
         <a href="{{ url_wiki }}" target="_blank">page Wiki de cette substance</a>.
     </p>
@@ -211,48 +211,6 @@
                 </p>
                 <div class="alert-box">
                     Point d'attention : Tout comme pour la carte précédente, les échantillons provenant du dark net ne sont pas pris en compte.
-            </div>
-        </div>
-        {% endif %}
-
-        {% if data_reg_dose_poids %}
-        <!-- MDMA comprime scatter-and-line plot -->
-        <div class="card text-center">
-            <div class="card-header">
-                Quantité de substance active VS Masse des comprimés
-            </div>
-            <div class="card-body">
-                {% include "components/scatter_line_chart.html.twig" with {id:"scatter_mdma_comprime", chart_data:data_reg_dose_poids | json_encode} %}
-            </div>
-            <p>
-                Ce nuage de points représente la relation entre la masse des comprimés envoyés (en milligrammes) 
-                et la quantité de substance psychoactive effectivement mesurée en laboratoire (en milligrammes). Chaque point correspond à un échantillon individuel. 
-                L’objectif est d’évaluer la cohérence entre la masse du comprimé et sa teneur réelle en substance active. 
-                La droite rouge représente le meilleur modèle linéaire pour lier la teneur en substance psychoactive au poids des comprimés.
-                La zone grisée décrit un intervalle de confiance à 95% sur ce modèle. 
-                <br>
-                On peut interpréter le graphe comme suit : si la masse de substance active
-                était une fonction linéaire de la masse des comprimés, alors la droite rouge est le meilleur modèle en fonction des échantillons et
-                la zone grisée représenterait l'intervalle de confiance à 95% sur ce modèle.
-                <br>
-                Dans les faits, la quantité de substance dans un comprimé ne dépend évidemment pas que de la masse de celui-ci donc la droite rouge n'est qu'une 
-                approximation de la relation entre ces deux grandeurs. Elle peut être utilisée pour estimer (grossièrement) la quantité de substance active dans un nouveau comprimé
-                si on connait uniquement la masse du comprimé. La zone grisée permet alors d'estimer l'erreur commise sur la prédiction donnée par la ligne rouge.
-                {% if molecule_name == "Comprimés de MDMA" %}
-                <br>
-                L'encart suivant permet d'effectuer une telle estimation.
-                {% endif %}
-            </p>
-        </div>
-        {% endif %}
-        {% if molecule_name == "Comprimés de MDMA" %}
-        <!-- MDMA quantity estimator -->
-        <div class="card text-center">
-            <div class="card-header">
-                Estimation de la quantité de MDMA
-            </div>
-            <div class="card-body">
-                {% include "components/MDMA_calculator.html.twig" with {id:"mdma_calculator", data:data_reg_dose_poids | json_encode} %}
             </div>
         </div>
         {% endif %}
