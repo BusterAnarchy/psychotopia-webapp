@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
-use App\Service\RRunner;
+use App\Service\CachedRRunner;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class AnalysisController extends AbstractController
 {
-    public function __construct(private readonly RRunner $runner) {}
+    public function __construct(private readonly CachedRRunner $runner) {}
 
     #[Route('/molecules', name: 'app_molecules')]
     public function app_molecules(): Response
