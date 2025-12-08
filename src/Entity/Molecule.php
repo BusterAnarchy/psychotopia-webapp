@@ -29,6 +29,15 @@ class Molecule
     #[ORM\Column(nullable: true)]
     private ?float $ratio_base_sel = null;
 
+    #[ORM\Column]
+    private ?bool $hasPurityAnalysis = null;
+
+    #[ORM\Column]
+    private ?bool $hasCutAgentsAnalysis = null;
+
+    #[ORM\Column]
+    private ?bool $hasSubProductAnalysis = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +99,42 @@ class Molecule
     public function setLabel(string $label): static
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    public function hasPurityAnalysis(): ?bool
+    {
+        return $this->hasPurityAnalysis;
+    }
+
+    public function setHasPurityAnalysis(bool $hasPurityAnalysis): static
+    {
+        $this->hasPurityAnalysis = $hasPurityAnalysis;
+
+        return $this;
+    }
+
+    public function hasCutAgentsAnalysis(): ?bool
+    {
+        return $this->hasCutAgentsAnalysis;
+    }
+
+    public function setHasCutAgentsAnalysis(bool $hasCutAgentsAnalysis): static
+    {
+        $this->hasCutAgentsAnalysis = $hasCutAgentsAnalysis;
+
+        return $this;
+    }
+
+    public function hasSubProductAnalysis(): ?bool
+    {
+        return $this->hasSubProductAnalysis;
+    }
+
+    public function setHasSubProductAnalysis(bool $hasSubProductAnalysis): static
+    {
+        $this->hasSubProductAnalysis = $hasSubProductAnalysis;
 
         return $this;
     }

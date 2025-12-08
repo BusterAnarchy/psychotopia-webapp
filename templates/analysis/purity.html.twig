@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
-{% block title %} Pureté - {{ molecule_name }} {% endblock %}
-{% block centerText %} Pureté - {{ molecule_name }} {% endblock %}
+{% block title %} Pureté - {{ molecule.label }} {% endblock %}
+{% block centerText %} Pureté - {{ molecule.label }} {% endblock %}
 
 {% block body %}
 
@@ -34,11 +34,11 @@
 
 <div class="info-box">
     <p>
-        {{ presentation | raw }}
+        {{ molecule.definition | raw }}
         Pour plus d'informations, vous pouvez regarder la 
-        <a href="{{ url_wiki }}" target="_blank">page Wiki de cette substance</a>.
+        <a href="{{ molecule.wikiUrl }}" target="_blank">page Wiki de cette substance</a>.
     </p>
-    {% if molecule_name == "3-MMC" %}
+    {% if molecule.label == "3-MMC" %}
     <div class="alert-box">
         Point d'attention : De nombreux échantillons vendus comme de la 3-MMC n'en sont pas (cf le nombre élevé d'échantillons
         dont la pureté est nulle). Ainsi, vous pouvez choisir dans les options de ne regarder que les échantillons qui contiennent de la 3-MMC 
@@ -141,7 +141,7 @@
         </div>
         {% endif %}
 
-        {% if molecule_name == "Héroïne" and false %}
+        {% if molecule.label == "Héroïne" and false %}
         <!-- Carte 4 : Cas particulier héroïne -->
         <div class="card text-center">
             <div class="card-header">

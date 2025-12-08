@@ -1,3 +1,5 @@
+{% set molecules = allMolecules() %}
+
 <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
       <a href="https://www.psychoactif.org" target="_blank"><img id="logo" src="https://www.psychoactif.org/images/banniere_psychoactif5.png"  alt="Logo Psychoactif"></a>
@@ -9,134 +11,78 @@
 
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ path('app_molecules') }}">Données</a>
+        </li>
 
         <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_molecules') }}">Les types de molécules</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_supply') }}">Les modes d'approvisionnement</a>
-        </li>
-
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="cocaineDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Cocaïne
-          </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="cocaineDropdown">
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { slug: 'cocaine' }) }}">Pureté</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_cut', { slug: 'cocaine' }) }}">Produits de coupe</a>
-                </li>
-          </ul>
-        </li>
-        
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="mdmaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            MDMA
-          </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="mdmaDropdown">
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { slug: 'mdma' }) }}">Pureté de la forme poudre</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity_tablets', { slug: 'mdma' }) }}">Dosage des comprimés</a>
-                </li>
-          </ul>
-        </li>
-
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="heroineDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Héroïne
-          </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="heroineDropdown">
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { slug: 'heroine' }) }}">Pureté</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_cut', { slug: 'heroine' }) }}">Produits de coupe</a>
-                </li>              
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_sub_products', { slug: 'heroine' }) }}">Sous-produit de synthèse</a>
-                </li> 
-          </ul>
-        </li>
-        
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="3mmcDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            3-MMC
-          </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="3mmcDropdown">
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { slug: '3-mmc' }) }}">Pureté</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_cut', { slug: '3-mmc' }) }}">Produits de coupe</a>
-                </li>     
-          </ul>
-        </li>
-        
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="ketamineDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Kétamine
-          </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="ketamineDropdown">
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { slug: 'ketamine' }) }}">Pureté</a>
-                </li>
-          </ul>
-        </li>
-
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="speedDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Speed
-          </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="speedDropdown">
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { slug: 'speed' }) }}">Pureté</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_cut', { slug: 'speed' }) }}">Produits de coupe</a>
-                </li>  
-          </ul>
-        </li>
-
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="cannabisDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Cannabis
-          </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="cannabisDropdown">
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { slug: 'cannabis'}) }}">Teneur en THC de la résine</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { slug: 'cannabis' }) }}">Teneur en THC de l'herbe</a>
-                </li>
-          </ul>
+          <a class="nav-link" href="{{ path('app_supply') }}">Modes d'approvisionnement</a>
         </li>
 
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="2cbDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            2C-B
-          </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="2cbDropdown">
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { slug: '2c-b' }) }}">Pureté de la forme poudre</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity_tablets', { slug: '2c-b' }) }}">Teneur des comprimés</a>
-                </li>
-          </ul>
+            <a class="nav-link dropdown-toggle" href="#" id="moleculeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Pureté des molécules
+            </a>
+            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="moleculeDropdown">
+                {% for molecule in molecules %}
+                  {% if molecule.hasPurityAnalysis %}
+                    <li>
+                        <a class="dropdown-item" href="{{ path('app_purity', { slug: molecule.slug }) }}">
+                            Pureté — {{ molecule.label }}
+                        </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+            </ul>
         </li>
-        <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_faq') }}">F.A.Q.</a>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="moleculeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Produits de coupes
+            </a>
+            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="moleculeDropdown">
+                {% for molecule in molecules %}
+                    {% if molecule.hasCutAgentsAnalysis %}
+                    <li>
+                        <a class="dropdown-item" href="{{ path('app_cut', { slug: molecule.slug }) }}">
+                            Coupe — {{ molecule.label }}
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="moleculeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Sous-Produits
+            </a>
+            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="moleculeDropdown">
+                {% for molecule in molecules %}
+                    {% if molecule.hasSubProductAnalysis %}
+                    <li>
+                        <a class="dropdown-item" href="{{ path('app_sub_products', { slug: molecule.slug }) }}">
+                            Sous-Produits — {{ molecule.label }}
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="moleculeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Comprimé
+            </a>
+            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="moleculeDropdown">
+                {% for molecule in molecules %}
+                    <li>
+                        <a class="dropdown-item" href="{{ path('app_purity_tablets', { slug: molecule.slug }) }}">
+                            Comprimé — {{ molecule.label }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
         </li>
       </ul>
     </div>

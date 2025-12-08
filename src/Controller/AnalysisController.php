@@ -67,15 +67,13 @@ final class AnalysisController extends AbstractController
             'THC-resin' => $this->runner->run(array_merge(["-m 'Cannabis (THC/CBD)'", "--form Résine"], $analysis)),
             'THC-weed' => $this->runner->run(array_merge(["-m 'Cannabis (THC/CBD)'", "--form Herbe"], $analysis)),
             '2C-B' => $this->runner->run(array_merge(["-m 2C-B", "--form Poudre,Cristal"], $analysis)),
-            default => $this->runner->run(array_merge(["-m ". $molecule->getLabel()], $analysis)),
+            default => $this->runner->run(array_merge(["-m '" . $molecule->getLabel() . "'"], $analysis)),
         };
 
         $results["histo_purity"]["ratio_base_sel"] = $molecule->getRatioBaseSel();
 
         return $this->render('analysis/purity.html.twig', [
-            'molecule_name' => $molecule->getLabel(),
-            'presentation' => $molecule->getDefinition(),
-            'url_wiki' => $molecule->getWikiUrl(),
+            'molecule' => $molecule,
             'results' => $results,
             'unit' => $unit,
             'delta' => $delta,
@@ -89,7 +87,7 @@ final class AnalysisController extends AbstractController
         $unit = "poids";
 
         $results = $this->runner->run([
-            "-m " . $molecule->getLabel(),
+            "-m '" . $molecule->getLabel() . "'",
             "--form comprimé",
             "-pt",
             "--tablet_mass",
@@ -101,9 +99,7 @@ final class AnalysisController extends AbstractController
         ]);
 
         return $this->render('analysis/purity_tablets.html.twig', [
-            'molecule_name' => $molecule->getLabel(),
-            'presentation' => $molecule->getDefinition(),
-            'url_wiki' => $molecule->getWikiUrl(),
+            'molecule' => $molecule,
             'results' => $results,
             'unit' => $unit,
             'delta' => $delta,
@@ -116,7 +112,7 @@ final class AnalysisController extends AbstractController
         $delta = 15;
         $unit = "pourcent";
 
-        $analysis = ["-m " . $molecule->getLabel(), 'count', 'count_cut_agents', 'histo_cut_agents','temporal_cut_agents'];
+        $analysis = ["-m '" . $molecule->getLabel() . "'", 'count', 'count_cut_agents', 'histo_cut_agents','temporal_cut_agents'];
 
         $results = match ($molecule->getLabel()) {
             '3-MMC' => $this->runner->run([
@@ -130,9 +126,7 @@ final class AnalysisController extends AbstractController
         };
 
         return $this->render('analysis/cut_agents.html.twig', [
-            'molecule_name' => $molecule->getLabel(),
-            'presentation' => $molecule->getDefinition(),
-            'url_wiki' => $molecule->getWikiUrl(),
+            'molecule' => $molecule,
             'results' => $results,
             'unit' => $unit,
             'delta' => $delta,
@@ -154,9 +148,7 @@ final class AnalysisController extends AbstractController
         ]);
 
         return $this->render('analysis/sub_products.html.twig', [
-            'molecule_name' => $molecule->getLabel(),
-            'presentation' => $molecule->getDefinition(),
-            'url_wiki' => $molecule->getWikiUrl(),
+            'molecule' => $molecule,
             'results' => $results,
             'unit' => $unit,
             'delta' => $delta,
