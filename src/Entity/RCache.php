@@ -6,6 +6,7 @@ use App\Repository\RCacheRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RCacheRepository::class)]
+#[ORM\Table(name: "topia_r_cache")]
 class RCache
 {
     #[ORM\Id]

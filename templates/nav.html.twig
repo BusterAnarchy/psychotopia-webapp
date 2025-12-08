@@ -24,10 +24,10 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="cocaineDropdown">
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { molecule: 'Cocaïne' }) }}">Pureté</a>
+                <a class="nav-link" href="{{ path('app_purity', { slug: 'cocaine' }) }}">Pureté</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_cut', { molecule: 'Cocaïne' }) }}">Produits de coupe</a>
+                <a class="nav-link" href="{{ path('app_cut', { slug: 'cocaine' }) }}">Produits de coupe</a>
                 </li>
           </ul>
         </li>
@@ -39,10 +39,10 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="mdmaDropdown">
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { molecule: 'MDMA' }) }}">Pureté de la forme poudre</a>
+                <a class="nav-link" href="{{ path('app_purity', { slug: 'mdma' }) }}">Pureté de la forme poudre</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity_tablets', { molecule: 'MDMA' }) }}">Dosage des comprimés</a>
+                <a class="nav-link" href="{{ path('app_purity_tablets', { slug: 'mdma' }) }}">Dosage des comprimés</a>
                 </li>
           </ul>
         </li>
@@ -54,13 +54,13 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="heroineDropdown">
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { molecule: 'Héroïne ' }) }}">Pureté</a>
+                <a class="nav-link" href="{{ path('app_purity', { slug: 'heroine' }) }}">Pureté</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_cut', { molecule: 'Héroïne ' }) }}">Produits de coupe</a>
+                <a class="nav-link" href="{{ path('app_cut', { slug: 'heroine' }) }}">Produits de coupe</a>
                 </li>              
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_sub_products', { molecule: 'Héroïne ' }) }}">Sous-produit de synthèse</a>
+                <a class="nav-link" href="{{ path('app_sub_products', { slug: 'heroine' }) }}">Sous-produit de synthèse</a>
                 </li> 
           </ul>
         </li>
@@ -72,10 +72,10 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="3mmcDropdown">
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { molecule: '3-MMC' }) }}">Pureté</a>
+                <a class="nav-link" href="{{ path('app_purity', { slug: '3-mmc' }) }}">Pureté</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_cut', { molecule: '3-MMC' }) }}">Produits de coupe</a>
+                <a class="nav-link" href="{{ path('app_cut', { slug: '3-mmc' }) }}">Produits de coupe</a>
                 </li>     
           </ul>
         </li>
@@ -87,7 +87,7 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="ketamineDropdown">
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { molecule: 'Kétamine' }) }}">Pureté</a>
+                <a class="nav-link" href="{{ path('app_purity', { slug: 'ketamine' }) }}">Pureté</a>
                 </li>
           </ul>
         </li>
@@ -99,10 +99,10 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="speedDropdown">
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { molecule: 'Speed' }) }}">Pureté</a>
+                <a class="nav-link" href="{{ path('app_purity', { slug: 'speed' }) }}">Pureté</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_cut', { molecule: 'Speed' }) }}">Produits de coupe</a>
+                <a class="nav-link" href="{{ path('app_cut', { slug: 'speed' }) }}">Produits de coupe</a>
                 </li>  
           </ul>
         </li>
@@ -114,10 +114,10 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="cannabisDropdown">
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { molecule: 'THC-resin'}) }}">Teneur en THC de la résine</a>
+                <a class="nav-link" href="{{ path('app_purity', { slug: 'cannabis'}) }}">Teneur en THC de la résine</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { molecule: 'THC-weed' }) }}">Teneur en THC de l'herbe</a>
+                <a class="nav-link" href="{{ path('app_purity', { slug: 'cannabis' }) }}">Teneur en THC de l'herbe</a>
                 </li>
           </ul>
         </li>
@@ -128,10 +128,10 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="2cbDropdown">
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity', { molecule: '2C-B' }) }}">Pureté de la forme poudre</a>
+                <a class="nav-link" href="{{ path('app_purity', { slug: '2c-b' }) }}">Pureté de la forme poudre</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_purity_tablets', { molecule: '2C-B' }) }}">Teneur des comprimés</a>
+                <a class="nav-link" href="{{ path('app_purity_tablets', { slug: '2c-b' }) }}">Teneur des comprimés</a>
                 </li>
           </ul>
         </li>
