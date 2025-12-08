@@ -5,47 +5,50 @@
 
 <script>
 (function() {
+
     const data = {{ chart_data | raw }};
     const unit = '{{unit}}'
     let x_axis_label = ''
+    
     if (unit === 'pourcent'){x_axis_label='Pourcentage de pureté'}
     if (unit === 'poids'){x_axis_label='Masse de la substance (mg)'}
-    if (typeof data.ratio_base_sel === 'undefined') {
-    new Chart(document.getElementById('{{ id }}').getContext('2d'), {
-        type: 'bar',
-        data: {
-            labels: data.labels,
-            datasets: [{
-                label: 'Proportion de produits retrouvés',
-                data: data.data,
-                backgroundColor: '#36A2EB',
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: x_axis_label
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Occurences'
-                    }
-                }
+
+    if (data.ratio_base_sel === null) {
+        new Chart(document.getElementById('{{ id }}').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Proportion de produits retrouvés',
+                    data: data.data,
+                    backgroundColor: '#36A2EB',
+                }]
             },
-            plugins: {
-                legend: {
-                    display: false
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: x_axis_label
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Occurences'
+                        }
+                    }
                 },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                }
             }
-        }
-    });
-}
+        });
+    }
     else {
     new Chart(document.getElementById('{{ id }}').getContext('2d'), {
         type: 'bar',
@@ -82,8 +85,8 @@
                     annotations: {
                         threshold: {
                             type: 'line',
-                            xMin: data.ratio_base_sel[0]/5,
-                            xMax: data.ratio_base_sel[0]/5,
+                            xMin: data.ratio_base_sel/5,
+                            xMax: data.ratio_base_sel/5,
                             borderColor: 'red',
                             borderWidth: 3,              // line thickness
                             borderDash: [6, 6],          // dashed line pattern

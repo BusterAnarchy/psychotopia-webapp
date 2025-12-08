@@ -7,9 +7,9 @@
 
         data.datasets_line.forEach(element => {
             
-            if (element.label[0] === "borne sup") {
+            if (element.label === "borne sup") {
                 element.borderColor = "transparent";
-            } else if (element.label[0] === "borne inf") {
+            } else if (element.label === "borne inf") {
                 element.borderColor = "transparent";
                 element.backgroundColor = pattern.draw('diagonal', 'rgba(128, 128, 128, 0.3)');
                 element.fill = "1";

@@ -9,7 +9,6 @@
         if (mode === 'absolu'){y_axis_label="Nombre d'échantillons"}
         if (mode === 'relatif'){y_axis_label='Proportion (%)'}
 
-            // Assign colors to datasets if not already set
         data.datasets_area.forEach((dataset, i) => {
             dataset.borderColor = Chart.defaults.colorPalette[i % Chart.defaults.colorPalette.length];
             dataset.backgroundColor = '#ff000000';

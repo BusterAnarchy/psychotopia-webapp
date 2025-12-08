@@ -120,6 +120,16 @@ final class AnalysisController extends AbstractController
                             pour les comprimés de 2C-B. L'analyse des échantillons sous forme de poudre possède aussi sa <a href='http://psychotopia.psychoactif.org/purity-2cb/' target='_blank'>page dédiée</a>.",
     ];
 
+    private array $dict_ratio_base_sel = [
+        'Cocaïne' =>  303.352/(303.352+35.453)  * 100,
+        'Héroïne' => 369.411/(369.411+35.453)  * 100,
+        '3-MMC' =>  177.247/(177.247+35.453)  * 100,
+        'MDMA' => 193.242/(193.242+35.453)  * 100,
+        'Kétamine' => 237.725/(237.725+35.453)  * 100,
+        'Speed' => 135.2062/(135.2062+35.453)  * 100,
+        '2C-B' => 260.13/(260.13+35.453)  * 100,
+    ];
+
     #[Route('/purity-{molecule}', name: 'app_purity')]
     public function app_purity(string $molecule): Response
     {
@@ -147,6 +157,8 @@ final class AnalysisController extends AbstractController
             '2C-B' => $this->runner->run(array_merge(["-m 2C-B", "--form Poudre,Cristal"], $analysis)),
             default => $this->runner->run(array_merge(["-m $molecule"], $analysis)),
         };
+
+        $results["histo_purity"]["ratio_base_sel"] = $this->dict_ratio_base_sel[$molecule] ?? null;
 
         return $this->render('analysis/purity.html.twig', [
             'molecule_name' => $molecule,

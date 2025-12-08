@@ -141,7 +141,7 @@
         </div>
         {% endif %}
 
-        {% if molecule_name == "Héroïne" %}
+        {% if molecule_name == "Héroïne" and false %}
         <!-- Carte 4 : Cas particulier héroïne -->
         <div class="card text-center">
             <div class="card-header">
@@ -162,8 +162,8 @@
             </div>
             <div class="card-body">
                 {{ render_map('map_chart_prop', results.geo_purity, options:{
-                        'start_hsl': [50, 100, 70],
-                        'end_hsl': [0, 100, 40],
+                        'start_hsl': [120, 60, 85],
+                        'end_hsl': [200, 100, 30],
                 } ) }}
                 <p>
                     Désormais, regardons la géographie de la pureté. Sur la carte suivante est présentée la pureté moyenne
