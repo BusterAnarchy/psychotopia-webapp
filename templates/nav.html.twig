@@ -76,11 +76,13 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="moleculeDropdown">
                 {% for molecule in molecules %}
-                    <li>
-                        <a class="dropdown-item" href="{{ path('app_purity_tablets', { slug: molecule.slug }) }}">
-                            Comprimé — {{ molecule.label }}
-                        </a>
-                    </li>
+                    {% if molecule.hasTabletsAnalysis %}
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_purity_tablets', { slug: molecule.slug }) }}">
+                                Comprimé — {{ molecule.label }}
+                            </a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </li>
