@@ -153,11 +153,11 @@ final class AnalysisController extends AbstractController
         $filters = $this->buildFilterArgs($request, includeNoCut: true);
 
         $results = match ($molecule->getLabel()) {
-            'THC-resin' => $this->runner->run(array_merge([
+            'Cannabis Résine' => $this->runner->run(array_merge([
                 $this->formatOption('-m', 'Cannabis (THC/CBD)'),
                 $this->formatOption('--form', 'Résine'),
             ], $filters, $analysis)),
-            'THC-weed' => $this->runner->run(array_merge([
+            'Cannabis Herbe' => $this->runner->run(array_merge([
                 $this->formatOption('-m', 'Cannabis (THC/CBD)'),
                 $this->formatOption('--form', 'Herbe'),
             ], $filters, $analysis)),
