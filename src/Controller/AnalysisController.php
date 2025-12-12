@@ -18,7 +18,7 @@ final class AnalysisController extends AbstractController
     #[Route('/molecules', name: 'app_molecules')]
     public function app_molecules(Request $request): Response
     {
-        $filters = $this->buildFilterArgs($request, includeFamilies: true);
+        $filters = $this->buildFilterArgs($request, includeFamilies: true, includeForms: true);
         $results = $this->runner->run(array_merge(
             $filters,
             [
@@ -92,14 +92,14 @@ final class AnalysisController extends AbstractController
         return $this->render('analysis/molecules.html.twig', [
             'page_title' => 'Toutes molécules',
             'results' => $results,
-            'filters_summary' => $this->summarizeFilters($request, includeFamilies: true),
+            'filters_summary' => $this->summarizeFilters($request, includeFamilies: true, includeForms: true),
         ]);
     }
 
     #[Route('/supply', name: 'app_supply')]
     public function app_supply(Request $request): Response
     {
-        $filters = $this->buildFilterArgs($request, includeFamilies: true);
+        $filters = $this->buildFilterArgs($request, includeFamilies: true, includeForms: true);
         $results = $this->runner->run(array_merge($filters, [
             'histo_supply',
             'temporal_supply',
@@ -129,7 +129,7 @@ final class AnalysisController extends AbstractController
         return $this->render('analysis/supply.html.twig', [
             'page_title' => 'Supply',
             'results' => $results,
-            'filters_summary' => $this->summarizeFilters($request, includeFamilies: true),
+            'filters_summary' => $this->summarizeFilters($request, includeFamilies: true, includeForms: true),
         ]);
     }
 
@@ -469,7 +469,12 @@ final class AnalysisController extends AbstractController
         ]);
     }
 
-    private function buildFilterArgs(Request $request, bool $includeFamilies = false, bool $includeNoCut = false): array
+    private function buildFilterArgs(
+        Request $request,
+        bool $includeFamilies = false,
+        bool $includeNoCut = false,
+        bool $includeForms = false
+    ): array
     {
         $args = [];
 
@@ -492,10 +497,23 @@ final class AnalysisController extends AbstractController
             $args[] = '--no-purity';
         }
 
+        if ($includeForms) {
+            $forms = $this->normalizeCsv($request->query->get('formes'));
+            if (!empty($forms)) {
+                $args[] = $this->formatOption('--form', implode(',', $forms));
+            }
+        }
+
         return $args;
     }
 
-    private function summarizeFilters(Request $request, bool $includeFamilies = false, bool $includeDelta = false, bool $includeNoCut = false): array
+    private function summarizeFilters(
+        Request $request,
+        bool $includeFamilies = false,
+        bool $includeDelta = false,
+        bool $includeNoCut = false,
+        bool $includeForms = false
+    ): array
     {
         $summary = [];
 
@@ -523,6 +541,13 @@ final class AnalysisController extends AbstractController
 
         if ($includeNoCut && $request->query->getBoolean('no_cut')) {
             $summary[] = 'Pureté > 0 uniquement';
+        }
+
+        if ($includeForms) {
+            $forms = $this->normalizeCsv($request->query->get('formes'));
+            if (!empty($forms)) {
+                $summary[] = sprintf('Formes : %s', implode(', ', $forms));
+            }
         }
 
         return $summary;

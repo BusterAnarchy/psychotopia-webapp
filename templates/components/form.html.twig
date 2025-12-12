@@ -39,6 +39,28 @@
             <p class="form-note">Laissez vide pour inclure toutes les familles.</p>
         </div>
 
+        <div class="form-field">
+            <span class="form-label">Formes à inclure :</span>
+            <div class="form-checklist">
+                {% set forms = [
+                    { value: 'poudre', label: 'Poudre' },
+                    { value: 'liquide', label: 'Liquide' },
+                    { value: 'herbe', label: 'Herbe' },
+                    { value: 'Cristal', label: 'Cristal' },
+                    { value: 'comprimé', label: 'Comprimé' },
+                    { value: 'Buvard / Micropointe', label: 'Buvard / Micropointe' },
+                    { value: 'Résine', label: 'Résine' }
+                ] %}
+                {% for form in forms %}
+                    <label class="form-checkbox">
+                        <input type="checkbox" name="forme" value="{{ form.value }}">
+                        <span>{{ form.label }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+            <p class="form-note">Laissez vide pour inclure toutes les formes.</p>
+        </div>
+
         <button id="sendButton" class="btn btn--primary btn--block" type="button">Appliquer</button>
     </div>
 </div>
@@ -48,11 +70,13 @@ document.getElementById('sendButton').addEventListener('click', function () {
     const date_debut = document.getElementById('date_debut').value;
     const date_fin = document.getElementById('date_fin').value;
     const selectedFamilles = Array.from(document.querySelectorAll('input[name="famille"]:checked')).map(cb => cb.value);
+    const selectedFormes = Array.from(document.querySelectorAll('input[name="forme"]:checked')).map(cb => cb.value);
 
     const params = new URLSearchParams();
     if (date_debut) params.set('date_debut', date_debut);
     if (date_fin) params.set('date_fin', date_fin);
     if (selectedFamilles.length > 0) params.set('familles', selectedFamilles.join(','));
+    if (selectedFormes.length > 0) params.set('formes', selectedFormes.join(','));
 
     window.location = window.location.pathname + '?' + params.toString();
 });
