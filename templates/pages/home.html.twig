@@ -14,6 +14,13 @@
             </p>
             <div class="page-hero__actions">
                 <a class="btn btn--primary" href="{{ path('app_molecules') }}">Explorer les données</a>
+                <div class="home-popular">
+                    <span class="home-popular__label">Les plus consultés</span>
+                    <div class="home-popular__links">
+                        <a class="home-popular__link" href="{{ path('app_purity', { slug: 'cannabis-herb' }) }}">🌿 Cannabis</a>
+                        <a class="home-popular__link" href="{{ path('app_purity', { slug: 'mdma' }) }}">💊 MDMA</a>
+                    </div>
+                </div>
                 <a class="btn btn--secondary" href="{{ path('app_faq') }}">Voir la FAQ</a>
             </div>
             <div class="page-hero__meta">
