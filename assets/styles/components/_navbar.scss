@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  flex-wrap: wrap;
   padding-inline: var(--space-2);
   max-width: 1100px;
   margin-inline: auto;
@@ -55,6 +56,9 @@
   flex-direction: column;
   gap: 4px;
   width: 100%;
+  flex-basis: 100%;
+  order: 1;
+  margin-top: var(--space-2);
 }
 
 .site-nav__menu.is-open {
@@ -129,6 +133,9 @@
     gap: var(--space-1);
     width: auto;
     margin-left: auto;
+    flex-basis: auto;
+    order: initial;
+    margin-top: 0;
   }
 
   .site-nav__link,

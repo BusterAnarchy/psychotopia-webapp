@@ -12,17 +12,6 @@
       <p class="analysis-header__count">{{ results.count }}</p>
     </div>
 
-    <div class="analysis-header__actions">
-      <button
-        class="btn btn--primary btn--block"
-        type="button"
-        aria-controls="drawerFilters"
-        aria-expanded="false"
-        data-drawer-target="#drawerFilters"
-      >
-        Options de visualisation
-      </button>
-    </div>
   </header>
 
   <aside
@@ -47,6 +36,8 @@
       </div>
     </div>
   </aside>
+
+  {% include "components/drawer_trigger.html.twig" %}
 
   <section class="analysis-grid container" id="moleculesMain">
     <article class="analysis-card">

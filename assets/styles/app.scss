@@ -3,21 +3,36 @@
 ------------------------------------------- */
 
 /* Variables (couleurs, tailles, etc.) */
-@import "variables";
+@import "settings/variables";
 
 /* Mixins */
-//@import "mixins";
+@import "tools/mixins";
 
 /* Reset CSS (optionnel mais conseillé) */
-@import "base/reset";
+@import "generic/reset";
 
 /* Styles globaux */
-@import "base/globals";
+@import "elements/base";
 
-/* Composants transversaux */
-@import "components/form";
-@import "components/nav";
+/* Objects (layout helpers) */
+@import "objects/container";
+@import "objects/layout";
+@import "objects/grid";
+
+/* Composants */
+@import "components/navbar";
+@import "components/forms";
+@import "components/buttons";
+@import "components/cards";
+@import "components/charts";
+@import "components/tabs";
+@import "components/drawer";
 @import "components/footer";
+
+/* Utilitaires */
+@import "utilities/spacing";
+@import "utilities/display";
+@import "utilities/text";
 
 /* Styles spécifiques aux pages */
 @import "pages/analysis";

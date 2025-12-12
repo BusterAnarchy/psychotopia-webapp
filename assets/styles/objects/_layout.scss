@@ -1,0 +1,40 @@
+/* -------------------------------------------
+   Layout helpers
+------------------------------------------- */
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.layout--two-columns {
+  display: flex;
+  flex-direction: column;
+}
+
+.layout__aside {
+  order: 2;
+}
+
+.layout__main {
+  order: 1;
+}
+
+@media (min-width: 768px) {
+  .layout--two-columns {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .layout__aside {
+    flex: 0 0 40%;
+    order: 1;
+  }
+
+  .layout__main {
+    flex: 1 1 60%;
+    order: 2;
+  }
+}

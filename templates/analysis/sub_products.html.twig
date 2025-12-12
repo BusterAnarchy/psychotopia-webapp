@@ -10,18 +10,7 @@
             <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
             <p class="analysis-header__count">{{ results.count }}</p>
         </div>
-        <div class="analysis-header__actions">
-            <button
-                class="btn btn--primary btn--block"
-                type="button"
-                aria-controls="drawerFilters"
-                aria-expanded="false"
-                data-drawer-target="#drawerFilters"
-            >
-                Options de visualisation
-            </button>
-        </div>
-    </header>
+            </header>
 
     <aside
         id="drawerFilters"
@@ -43,7 +32,9 @@
                 </div>
             </div>
         </div>
-    </aside>
+            </aside>
+
+            {% include "components/drawer_trigger.html.twig" %}
 
     <section class="info-panel container">
         <p>

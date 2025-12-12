@@ -1,11 +1,13 @@
-<div class="map-container">
-    <div
-        id="{{ id }}"
-        class="map"
-        data-chart="{{ chart_data|json_encode|e('html_attr') }}"
-        data-colors="{{ color_data|json_encode|e('html_attr') }}"
-        data-options="{{ options|json_encode|e('html_attr') }}"
-    >
+<div class="chart-wrapper chart-wrapper--map">
+    <div class="chart-wrapper__canvas chart-wrapper__canvas--flush">
+        <div
+            id="{{ id }}"
+            class="map chart-canvas chart-canvas--map"
+            data-chart="{{ chart_data|json_encode|e('html_attr') }}"
+            data-colors="{{ color_data|json_encode|e('html_attr') }}"
+            data-options="{{ options|json_encode|e('html_attr') }}"
+        >
+        </div>
     </div>
 </div>
 
