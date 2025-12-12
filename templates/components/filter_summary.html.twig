@@ -1,0 +1,7 @@
+{% set summary = summary is defined ? summary : filters_summary|default([]) %}
+{% if summary is iterable and summary|length > 0 %}
+    <div class="analysis-header__filters">
+        <small class="analysis-header__label">Filtres appliqués :</small>
+        <p>{{ summary|join(' · ') }}</p>
+    </div>
+{% endif %}

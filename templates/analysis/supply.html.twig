@@ -3,62 +3,66 @@
 {% block title %} {{ page_title }} {% endblock %}
 {% block centerText %} {{ page_title }} {% endblock %}
 
+{% block body %}
+<div class="analysis-page">
+    <header class="analysis-header container">
+        <div class="analysis-header__meta analysis-header__card">
+            <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
+            <p class="analysis-header__count">{{ results.histo_supply.count }}</p>
+            {% include "components/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
+        </div>
+    </header>
 
-{% block body %} 
-
-<div class="d-flex align-items-center gap-3 m-3">
-    
-    <!-- Infos sur le nombre total d'observations -->
-    <div>
-        <small>Nombre total d'échantillons observés :</small>
-        <p class="display-6 mb-0">{{ results.histo_supply.count }}</p>
-    </div>
-
-    <!-- Bouton pour ouvrir le formulaire -->
-    <button class="btn btn-primary flex-shrink-0" style="width: 200px;" 
-            type="button" data-bs-toggle="offcanvas" data-bs-target="#formOffcanvas" 
-            aria-controls="formOffcanvas">
-        Options de visualisation
-    </button>
-</div>
-
-<!-- Offcanvas gauche -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="formOffcanvas" aria-labelledby="formOffcanvasLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="formOffcanvasLabel">Formulaire</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
-    </div>
-    <div class="offcanvas-body">
-        {% include "components/form.html.twig" %}
-    </div>
-</div>
-
-<div class="container py-3">
-    <div class="masonry-grid">
-
-        <!-- Carte 1 : Répartition par voie d'approvisionnement -->
-        <div class="card text-center">
-            <div class="card-header">
-                Répartition par voie d'approvisionnement
+    <aside
+        id="drawerFilters"
+        class="drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="drawerFiltersTitle"
+        aria-hidden="true"
+    >
+        <div class="drawer__panel">
+            <div class="drawer__handle" aria-hidden="true"></div>
+            <div class="drawer__inner">
+                <div class="drawer__header">
+                    <h3 id="drawerFiltersTitle">Options de visualisation</h3>
+                    <button class="btn btn--ghost drawer__close" type="button" aria-label="Fermer les options" data-drawer-close>✕</button>
+                </div>
+                <div class="drawer__body">
+                    {% include "components/form.html.twig" %}
+                </div>
             </div>
-            <div class="card-body">
-                <p>Répartition des échantillons selon les différentes voies d'approvisionnement.</p>
+        </div>
+    </aside>
+
+    {% include "components/drawer_trigger.html.twig" %}
+
+    <section class="analysis-grid container">
+        {% set supply_share_desc %}
+            <p>Répartition des échantillons selon les différentes voies d'approvisionnement.</p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Répartition par voie d'approvisionnement",
+            description: supply_share_desc
+        } %}
+            {% block body %}
                 {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_supply | json_encode } %}
-            </div>
-        </div>
+            {% endblock %}
+        {% endembed %}
 
-        <!-- Carte 2 : Évolution temporelle -->
-        <div class="card text-center">
-            <div class="card-header">
-                Évolution temporelle par voie d'approvisionnement
-            </div>
-            <div class="card-body">
-                <p>Proportion des échantillons par voie d'approvisionnement, regroupée par bimestre.</p>
+        {% set supply_timeline_desc %}
+            <p>Proportion des échantillons par voie d'approvisionnement, regroupée par bimestre.</p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Évolution temporelle par voie d'approvisionnement",
+            description: supply_timeline_desc
+        } %}
+            {% block body %}
                 {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_supply | json_encode, is_stacked:'true', mode:'relatif' }  %}
-            </div>
-        </div>
-
-    </div>
+            {% endblock %}
+        {% endembed %}
+    </section>
 </div>
-
 {% endblock %}

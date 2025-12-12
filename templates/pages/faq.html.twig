@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Psychotopia — FAQ{% endblock %}
+
+{% block body %}
+<div class="faq-page">
+    <section class="page-hero">
+        <div class="page-hero__content container">
+
+            <h1 class="page-hero__title">Questions fréquentes</h1>
+            <p class="page-hero__lead">
+                Cette page rassemble les réponses rapides sur l'origine du projet, la méthodologie cartographique,
+                l'open source et la meilleure manière de citer Psychotopia.
+            </p>
+            <div class="page-hero__meta">
+                Vous ne trouvez pas votre réponse ? Écrivez sur le forum Psychoactif dans la catégorie Psychotopia ou contactez l'équipe dédiée.
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-grid container">
+        <article class="info-panel faq-item">
+            <h3>Qui sommes-nous ?</h3>
+            <p>
+                Psychotopia a été développé à l'initiative de deux adhérents de Psychoactif :
+                <a href="https://www.psychoactif.org/forum/profile.php?id=185396" target="_blank" rel="noreferrer">Delphes</a>
+                et <a href="https://www.psychoactif.org/forum/profile.php?id=187800" target="_blank" rel="noreferrer">Buster (Anarqueen)</a>.
+            </p>
+            <p>
+                Le projet s'appuie sur le dispositif d'analyse à distance opéré collectivement par Psychoactif, Psychonaut, Safe, ATP-idf
+                et Fédération Addiction. Merci à Camille et Pierre pour leurs retours et relectures.
+            </p>
+        </article>
+
+        <article class="info-panel faq-item">
+            <h3>Le travail est-il open source&nbsp;?</h3>
+            <p>
+                Oui. Vous pouvez consulter le code, proposer des améliorations ou vérifier les traitements statistiques
+                directement sur GitHub.
+            </p>
+            <ul>
+                <li><a href="https://github.com/BusterAnarchy/psychotopia-r" target="_blank" rel="noreferrer" >github.com/BusterAnarchy/psychotopia-r</a></li>
+                <li><a href="https://github.com/BusterAnarchy/psychotopia-webapp" target="_blank" rel="noreferrer" >github.com/BusterAnarchy/psychotopia-webapp</a></li>
+            </ul>
+        </article>
+
+        <article class="info-panel faq-item">
+            <h3>Pourquoi les cartes se concentrent-elles sur l'hexagone et la Corse&nbsp;?</h3>
+            <p>
+                Malgré notre volonté d'inclure toutes les régions, le nombre d'échantillons ultramarins reste très faible
+                (1 échantillon provenant de la Guadeloupe sur 3344 au 05/07/2025). Pour garantir la lisibilité et limiter
+                la complexité technique, nous affichons actuellement l'hexagone et la Corse.
+            </p>
+        </article>
+
+        <article class="info-panel faq-item">
+            <h3>Comment poser une question ou signaler un problème&nbsp;?</h3>
+            <p>
+                Commencez par ouvrir une discussion sur le forum Psychoactif, dans la catégorie Psychotopia,
+                afin que la communauté puisse répondre ou orienter la demande.
+            </p>
+            <p>
+                Si vous avez besoin d'un échange direct, contactez l'équipe via les messages privés du forum ou par l'adresse partagée dans la communauté.
+            </p>
+        </article>
+
+        <article class="info-panel faq-item">
+            <h3>Comment citer Psychotopia dans un travail&nbsp;?</h3>
+            <p>
+                Nous vous invitons à mentionner explicitement le site afin de faciliter la reproductibilité des analyses.
+                Un exemple de formulation :
+            </p>
+            <p>
+                “Les auteurs·ices remercient la plateforme Psychotopia et l'association Psychoactif pour leurs ressources et leur soutien.”
+            </p>
+        </article>
+    </section>
+</div>
+{% endblock %}

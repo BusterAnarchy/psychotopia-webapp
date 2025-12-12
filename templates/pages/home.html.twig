@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Psychotopia — Observatoire communautaire{% endblock %}
+
+{% block body %}
+<div class="home-page">
+    <section class="page-hero">
+        <div class="page-hero__content container">
+            <p class="page-hero__eyebrow">Observatoire communautaire</p>
+            <h1 class="page-hero__title">Un paysage des drogues en France</h1>
+            <p class="page-hero__lead">
+                Ce site rassemble des analyses statistiques construites à partir du dispositif d'<a href="https://www.psychoactif.org/blogs/L-analyse-de-drogue-a-distance-Psychoactif-en-a-reve-et-l-a-fait_7273_1.html" target="_blank" rel="noreferrer">analyse à distance</a>.
+                Les visualisations permettent de suivre les tendances, la pureté et les dynamiques territoriales.
+            </p>
+            <div class="page-hero__actions">
+                <a class="btn btn--primary" href="{{ path('app_molecules') }}">Explorer les données</a>
+                <a class="btn btn--secondary" href="{{ path('app_faq') }}">Voir la FAQ</a>
+            </div>
+            <div class="page-hero__meta">
+                Analyses réalisées avec les contributions de <strong>Psychoactif</strong>, <strong>Psychonaut</strong>, <strong>Safe</strong>, <strong>ATP-idf</strong> et <strong>Fédération Addiction</strong>.
+            </div>
+        </div>
+    </section>
+
+    <section class="home-section container">
+        <div class="section-head">
+            <p class="section-head__eyebrow">Méthodologie</p>
+            <h2>Des lectures paramétrables et accompagnées</h2>
+            <p>Affinez les graphiques pour isoler une molécule, une période ou une catégorie spécifique selon vos besoins.</p>
+        </div>
+        <div class="home-guidelines">
+            <article class="info-panel">
+                <h3>Analyses paramétrables</h3>
+                <p>Choisissez la fenêtre temporelle, l'option de moyennage ou les catégories de substances pertinentes afin de comparer les situations nationales et locales.</p>
+            </article>
+
+            <article class="info-panel">
+                <h3>Lecture guidée</h3>
+                <p>Chaque graphique est accompagné d'un texte qui explicite ce qui est montré, donne des clés d'interprétation et rappelle les notations utilisées.</p>
+            </article>
+
+            <article class="info-panel">
+                <h3>Une démarche collective</h3>
+                <p>Psychotopia est né à l'initiative de <strong>Delphes</strong> et <strong>Buster (Anarqueen)</strong>, avec le soutien de la communauté Psychoactif. Merci à Camille et Pierre pour leurs relectures.</p>
+            </article>
+        </div>
+    </section>
+</div>
+{% endblock %}

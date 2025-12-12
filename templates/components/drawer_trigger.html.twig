@@ -1,0 +1,13 @@
+{# Floating trigger that opens the filter drawer #}
+{% set controls = controls is defined ? controls : 'drawerFilters' %}
+{% set label = label is defined ? label : 'Options de visualisation' %}
+
+<button
+  class="btn btn--primary drawer-trigger"
+  type="button"
+  aria-controls="{{ controls }}"
+  aria-expanded="false"
+  data-drawer-target="#{{ controls }}"
+>
+  {{ label }}
+</button>

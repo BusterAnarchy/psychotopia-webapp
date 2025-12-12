@@ -1,0 +1,45 @@
+/* -------------------------------------------
+   Tabs component
+------------------------------------------- */
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.tabs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid var(--neutral-200);
+  padding-bottom: 4px;
+}
+
+.tabs__button {
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--neutral-700);
+}
+
+.tabs__button:is(:hover, :focus-visible) {
+  border-color: var(--brand-300);
+  color: var(--brand-900);
+}
+
+.tabs__button.is-active {
+  background: var(--brand-600);
+  border-color: var(--brand-600);
+  color: #fff;
+}
+
+.tabs__panel {
+  display: none;
+}
+
+.tabs__panel.is-active {
+  display: block;
+}

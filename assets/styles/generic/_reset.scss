@@ -1,0 +1,55 @@
+/* -------------------------------------------
+   Minimal Reset – Psychotopia
+------------------------------------------- */
+
+/* Remove margins and padding */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Remove list bullets */
+ul,
+ol {
+    list-style: none;
+    padding-left: 0;
+}
+
+/* Reset links */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Images scale nicely */
+img,
+svg,
+canvas {
+    display: block;
+    max-width: 100%;
+}
+
+/* Default font smoothing */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Forms – inherit font */
+button,
+input,
+select,
+textarea {
+    font: inherit;
+    border-radius: 0;
+}
+
+/* Remove default button appearance (for custom styling) */
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}

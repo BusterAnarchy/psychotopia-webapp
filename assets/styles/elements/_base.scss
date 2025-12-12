@@ -1,0 +1,33 @@
+/* -------------------------------------------
+   Base elements – html, body, focus styles
+------------------------------------------- */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-stack);
+  font-size: var(--font-size-base);
+  color: var(--neutral-900);
+  background: var(--bg);
+  margin: 0;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(62, 124, 115, 0.25);
+  outline-offset: 2px;
+}
+
+main#content {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}

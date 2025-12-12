@@ -1,0 +1,38 @@
+{# Sous-menu contextuel pour naviguer entre les analyses d'une molécule #}
+{% if molecule is defined %}
+    {% set currentRoute = app.request.attributes.get('_route') %}
+    {% set entries = [] %}
+
+    {% if molecule.hasPurityAnalysis %}
+        {% set entries = entries|merge([{ label: 'Pureté', route: 'app_purity' }]) %}
+    {% endif %}
+    {% if molecule.hasCutAgentsAnalysis %}
+        {% set entries = entries|merge([{ label: 'Produits de coupe', route: 'app_cut' }]) %}
+    {% endif %}
+    {% if molecule.hasSubProductAnalysis %}
+        {% set entries = entries|merge([{ label: 'Sous-produits', route: 'app_sub_products' }]) %}
+    {% endif %}
+    {% if molecule.hasTabletsAnalysis %}
+        {% set entries = entries|merge([{ label: 'Comprimés', route: 'app_purity_tablets' }]) %}
+    {% endif %}
+
+    {% if entries|length %}
+        <nav class="molecule-subnav container" aria-label="Analyses pour {{ molecule.label }}">
+            <h1 class="molecule-subnav__title">{{ molecule.label }}</H1>
+            <ul class="molecule-subnav__list">
+                {% for entry in entries %}
+                    {% set isActive = currentRoute == entry.route %}
+                    <li class="">
+                        <a
+                            class="molecule-subnav__link{{ isActive ? ' is-active' }}"
+                            href="{{ path(entry.route, { slug: molecule.slug }) }}"
+                            {% if isActive %}aria-current="page"{% endif %}
+                        >
+                            {{ entry.label }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endif %}

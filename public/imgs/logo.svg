@@ -1,0 +1,12 @@
+<svg width="180" height="90" viewBox="0 5 180 90" xmlns="http://www.w3.org/2000/svg">
+<g fill="#1f6f8b">
+<rect x="5" y="40" width="16" height="40" rx="3" />
+<rect x="25" y="30" width="16" height="60" rx="3" />
+<rect x="45" y="10" width="16" height="70" rx="3" />
+<rect x="65" y="40" width="16" height="50" rx="3" />
+</g>
+
+
+<text x="5" y="80" font-size="24" font-family="sans-serif" fill="#ffffff">Psycho</text>
+<text x="90" y="80" font-size="32" font-family="sans-serif" fill="#F0A35A">Topia</text>
+</svg>

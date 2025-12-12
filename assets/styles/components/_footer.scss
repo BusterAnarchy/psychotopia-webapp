@@ -1,0 +1,12 @@
+
+/* === footer === */
+.footer-logos {
+  display:flex;
+  gap:var(--space-2);
+  align-items:center;
+  justify-content:center;
+  padding: var(--space-3) var(--space-2);
+  background: var(--neutral-200);
+  flex-wrap:wrap;
+}
+.footer-logos img { max-height:48px; width:auto; display:block; }

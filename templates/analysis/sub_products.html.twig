@@ -4,77 +4,86 @@
 {% block centerText %} Sous produits - {{ molecule.label }} {% endblock %}
 
 {% block body %}
-
-<div class="d-flex align-items-center gap-3 m-3">
-    
-    <!-- Infos sur le nombre total d'observations -->
-    <div>
-        <small>Nombre total d'échantillons observés :</small>
-        <p class="display-6 mb-0">{{ results.count }}</p>
-    </div>
-
-    <!-- Bouton pour ouvrir le panneau -->
-    <button class="btn btn-primary flex-shrink-0" style="width: 200px;" 
-            type="button" data-bs-toggle="offcanvas" data-bs-target="#formOffcanvas" 
-            aria-controls="formOffcanvas">
-        Options de visualisation
-    </button>
-</div>
-
-<div class="info-box">
-    <p>
-        {{ molecule.definition | raw }}
-        Pour plus d'informations, vous pouvez regarder la 
-        <a href="{{ molecule.wikiUrl }}" target="_blank">page Wiki de cette substance</a>.
-    </p>
-    <p>
-        Un sous-produit est un produit accessoire ou secondaire issu de la fabrication, 
-        la production, la réaction ou la synthèse d'une molécule.
-    </p>
-</div>
-
-<!-- Offcanvas gauche -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="formOffcanvas" aria-labelledby="formOffcanvasLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="formOffcanvasLabel">Formulaire</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
-    </div>
-    <div class="offcanvas-body">
-        {% include "components/form_coupe.html.twig" %}
-    </div>
-</div>
-
-<div class="container py-3">
-    <div class="masonry-grid">
-
-        <!-- Carte 1 : Histogramme produits de coupe -->
-        <div class="card text-center">
-            <div class="card-header">
-                Proportion par sous-produit
-            </div>
-            <div class="card-body">
-                {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
+<div class="analysis-page">
+    {% include "components/molecule_nav.html.twig" with { molecule: molecule } %}
+    <header class="analysis-header container">
+        <div class="analysis-header__meta analysis-header__card">
+            <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
+            <p class="analysis-header__count">{{ results.count }}</p>
+            {% include "components/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
+        </div>
+        <article class="analysis-header__info analysis-header__card">
+            <p>{{ molecule.definition | raw }}</p>
+            {% if molecule.wikiUrl %}
                 <p>
-                    L'histogramme suivant montre, parmi les échantillons contenant un ou plusieurs sous-produits, 
-                    la proportion pour chacun des sous-produits.
+                    Pour plus d'informations, vous pouvez consulter la
+                    <a href="{{ molecule.wikiUrl }}" target="_blank" rel="noreferrer">page Wiki de cette substance</a>.
                 </p>
+            {% endif %}
+        </article>
+    </header>
+
+    <aside
+        id="drawerFilters"
+        class="drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="drawerFiltersTitle"
+        aria-hidden="true"
+    >
+        <div class="drawer__panel">
+            <div class="drawer__handle" aria-hidden="true"></div>
+            <div class="drawer__inner">
+                <div class="drawer__header">
+                    <h3 id="drawerFiltersTitle">Options de visualisation</h3>
+                    <button class="btn btn--ghost drawer__close" type="button" aria-label="Fermer les options" data-drawer-close>✕</button>
+                </div>
+                <div class="drawer__body">
+                    {% include "components/form_coupe.html.twig" %}
+                </div>
             </div>
         </div>
+    </aside>
 
-        <!-- Carte 2 : Évolution temporelle -->
-        <div class="card text-center">
-            <div class="card-header">
-                Évolution temporelle des sous-produits
-            </div>
-            <div class="card-body">
+    {% include "components/drawer_trigger.html.twig" %}
+
+    <section class="info-panel container">
+        <p>
+            Un sous-produit est un produit accessoire ou secondaire issu de la fabrication,
+            la production, la réaction ou la synthèse d'une molécule.
+        </p>
+    </section>
+
+    <section class="analysis-grid container">
+        {% set sub_products_distribution_desc %}
+            <p>
+                Parmi les échantillons contenant un ou plusieurs sous-produits, voici la proportion pour chacun d'entre eux.
+            </p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Proportion par sous-produit",
+            description: sub_products_distribution_desc
+        } %}
+            {% block body %}
+                {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
+            {% endblock %}
+        {% endembed %}
+
+        {% set sub_products_timeline_desc %}
+            <p>
+                Parmi les échantillons comportant un ou plusieurs sous-produits, voici l'évolution temporelle (par bimestre) de la présence de chacun.
+            </p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Évolution temporelle des sous-produits",
+            description: sub_products_timeline_desc
+        } %}
+            {% block body %}
                 {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data:results.temporal_sub_products | json_encode, is_stacked:'false', mode:'relatif' } %}
-                <p>
-                    Parmi les échantillons avec un ou plusieurs sous-produits, voici l'évolution temporelle (par bimestre), de la présence de chaque sous-produit.
-                </p>  
-            </div>
-        </div>
-
-    </div>
+            {% endblock %}
+        {% endembed %}
+    </section>
 </div>
-
 {% endblock %}

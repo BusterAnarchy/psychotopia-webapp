@@ -1,0 +1,38 @@
+/* -------------------------------------------
+   Chart wrappers & responsive canvas
+------------------------------------------- */
+
+.chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.chart-wrapper__canvas {
+  position: relative;
+  width: 100%;
+  padding: var(--space-1);
+  border: 1px solid var(--neutral-200);
+  border-radius: calc(var(--radius) - 2px);
+  background: #fff;
+  overflow: hidden;
+}
+
+.chart-wrapper__canvas--flush {
+  padding: 0;
+}
+
+.chart-wrapper--map .chart-wrapper__canvas {
+  padding: 0;
+}
+
+.chart-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chart-canvas--map {
+  min-height: 320px;
+  height: clamp(280px, 45vw, 460px);
+}

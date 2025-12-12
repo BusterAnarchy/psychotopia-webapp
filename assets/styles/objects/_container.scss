@@ -1,0 +1,14 @@
+/* -------------------------------------------
+   Container helpers
+------------------------------------------- */
+
+.container {
+  width: 100%;
+  padding-inline: var(--space-2);
+  margin-inline: auto;
+  max-width: 1600px;
+}
+
+.container--fluid {
+  padding-inline: var(--space-2);
+}

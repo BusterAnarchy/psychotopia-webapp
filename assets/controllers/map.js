@@ -80,4 +80,8 @@ function initLeafletMap(id) {
     };
 
     legend.addTo(map);
-};
+}
+
+if (typeof window !== 'undefined') {
+    window.initLeafletMap = initLeafletMap;
+}
