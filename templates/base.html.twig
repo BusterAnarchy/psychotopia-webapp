@@ -44,7 +44,12 @@
         ];
     </script>
 </head>
-<body>
+{% set _supported_themes = ['navy', 'nocturne', 'neon'] %}
+{% set _theme = app.request.query.get('theme') %}
+{% if _theme not in _supported_themes %}
+    {% set _theme = 'navy' %}
+{% endif %}
+<body data-theme="{{ _theme }}">
   
     {% include "nav.html.twig" %}
 
@@ -135,6 +140,60 @@
             </div>
         </div>
     </div>
- 
+    <script>
+        (function() {
+            const storageKey = 'psychotopia-theme';
+            const readStoredTheme = () => {
+                try {
+                    return window.localStorage.getItem(storageKey);
+                } catch (error) {
+                    return null;
+                }
+            };
+            const persistTheme = (theme) => {
+                try {
+                    window.localStorage.setItem(storageKey, theme);
+                } catch (error) {
+                    /* ignore persistence errors */
+                }
+            };
+            const supportedThemes = {{ _supported_themes|json_encode|raw }};
+            const body = document.body;
+            const savedTheme = readStoredTheme();
+
+            if (savedTheme && supportedThemes.includes(savedTheme)) {
+                body.dataset.theme = savedTheme;
+            }
+
+            const updatePickers = () => {
+                const activeTheme = body.dataset.theme || 'navy';
+                document.querySelectorAll('[data-theme-picker]').forEach((picker) => {
+                    picker.value = activeTheme;
+                });
+            };
+
+            const applyTheme = (theme) => {
+                if (!supportedThemes.includes(theme)) {
+                    return;
+                }
+                body.dataset.theme = theme;
+                persistTheme(theme);
+                updatePickers();
+            };
+
+            document.addEventListener('change', (event) => {
+                const target = event.target;
+                if (!(target instanceof HTMLSelectElement)) {
+                    return;
+                }
+                if (!target.matches('[data-theme-picker]')) {
+                    return;
+                }
+                applyTheme(target.value);
+            });
+
+            updatePickers();
+        })();
+    </script>
 </body>
 </html>
