@@ -1,0 +1,76 @@
+{% set desc_open = description_open is defined ? description_open : true %}
+{% set article_classes = ['analysis-card'] %}
+{% if description is defined and description %}
+    {% set article_classes = article_classes|merge(['has-description']) %}
+{% endif %}
+{% if class is defined and class %}
+    {% set article_classes = article_classes|merge([class]) %}
+{% endif %}
+
+{% set normalized_title = title|lower %}
+{% set normalized_title = normalized_title|replace({
+    ' ':'-',
+    '—':'-',
+    '–':'-',
+    '_':'-',
+    '\'':'',
+    '’':'',
+    '"':'',
+    ',':'',
+    '.':'',
+    ':':'',
+    ';':''
+}) %}
+{% set normalized_title = normalized_title|replace({
+    'à':'a','â':'a','ä':'a',
+    'é':'e','è':'e','ê':'e','ë':'e',
+    'î':'i','ï':'i',
+    'ô':'o','ö':'o',
+    'ù':'u','û':'u','ü':'u',
+    'ç':'c'
+}) %}
+{% if normalized_title is empty %}
+    {% set normalized_title = 'visualisation' %}
+{% endif %}
+{% set normalized_title = normalized_title|replace({'--':'-'}) %}
+{% set computed_id = 'card-' ~ normalized_title %}
+{% set card_id = (id is defined and id) ? id : computed_id %}
+
+<article
+    class="{{ article_classes|join(' ') }}"
+    id="{{ card_id }}"
+    data-analysis-card
+    data-card-title="{{ title }}"
+>
+    <header class="analysis-card__head">
+        <h3 class="analysis-card__title">{{ title }}</h3>
+    </header>
+    <div class="analysis-card__body">
+        <div class="analysis-card__main">
+            {% block body %}{% endblock %}
+        </div>
+        {% if description is defined and description %}
+            <aside
+                class="analysis-card__desc-panel{% if desc_open %} is-open{% endif %}"
+                data-card-description
+            >
+                <button
+                    type="button"
+                    class="analysis-card__desc-toggle"
+                    data-card-description-toggle
+                    aria-expanded="{{ desc_open ? 'true' : 'false' }}"
+                    data-label-open="{{ description_toggle_label_open|default('Masquer la description') }}"
+                    data-label-closed="{{ description_toggle_label_closed|default('Afficher la description') }}"
+                >
+                    <span data-card-description-toggle-label>
+                        {{ desc_open ? description_toggle_label_open|default('Masquer la description') : description_toggle_label_closed|default('Afficher la description') }}
+                    </span>
+                    <span class="analysis-card__desc-toggle-icon" aria-hidden="true"></span>
+                </button>
+                <div class="analysis-card__desc-content" data-card-description-content>
+                    {{ description|raw }}
+                </div>
+            </aside>
+        {% endif %}
+    </div>
+</article>

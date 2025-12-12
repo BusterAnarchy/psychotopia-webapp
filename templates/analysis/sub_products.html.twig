@@ -55,25 +55,35 @@
     </section>
 
     <section class="analysis-grid container">
-        <article class="analysis-card">
-            <header class="analysis-card__head">Proportion par sous-produit</header>
-            <div class="analysis-card__body">
-                {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
-                <p class="analysis-card__desc">
-                    Parmi les échantillons contenant un ou plusieurs sous-produits, voici la proportion pour chacun d'entre eux.
-                </p>
-            </div>
-        </article>
+        {% set sub_products_distribution_desc %}
+            <p>
+                Parmi les échantillons contenant un ou plusieurs sous-produits, voici la proportion pour chacun d'entre eux.
+            </p>
+        {% endset %}
 
-        <article class="analysis-card">
-            <header class="analysis-card__head">Évolution temporelle des sous-produits</header>
-            <div class="analysis-card__body">
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Proportion par sous-produit",
+            description: sub_products_distribution_desc
+        } %}
+            {% block body %}
+                {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
+            {% endblock %}
+        {% endembed %}
+
+        {% set sub_products_timeline_desc %}
+            <p>
+                Parmi les échantillons comportant un ou plusieurs sous-produits, voici l'évolution temporelle (par bimestre) de la présence de chacun.
+            </p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Évolution temporelle des sous-produits",
+            description: sub_products_timeline_desc
+        } %}
+            {% block body %}
                 {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data:results.temporal_sub_products | json_encode, is_stacked:'false', mode:'relatif' } %}
-                <p class="analysis-card__desc">
-                    Parmi les échantillons comportant un ou plusieurs sous-produits, voici l'évolution temporelle (par bimestre) de la présence de chacun.
-                </p>
-            </div>
-        </article>
+            {% endblock %}
+        {% endembed %}
     </section>
 </div>
 {% endblock %}

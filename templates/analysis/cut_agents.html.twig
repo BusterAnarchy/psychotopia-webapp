@@ -57,35 +57,50 @@
     </section>
 
     <section class="analysis-grid container">
-        <article class="analysis-card">
-            <header class="analysis-card__head">Proportion des échantillons avec produits de coupe</header>
-            <div class="analysis-card__body">
+        {% set cut_agents_share_desc %}
+            <p>
+                Le diagramme présente la proportion d'échantillons contenant un ou plusieurs produits de coupe.
+            </p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Proportion des échantillons avec produits de coupe",
+            description: cut_agents_share_desc
+        } %}
+            {% block body %}
                 {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.count_cut_agents | json_encode } %}
-                <p class="analysis-card__desc">
-                    Le diagramme présente la proportion d'échantillons contenant un ou plusieurs produits de coupe.
-                </p>
-            </div>
-        </article>
+            {% endblock %}
+        {% endembed %}
 
-        <article class="analysis-card">
-            <header class="analysis-card__head">Proportion par produit de coupe</header>
-            <div class="analysis-card__body">
+        {% set cut_agents_distribution_desc %}
+            <p>
+                Parmi les échantillons contenant un ou plusieurs produits de coupe, voici la proportion pour chacun d'eux.
+            </p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Proportion par produit de coupe",
+            description: cut_agents_distribution_desc
+        } %}
+            {% block body %}
                 {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_cut_agents | json_encode } %}
-                <p class="analysis-card__desc">
-                    Parmi les échantillons contenant un ou plusieurs produits de coupe, voici la proportion pour chacun d'eux.
-                </p>
-            </div>
-        </article>
+            {% endblock %}
+        {% endembed %}
 
-        <article class="analysis-card">
-            <header class="analysis-card__head">Évolution temporelle des produits de coupe</header>
-            <div class="analysis-card__body">
+        {% set cut_agents_timeline_desc %}
+            <p>
+                Parmi les échantillons coupés, voici l'évolution temporelle (par bimestre) de la présence de chaque produit de coupe.
+            </p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Évolution temporelle des produits de coupe",
+            description: cut_agents_timeline_desc
+        } %}
+            {% block body %}
                 {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_cut_agents | json_encode, is_stacked:'false', mode:'relatif' } %}
-                <p class="analysis-card__desc">
-                    Parmi les échantillons coupés, voici l'évolution temporelle (par bimestre) de la présence de chaque produit de coupe.
-                </p>
-            </div>
-        </article>
+            {% endblock %}
+        {% endembed %}
     </section>
 </div>
 {% endblock %}

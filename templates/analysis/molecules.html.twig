@@ -41,59 +41,89 @@
   {% include "components/drawer_trigger.html.twig" %}
 
   <section class="analysis-grid container" id="moleculesMain">
-    <article class="analysis-card">
-      <header class="analysis-card__head">Répartition par molécule</header>
-      <div class="analysis-card__body">
+    {% set mol_distribution_desc %}
+      <p>Le diagramme présente la proportion des échantillons en fonction de la molécule supposée.</p>
+    {% endset %}
+
+    {% embed "components/analysis_card.html.twig" with {
+      title: "Répartition par molécule",
+      description: mol_distribution_desc
+    } %}
+      {% block body %}
         {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_count | json_encode } %}
-        <p class="analysis-card__desc">Le diagramme présente la proportion des échantillons en fonction de la molécule supposée.</p>
-      </div>
-    </article>
+      {% endblock %}
+    {% endembed %}
 
-    <article class="analysis-card">
-      <header class="analysis-card__head">Proportion après première consommation</header>
-      <div class="analysis-card__body">
+    {% set mol_first_consumption_desc %}
+      <p>Proportion des échantillons envoyés après une première consommation.</p>
+    {% endset %}
+
+    {% embed "components/analysis_card.html.twig" with {
+      title: "Proportion après première consommation",
+      description: mol_first_consumption_desc
+    } %}
+      {% block body %}
         {% include "components/pie_chart.html.twig" with { id:"pie_chart_conso", chart_data:results.pie_consumption | json_encode } %}
-        <p class="analysis-card__desc">Proportion des échantillons envoyés après une première consommation.</p>
-      </div>
-    </article>
+      {% endblock %}
+    {% endembed %}
 
-    <article class="analysis-card">
-      <header class="analysis-card__head">Évolution temporelle — Nombre d'échantillons</header>
-      <div class="analysis-card__body">
+    {% set mol_timeline_abs_desc %}
+      <p>Les données sont regroupées par bimestre et montrent l'évolution en nombre d'échantillons par molécule.</p>
+    {% endset %}
+
+    {% embed "components/analysis_card.html.twig" with {
+      title: "Évolution temporelle — Nombre d'échantillons",
+      description: mol_timeline_abs_desc
+    } %}
+      {% block body %}
         {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' } %}
-        <p class="analysis-card__desc">Les données sont regroupées par bimestre et montrent l'évolution en nombre d'échantillons par molécule.</p>
-      </div>
-    </article>
+      {% endblock %}
+    {% endembed %}
 
-    <article class="analysis-card">
-      <header class="analysis-card__head">Évolution temporelle — Proportion</header>
-      <div class="analysis-card__body">
+    {% set mol_timeline_prop_desc %}
+      <p>Les données sont regroupées par bimestre et montrent l'évolution en proportion d'échantillons par molécule.</p>
+    {% endset %}
+
+    {% embed "components/analysis_card.html.twig" with {
+      title: "Évolution temporelle — Proportion",
+      description: mol_timeline_prop_desc
+    } %}
+      {% block body %}
         {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' } %}
-        <p class="analysis-card__desc">Les données sont regroupées par bimestre et montrent l'évolution en proportion d'échantillons par molécule.</p>
-      </div>
-    </article>
+      {% endblock %}
+    {% endembed %}
 
-    <article class="analysis-card">
-      <header class="analysis-card__head">Carte — Nombre d'échantillons par région</header>
-      <div class="analysis-card__body">
+    {% set mol_map_abs_desc %}
+      <p>La carte montre le nombre d'échantillons reçus en fonction de la région d'envoi.</p>
+    {% endset %}
+
+    {% embed "components/analysis_card.html.twig" with {
+      title: "Carte — Nombre d'échantillons par région",
+      description: mol_map_abs_desc
+    } %}
+      {% block body %}
         {{ render_map('map_chart_abs', results.geo_count_abs, options:{
             'start_hsl': [120, 60, 85],
             'end_hsl': [200, 100, 30],
         }) }}
-        <p class="analysis-card__desc">La carte montre le nombre d'échantillons reçus en fonction de la région d'envoi.</p>
-      </div>
-    </article>
+      {% endblock %}
+    {% endembed %}
 
-    <article class="analysis-card">
-      <header class="analysis-card__head">Carte — Échantillons par million d'habitants</header>
-      <div class="analysis-card__body">
+    {% set mol_map_prop_desc %}
+      <p>Nombre d'échantillons reçus par région, rapporté à la population (par million d'habitants).</p>
+    {% endset %}
+
+    {% embed "components/analysis_card.html.twig" with {
+      title: "Carte — Échantillons par million d'habitants",
+      description: mol_map_prop_desc
+    } %}
+      {% block body %}
         {{ render_map('map_chart_prop', results.geo_count_prop, options:{
             'start_hsl': [50, 100, 70],
             'end_hsl': [0, 100, 40],
         } ) }}
-        <p class="analysis-card__desc">Nombre d'échantillons reçus par région, rapporté à la population (par million d'habitants).</p>
-      </div>
-    </article>
+      {% endblock %}
+    {% endembed %}
   </section>
 </div>
 {% endblock %}

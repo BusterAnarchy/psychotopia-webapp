@@ -12,7 +12,7 @@ body.has-open-drawer {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.4 5);
+  background: rgba(0, 0, 0, 0.45);
   visibility: hidden;
   opacity: 0;
   transition: opacity 200ms ease;
@@ -100,5 +100,239 @@ body.has-open-drawer .drawer-trigger {
 
   body.has-open-drawer .drawer-trigger {
     transform: translateY(12px);
+  }
+}
+
+/* -------------------------------------------
+   Card modal overlay
+------------------------------------------- */
+
+body.has-card-modal {
+  overflow: hidden;
+}
+
+.card-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease;
+  z-index: 1400;
+}
+
+.card-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.card-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+}
+
+.card-modal__dialog {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.25);
+  width: min(1100px, calc(100% - 32px));
+  max-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--brand-900);
+  color: #fff;
+}
+
+.card-modal__title {
+  font-size: 1.1rem;
+  margin: 0;
+  color: inherit;
+}
+
+.card-modal__close {
+  appearance: none;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.card-modal__close:hover,
+.card-modal__close:focus-visible {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.card-modal__body {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3);
+  gap: var(--space-2);
+  height: 100%;
+  overflow: hidden;
+}
+
+.card-modal__content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-2);
+  border: 1px solid var(--neutral-100);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fff 0%, rgba(250, 250, 250, 0.8) 100%);
+}
+
+.card-modal__content .analysis-card,
+.card-modal__content .chart-card {
+  box-shadow: none;
+  border: none;
+  padding: 0;
+}
+
+.card-modal__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+}
+
+.card-modal__section {
+  border: 1px solid var(--neutral-100);
+  border-radius: 14px;
+  padding: var(--space-2);
+  background: #fbfbff;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.card-modal__section--description {
+  max-height: 350px;
+  overflow: auto;
+}
+
+.card-modal__section--share {
+  margin-top: auto;
+}
+
+.card-modal__section-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--neutral-500);
+  margin: 0;
+}
+
+.card-modal__section-content {
+  font-size: 0.95rem;
+  color: var(--neutral-700);
+  line-height: 1.6;
+}
+
+.card-modal__muted {
+  color: var(--neutral-400);
+  margin: 0;
+}
+
+.card-modal__share {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-modal__share-input {
+  width: 100%;
+  border: 1px solid var(--neutral-200);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: var(--font-family, inherit);
+  font-size: 0.95rem;
+  background: #fff;
+  color: var(--neutral-700);
+}
+
+.card-modal__share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card-modal__share-copy,
+.card-modal__share-link {
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.card-modal__share-copy {
+  appearance: none;
+  border: none;
+  background: var(--brand-600);
+  color: #fff;
+}
+
+.card-modal__share-copy:hover,
+.card-modal__share-copy:focus-visible {
+  background: var(--brand-900);
+  transform: translateY(-1px);
+}
+
+.card-modal__share-copy.is-success {
+  background: var(--brand-400);
+  color: var(--neutral-900);
+}
+
+.card-modal__share-link {
+  border: 1px solid var(--neutral-200);
+  color: var(--neutral-700);
+  background: #fff;
+}
+
+.card-modal__share-link:hover,
+.card-modal__share-link:focus-visible {
+  border-color: var(--brand-500);
+  color: var(--brand-600);
+}
+
+@media (min-width: 992px) {
+  .card-modal__body {
+    flex-direction: row;
+  }
+
+  .card-modal__content {
+    flex: 2;
+  }
+
+  .card-modal__sidebar {
+    flex: 1;
+    padding-left: var(--space-3);
+    border-left: 1px solid var(--neutral-100);
+    min-height: 0;
   }
 }

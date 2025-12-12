@@ -53,6 +53,62 @@
     </main>
 
     {% include 'footer.html.twig' %}
+
+    <div class="card-modal" data-card-modal aria-hidden="true">
+        <div class="card-modal__backdrop" data-card-modal-close></div>
+        <div class="card-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="cardModalTitle" tabindex="-1">
+            <header class="card-modal__header">
+                <div class="card-modal__header-text">
+                    <h2 id="cardModalTitle" class="card-modal__title" data-card-modal-title>Visualisation</h2>
+                </div>
+                <button class="card-modal__close" type="button" aria-label="Fermer la fenêtre" data-card-modal-close>✕</button>
+            </header>
+            <div class="card-modal__body">
+                <div class="card-modal__content" data-card-modal-content></div>
+                <aside class="card-modal__sidebar">
+                    <section class="card-modal__section card-modal__section--description">
+                        <p class="card-modal__section-label">Description</p>
+                        <div class="card-modal__section-content" data-card-modal-description>
+                            <p class="card-modal__muted">Aucune description disponible.</p>
+                        </div>
+                    </section>
+                    <section class="card-modal__section card-modal__section--share">
+                        <p class="card-modal__section-label">Partager</p>
+                        <div class="card-modal__section-content">
+                            <div class="card-modal__share">
+                                <input
+                                    type="text"
+                                    class="card-modal__share-input"
+                                    value=""
+                                    readonly
+                                    data-card-modal-share-input
+                                    aria-label="Lien de partage"
+                                />
+                                <div class="card-modal__share-actions">
+                                    <button
+                                        type="button"
+                                        class="card-modal__share-copy"
+                                        data-card-modal-share-copy
+                                    >
+                                        Copier
+                                    </button>
+                                    <a
+                                        class="card-modal__share-link"
+                                        href="#"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        data-card-modal-share-link
+                                    >
+                                        Ouvrir
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+        </div>
+    </div>
  
 </body>
 </html>

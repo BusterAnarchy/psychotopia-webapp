@@ -48,25 +48,39 @@
     {% include "components/drawer_trigger.html.twig" %}
 
     <section class="analysis-grid container">
-        <article class="analysis-card">
-            <header class="analysis-card__head">Histogramme de la pureté</header>
-            <div class="analysis-card__body">
-                {% include "components/bar_y_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit} %}
-                <p>
-                    Commençons par regarder le nombre d'échantillons en fonction de leur pureté.
-                    Les analyses présentent la pureté de deux façons différentes : équivalent base et équivalent chlorhydrate.
-                    Nous présentons le pourcentage en équivalent base car c'est celui directement mesuré par le laboratoire.
-                </p>
-                <p>
-                    La pureté maximale n'est pas 100% mais dépend de la molécule considérée et est représentée par la barre verticale rouge en pointillé.
-                    Certains échantillons peuvent dépasser cette limite car les résultats sont donnés avec une incertitude de +/- 10%.
-                </p>
-            </div>
-        </article>
+        {% set tablets_hist_desc %}
+            <p>
+                Commençons par regarder le nombre d'échantillons en fonction de leur pureté.
+                Les analyses présentent la pureté de deux façons différentes : équivalent base et équivalent chlorhydrate.
+                Nous présentons le pourcentage en équivalent base car c'est celui directement mesuré par le laboratoire.
+            </p>
+            <p>
+                La pureté maximale n'est pas 100% mais dépend de la molécule considérée et est représentée par la barre verticale rouge en pointillé.
+                Certains échantillons peuvent dépasser cette limite car les résultats sont donnés avec une incertitude de +/- 10%.
+            </p>
+        {% endset %}
 
-        <article class="analysis-card">
-            <header class="analysis-card__head">Évolution temporelle de la pureté</header>
-            <div class="analysis-card__body">
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Histogramme de la pureté",
+            description: tablets_hist_desc
+        } %}
+            {% block body %}
+                {% include "components/bar_y_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit} %}
+            {% endblock %}
+        {% endembed %}
+
+        {% set tablets_timeline_desc %}
+            <p>
+                Vous pouvez visualiser l'évolution de la moyenne et de l'écart-type, ou bien celle de la médiane et des quartiles,
+                sur une fenêtre glissante de Δ jours (actuellement Δ = {{ delta }}). Ajustez Δ dans les options de visualisation.
+            </p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Évolution temporelle de la pureté",
+            description: tablets_timeline_desc
+        } %}
+            {% block body %}
                 <div class="tabs" data-tab-group="tablets-{{ molecule.slug }}">
                     <div class="tabs__list" role="tablist">
                         <button
@@ -99,28 +113,29 @@
                         {% include "components/line_chart.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
                     </div>
                 </div>
-                <p>
-                    Vous pouvez visualiser l'évolution de la moyenne et de l'écart-type, ou bien celle de la médiane et des quartiles,
-                    sur une fenêtre glissante de Δ jours (actuellement Δ = {{ delta }}). Ajustez Δ dans les options de visualisation.
-                </p>
-            </div>
-        </article>
+            {% endblock %}
+        {% endembed %}
 
-        <article class="analysis-card">
-            <header class="analysis-card__head">Quantité de substance active vs masse des comprimés</header>
-            <div class="analysis-card__body">
+        {% set tablets_scatter_desc %}
+            <p>
+                Ce nuage de points représente la relation entre la masse des comprimés envoyés (en milligrammes)
+                et la quantité de substance psychoactive mesurée en laboratoire. Chaque point correspond à un échantillon individuel.
+            </p>
+            <p>
+                La droite rouge représente le meilleur modèle linéaire pour lier la teneur en substance psychoactive au poids des comprimés.
+                La zone grisée décrit un intervalle de confiance à 95%. Elle peut être utilisée pour estimer l'erreur commise
+                lors de la prédiction de la quantité de substance active lorsque seule la masse du comprimé est connue.
+            </p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Quantité de substance active vs masse des comprimés",
+            description: tablets_scatter_desc
+        } %}
+            {% block body %}
                 {% include "components/scatter_line_chart.html.twig" with { id:"scatter_mdma_comprime", chart_data: results.mass_reg_purity | json_encode } %}
-                <p>
-                    Ce nuage de points représente la relation entre la masse des comprimés envoyés (en milligrammes)
-                    et la quantité de substance psychoactive mesurée en laboratoire. Chaque point correspond à un échantillon individuel.
-                </p>
-                <p>
-                    La droite rouge représente le meilleur modèle linéaire pour lier la teneur en substance psychoactive au poids des comprimés.
-                    La zone grisée décrit un intervalle de confiance à 95%. Elle peut être utilisée pour estimer l'erreur commise
-                    lors de la prédiction de la quantité de substance active lorsque seule la masse du comprimé est connue.
-                </p>
-            </div>
-        </article>
+            {% endblock %}
+        {% endembed %}
     </section>
 </div>
 
