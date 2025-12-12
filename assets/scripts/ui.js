@@ -169,10 +169,22 @@ function initCardDescriptions() {
   const panels = document.querySelectorAll('[data-card-description]');
   if (!panels.length) return;
 
+  const mobileQuery = window.matchMedia('(max-width: 767px)');
+
+  const applyResponsiveState = () => {
+    panels.forEach((panel) => {
+      const defaultState = panel.dataset.cardDescriptionDefault === 'open';
+      const desiredState = mobileQuery.matches ? false : defaultState;
+      setCardDescriptionState(panel, desiredState);
+    });
+  };
+
   panels.forEach((panel) => {
     const toggle = panel.querySelector('[data-card-description-toggle]');
     if (!toggle) return;
-    const initialState = panel.classList.contains('is-open');
+    const defaultState = panel.classList.contains('is-open');
+    panel.dataset.cardDescriptionDefault = defaultState ? 'open' : 'closed';
+    const initialState = mobileQuery.matches ? false : defaultState;
     setCardDescriptionState(panel, initialState);
 
     toggle.addEventListener('click', (event) => {
@@ -181,6 +193,13 @@ function initCardDescriptions() {
       setCardDescriptionState(panel, nextState);
     });
   });
+
+  const mediaHandler = () => applyResponsiveState();
+  if (mobileQuery.addEventListener) {
+    mobileQuery.addEventListener('change', mediaHandler);
+  } else {
+    mobileQuery.addListener(mediaHandler);
+  }
 }
 
 function initCardModal() {

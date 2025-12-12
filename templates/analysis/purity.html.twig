@@ -82,52 +82,35 @@
             {% endblock %}
         {% endembed %}
 
-        {% set timeline_desc %}
+        {% set purity_mean_desc %}
             <p>
-                Jetons ensuite un coup d'œil à l'évolution temporelle de la pureté. Deux choix s'offrent à vous : visualiser
-                l'évolution de la moyenne et de l'écart-type de la distribution des échantillons, ou l'évolution de la médiane
-                et des quartiles. Chacune des grandeurs est calculée sur une fenêtre glissante de Δ jours autour de chaque échantillon reçu
-                (actuellement Δ = {{ delta }} jours). Vous pouvez paramétrer la valeur de Δ dans les "Options de visualisation".
+                Visualisation de l'évolution de la moyenne de pureté et de la zone représentant +/- 1 écart-type autour de cette moyenne.
+                Calculée sur une fenêtre glissante de Δ jours autour de chaque échantillon (actuellement Δ = {{ delta }} jours).
             </p>
         {% endset %}
 
         {% embed "components/analysis_card.html.twig" with {
-            title: "Évolution temporelle de la pureté",
-            description: timeline_desc
+            title: "Évolution temporelle – Moyennes et écarts type",
+            description: purity_mean_desc
         } %}
             {% block body %}
-                <div class="tabs" data-tab-group="purity-{{ molecule.slug }}">
-                    <div class="tabs__list" role="tablist">
-                        <button
-                            class="tabs__button is-active"
-                            type="button"
-                            role="tab"
-                            aria-selected="true"
-                            aria-controls="tab-purity-mean"
-                            data-tab-target="#tab-purity-mean"
-                        >
-                            Moyenne et écarts type
-                        </button>
-                        <button
-                            class="tabs__button"
-                            type="button"
-                            role="tab"
-                            aria-selected="false"
-                            aria-controls="tab-purity-median"
-                            data-tab-target="#tab-purity-median"
-                        >
-                            Médianes et quartiles
-                        </button>
-                    </div>
-                    <div class="tabs__panel is-active" id="tab-purity-mean" role="tabpanel" data-tab-panel>
-                        <p>La ligne bleue représente la moyenne et la zone grisée est l'espace autour de la moyenne à +/- 1 écart-type.</p>
-                        {% include "components/line_chart.html.twig" with {id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false'} %}
-                    </div>
-                    <div class="tabs__panel" id="tab-purity-median" role="tabpanel" data-tab-panel>
-                        <p>La ligne bleue représente la médiane, la zone grisée s'étend du premier quartile au troisième quartile.</p>
-                        {% include "components/line_chart.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
-                    </div>
-                </div>
+                {% include "components/line_chart.html.twig" with {id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false'} %}
+            {% endblock %}
+        {% endembed %}
+
+        {% set purity_median_desc %}
+            <p>
+                Visualisation de la médiane de pureté au fil du temps, accompagnée d'une zone grisée allant du premier au troisième quartile.
+                Basée sur la même fenêtre glissante de Δ jours (actuellement Δ = {{ delta }} jours).
+            </p>
+        {% endset %}
+
+        {% embed "components/analysis_card.html.twig" with {
+            title: "Évolution temporelle – Médianes et quartiles",
+            description: purity_median_desc
+        } %}
+            {% block body %}
+                {% include "components/line_chart.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
             {% endblock %}
         {% endembed %}
 
