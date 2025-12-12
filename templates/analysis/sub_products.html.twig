@@ -4,77 +4,79 @@
 {% block centerText %} Sous produits - {{ molecule.label }} {% endblock %}
 
 {% block body %}
+<div class="analysis-page">
+    <header class="analysis-header container">
+        <div class="analysis-header__meta">
+            <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
+            <p class="analysis-header__count">{{ results.count }}</p>
+        </div>
+        <div class="analysis-header__actions">
+            <button
+                class="btn btn--primary btn--block"
+                type="button"
+                aria-controls="drawerFilters"
+                aria-expanded="false"
+                data-drawer-target="#drawerFilters"
+            >
+                Options de visualisation
+            </button>
+        </div>
+    </header>
 
-<div class="d-flex align-items-center gap-3 m-3">
-    
-    <!-- Infos sur le nombre total d'observations -->
-    <div>
-        <small>Nombre total d'échantillons observés :</small>
-        <p class="display-6 mb-0">{{ results.count }}</p>
-    </div>
-
-    <!-- Bouton pour ouvrir le panneau -->
-    <button class="btn btn-primary flex-shrink-0" style="width: 200px;" 
-            type="button" data-bs-toggle="offcanvas" data-bs-target="#formOffcanvas" 
-            aria-controls="formOffcanvas">
-        Options de visualisation
-    </button>
-</div>
-
-<div class="info-box">
-    <p>
-        {{ molecule.definition | raw }}
-        Pour plus d'informations, vous pouvez regarder la 
-        <a href="{{ molecule.wikiUrl }}" target="_blank">page Wiki de cette substance</a>.
-    </p>
-    <p>
-        Un sous-produit est un produit accessoire ou secondaire issu de la fabrication, 
-        la production, la réaction ou la synthèse d'une molécule.
-    </p>
-</div>
-
-<!-- Offcanvas gauche -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="formOffcanvas" aria-labelledby="formOffcanvasLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="formOffcanvasLabel">Formulaire</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
-    </div>
-    <div class="offcanvas-body">
-        {% include "components/form_coupe.html.twig" %}
-    </div>
-</div>
-
-<div class="container py-3">
-    <div class="masonry-grid">
-
-        <!-- Carte 1 : Histogramme produits de coupe -->
-        <div class="card text-center">
-            <div class="card-header">
-                Proportion par sous-produit
+    <aside
+        id="drawerFilters"
+        class="drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="drawerFiltersTitle"
+        aria-hidden="true"
+    >
+        <div class="drawer__panel">
+            <div class="drawer__handle" aria-hidden="true"></div>
+            <div class="drawer__inner">
+                <div class="drawer__header">
+                    <h3 id="drawerFiltersTitle">Options de visualisation</h3>
+                    <button class="btn btn--ghost drawer__close" type="button" aria-label="Fermer les options" data-drawer-close>✕</button>
+                </div>
+                <div class="drawer__body">
+                    {% include "components/form_coupe.html.twig" %}
+                </div>
             </div>
-            <div class="card-body">
+        </div>
+    </aside>
+
+    <section class="info-panel container">
+        <p>
+            {{ molecule.definition | raw }}
+            Pour plus d'informations, vous pouvez regarder la
+            <a href="{{ molecule.wikiUrl }}" target="_blank">page Wiki de cette substance</a>.
+        </p>
+        <p>
+            Un sous-produit est un produit accessoire ou secondaire issu de la fabrication,
+            la production, la réaction ou la synthèse d'une molécule.
+        </p>
+    </section>
+
+    <section class="analysis-grid container">
+        <article class="analysis-card">
+            <header class="analysis-card__head">Proportion par sous-produit</header>
+            <div class="analysis-card__body">
                 {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
-                <p>
-                    L'histogramme suivant montre, parmi les échantillons contenant un ou plusieurs sous-produits, 
-                    la proportion pour chacun des sous-produits.
+                <p class="analysis-card__desc">
+                    Parmi les échantillons contenant un ou plusieurs sous-produits, voici la proportion pour chacun d'entre eux.
                 </p>
             </div>
-        </div>
+        </article>
 
-        <!-- Carte 2 : Évolution temporelle -->
-        <div class="card text-center">
-            <div class="card-header">
-                Évolution temporelle des sous-produits
-            </div>
-            <div class="card-body">
+        <article class="analysis-card">
+            <header class="analysis-card__head">Évolution temporelle des sous-produits</header>
+            <div class="analysis-card__body">
                 {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data:results.temporal_sub_products | json_encode, is_stacked:'false', mode:'relatif' } %}
-                <p>
-                    Parmi les échantillons avec un ou plusieurs sous-produits, voici l'évolution temporelle (par bimestre), de la présence de chaque sous-produit.
-                </p>  
+                <p class="analysis-card__desc">
+                    Parmi les échantillons comportant un ou plusieurs sous-produits, voici l'évolution temporelle (par bimestre) de la présence de chacun.
+                </p>
             </div>
-        </div>
-
-    </div>
+        </article>
+    </section>
 </div>
-
 {% endblock %}

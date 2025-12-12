@@ -1,0 +1,23 @@
+/* -------------------------------------------
+   Base style loader for Psychotopia
+------------------------------------------- */
+
+/* Variables (couleurs, tailles, etc.) */
+@import "variables";
+
+/* Mixins */
+//@import "mixins";
+
+/* Reset CSS (optionnel mais conseillé) */
+@import "base/reset";
+
+/* Styles globaux */
+@import "base/globals";
+
+/* Composants transversaux */
+@import "components/form";
+@import "components/nav";
+@import "components/footer";
+
+/* Styles spécifiques aux pages */
+@import "pages/analysis";

@@ -1,92 +1,86 @@
 {% set molecules = allMolecules() %}
 
-<nav class="navbar navbar-expand-lg bg-dark">
-    <div class="container-fluid">
-      <a href="https://www.psychoactif.org" target="_blank"><img id="logo" src="https://www.psychoactif.org/images/banniere_psychoactif5.png"  alt="Logo Psychoactif"></a>
-      <a class="navbar-brand" href="/">Psychotopia</a>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarContent">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{{ path('app_molecules') }}">Données</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="{{ path('app_supply') }}">Modes d'approvisionnement</a>
-        </li>
-
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="moleculeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Pureté des molécules
+<nav class="site-nav" aria-label="Navigation principale">
+    <div class="site-nav__inner">
+        <div class="site-nav__brand">
+            <a href="https://www.psychoactif.org" target="_blank" rel="noreferrer">
+                <img src="https://www.psychoactif.org/images/banniere_psychoactif5.png" alt="Logo Psychoactif">
             </a>
-            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="moleculeDropdown">
-                {% for molecule in molecules %}
-                  {% if molecule.hasPurityAnalysis %}
-                    <li>
-                        <a class="dropdown-item" href="{{ path('app_purity', { slug: molecule.slug }) }}">
-                            Pureté — {{ molecule.label }}
-                        </a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-            </ul>
-        </li>
+            <a href="/" class="site-nav__brand-name">Psychotopia</a>
+        </div>
 
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="moleculeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Produits de coupes
-            </a>
-            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="moleculeDropdown">
-                {% for molecule in molecules %}
-                    {% if molecule.hasCutAgentsAnalysis %}
-                    <li>
-                        <a class="dropdown-item" href="{{ path('app_cut', { slug: molecule.slug }) }}">
-                            Coupe — {{ molecule.label }}
-                        </a>
-                    </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </li>
+        <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="primaryNavMenu" data-nav-toggle>
+            Menu
+        </button>
 
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="moleculeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Sous-Produits
-            </a>
-            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="moleculeDropdown">
-                {% for molecule in molecules %}
-                    {% if molecule.hasSubProductAnalysis %}
-                    <li>
-                        <a class="dropdown-item" href="{{ path('app_sub_products', { slug: molecule.slug }) }}">
-                            Sous-Produits — {{ molecule.label }}
-                        </a>
-                    </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </li>
+        <ul class="site-nav__menu" id="primaryNavMenu" data-nav-menu>
+            <li class="site-nav__item">
+                <a class="site-nav__link" href="{{ path('app_molecules') }}">Données</a>
+            </li>
 
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="moleculeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Comprimé
-            </a>
-            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="moleculeDropdown">
-                {% for molecule in molecules %}
-                    {% if molecule.hasTabletsAnalysis %}
-                        <li>
-                            <a class="dropdown-item" href="{{ path('app_purity_tablets', { slug: molecule.slug }) }}">
+            <li class="site-nav__item">
+                <a class="site-nav__link" href="{{ path('app_supply') }}">Modes d'approvisionnement</a>
+            </li>
+
+            <li class="site-nav__item">
+                <button class="site-nav__dropdown-toggle" type="button" aria-expanded="false" aria-controls="nav-purity" data-nav-dropdown="#nav-purity">
+                    Pureté des molécules
+                </button>
+                <div class="site-nav__dropdown" id="nav-purity">
+                    {% for molecule in molecules  %}
+                        {% if molecule.hasPurityAnalysis %}
+                            <a class="site-nav__dropdown-link" href="{{ path('app_purity', { slug: molecule.slug }) }}">
+                                Pureté — {{ molecule.label }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </li>
+
+            <li class="site-nav__item">
+                <button class="site-nav__dropdown-toggle" type="button" aria-expanded="false" aria-controls="nav-cut" data-nav-dropdown="#nav-cut">
+                    Produits de coupe
+                </button>
+                <div class="site-nav__dropdown" id="nav-cut">
+                    {% for molecule in molecules %}
+                        {% if molecule.hasCutAgentsAnalysis %}
+                            <a class="site-nav__dropdown-link" href="{{ path('app_cut', { slug: molecule.slug }) }}">
+                                Coupe — {{ molecule.label }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </li>
+
+            <li class="site-nav__item">
+                <button class="site-nav__dropdown-toggle" type="button" aria-expanded="false" aria-controls="nav-sub" data-nav-dropdown="#nav-sub">
+                    Sous-produits
+                </button>
+                <div class="site-nav__dropdown" id="nav-sub">
+                    {% for molecule in molecules  %}
+                        {% if molecule.hasSubProductAnalysis %}
+                            <a class="site-nav__dropdown-link" href="{{ path('app_sub_products', { slug: molecule.slug }) }}">
+                                Sous-produits — {{ molecule.label }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </li>
+
+            <li class="site-nav__item">
+                <button class="site-nav__dropdown-toggle" type="button" aria-expanded="false" aria-controls="nav-tablets" data-nav-dropdown="#nav-tablets">
+                    Comprimé
+                </button>
+                <div class="site-nav__dropdown" id="nav-tablets">
+                    {% for molecule in molecules  %}
+                        {% if molecule.hasTabletsAnalysis %}
+                            <a class="site-nav__dropdown-link" href="{{ path('app_purity_tablets', { slug: molecule.slug }) }}">
                                 Comprimé — {{ molecule.label }}
                             </a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </li>
-      </ul>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </li>
+        </ul>
     </div>
-  </div>
 </nav>

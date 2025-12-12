@@ -1,0 +1,159 @@
+/* ============================
+   FORM CARD
+   ============================ */
+
+.form-card {
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+}
+
+.form-card__header {
+  border-bottom: 1px solid var(--neutral-200);
+  padding-bottom: 8px;
+}
+
+.form-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.form-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* ============================
+   FORM FIELDS
+   ============================ */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field--center {
+  align-items: center;
+  text-align: center;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  color: var(--neutral-700);
+  font-weight: 600;
+}
+
+/* INPUTS */
+.form-input {
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--neutral-900);
+}
+
+.form-input:focus {
+  outline: 3px solid rgba(62,124,115,0.18);
+}
+
+/* RANGE */
+.form-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-range__input {
+  flex: 1;
+}
+
+.form-range__output {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* CHECKBOX LIST */
+.form-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  padding: 0;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--neutral-900);
+}
+
+.form-checkbox input {
+  margin-top: 4px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--brand-600);
+}
+
+.form-note {
+  font-size: 0.85rem;
+  color: var(--neutral-400);
+}
+
+/* ============================
+   SWITCH
+   ============================ */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 3.2em;
+  height: 1.8em;
+}
+
+.switch input { 
+  opacity: 0; 
+  width: 0; 
+  height: 0; 
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid var(--neutral-400);
+  border-radius: 30px;
+  transition: .25s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 1.2em;
+  width: 1.2em;
+  left: 0.3em;
+  top: 0.25em;
+  background: var(--neutral-400);
+  border-radius: 20px;
+  transition: .25s;
+}
+
+.switch input:checked + .slider {
+  background: var(--brand-600);
+  border-color: var(--brand-600);
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(1.4em);
+  background: #fff;
+}

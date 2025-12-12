@@ -1,106 +1,63 @@
-<div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Remplir le formulaire</h5>
-    </div>
-    <div class="card-body">
-        <div>
-            <div class="mb-3">
-                <label for="nom" class="form-label">Choisir une date de début :</label>
-                <input type="date" class="form-control" id="date_debut">
-            </div>
+<div class="form-card">
+    <header class="form-card__header">
+        <h5 class="form-card__title">Options de filtrage</h5>
+    </header>
 
-            <div class="mb-3">
-                <label for="nom" class="form-label">Choisir une date de fin :</label>
-                <input type="date" class="form-control" id="date_fin">
-            </div>
-            
-            <div class="mb-1">
-                <label for="nom" class="form-label">Cathinones</label>
-                <input type="checkbox" name="famille" value="Cathinones"> 
-            </div>
-
-            <div class="mb-1">
-                <label for="nom" class="form-label">MDMA</label>
-                <input type="checkbox" name="famille" value="MDMA"> 
-            </div>
-            <div class="mb-1">
-                <label for="nom" class="form-label">Cocaïne</label>
-                <input type="checkbox" name="famille" value="Cocaïne"> 
-            </div>
-            
-            <div class="mb-1">
-                <label for="nom" class="form-label">Héroïne</label>
-                <input type="checkbox" name="famille" value="Héroïne">
-            </div>
-            
-            <div class="mb-1">
-                <label for="nom" class="form-label">Kétamine</label>
-                <input type="checkbox" name="famille" value="Kétamine">
-            </div>
-            
-            <div class="mb-1">
-                <label for="nom" class="form-label">Speed</label>
-                <input type="checkbox" name="famille" value="Speed">
-            </div>
-            
-            <div class="mb-1">
-                <label for="nom" class="form-label">Dissociatifs</label>
-                <input type="checkbox" name="famille" value="Dissociatifs">
-            </div>
-            <div class="mb-1">
-                <label for="nom" class="form-label">Amphétamines</label>
-                <input type="checkbox" name="famille" value="Amphétamines">
-            </div>
-
-            <div class="mb-1">
-                <label for="nom" class="form-label">Opioïdes</label>
-                <input type="checkbox" name="famille" value="Opioïdes"> 
-            </div>
-            <div class="mb-1">
-                <label for="nom" class="form-label">Cannabinoïdes</label>
-                <input type="checkbox" name="famille" value="Cannabinoïdes"> 
-            </div>
-
-            <div class="mb-1">
-                <label for="nom" class="form-label">Hallucinogènes</label>
-                <input type="checkbox" name="famille" value="Hallucinogènes">
-            </div>
-
-            <div class="mb-1">
-                <label for="nom" class="form-label">Crack/Freebase (cocaine base)</label>
-                <input type="checkbox" name="famille" value="Crack/Freebase (cocaine base)">
-            </div>
-
-            <div class="mb-1">
-                <label for="nom" class="form-label">Benzodiazépines et similaires</label>
-                <input type="checkbox" name="famille" value="Benzodiazépines_et_similaires">
-            </div>
-
-            <div class="mb-1">
-                <label for="nom" class="form-label">GABAergiques non benzo</label>
-                <input type="checkbox" name="famille" value="GABAergiques_non_benzo">
-            </div>
-   
-            <button id="sendButton" class="btn btn-primary w-100">Envoyer</button>
+    <div class="form-card__body">
+        <div class="form-field">
+            <label for="date_debut" class="form-label">Choisir une date de début :</label>
+            <input type="date" class="form-input" id="date_debut">
         </div>
+
+        <div class="form-field">
+            <label for="date_fin" class="form-label">Choisir une date de fin :</label>
+            <input type="date" class="form-input" id="date_fin">
+        </div>
+
+        <div class="form-field">
+            <span class="form-label">Familles à inclure :</span>
+            <div class="form-checklist">
+                {% set familles = [
+                    { value: 'Cathinones', label: 'Cathinones' },
+                    { value: 'MDMA', label: 'MDMA' },
+                    { value: 'Cocaïne', label: 'Cocaïne' },
+                    { value: 'Héroïne', label: 'Héroïne' },
+                    { value: 'Kétamine', label: 'Kétamine' },
+                    { value: 'Speed', label: 'Speed' },
+                    { value: 'Dissociatifs', label: 'Dissociatifs' },
+                    { value: 'Amphétamines', label: 'Amphétamines' },
+                    { value: 'Opioïdes', label: 'Opioïdes' },
+                    { value: 'Cannabinoïdes', label: 'Cannabinoïdes' },
+                    { value: 'Hallucinogènes', label: 'Hallucinogènes' },
+                    { value: 'Crack/Freebase (cocaine base)', label: 'Crack/Freebase (cocaine base)' },
+                    { value: 'Benzodiazépines_et_similaires', label: 'Benzodiazépines et similaires' },
+                    { value: 'GABAergiques_non_benzo', label: 'GABAergiques non benzo' }
+                ] %}
+                {% for famille in familles %}
+                    <label class="form-checkbox">
+                        <input type="checkbox" name="famille" value="{{ famille.value }}">
+                        <span>{{ famille.label }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+            <p class="form-note">Laissez vide pour inclure toutes les familles.</p>
+        </div>
+
+        <button id="sendButton" class="btn btn--primary btn--block" type="button">Appliquer</button>
     </div>
 </div>
 
 <script>
-    
-    document.getElementById('sendButton').addEventListener('click', function () {
-        const date_debut = document.getElementById('date_debut').value;
-        const date_fin = document.getElementById('date_fin').value;
-        const selectedFamilles = Array.from(document.querySelectorAll('input[name="famille"]:checked')).map(cb => cb.value);
+document.getElementById('sendButton').addEventListener('click', function () {
+    const date_debut = document.getElementById('date_debut').value;
+    const date_fin = document.getElementById('date_fin').value;
+    const selectedFamilles = Array.from(document.querySelectorAll('input[name="famille"]:checked')).map(cb => cb.value);
 
-        const params = new URLSearchParams();
-        if (date_debut) params.set('date_debut', date_debut);
-        if (date_fin) params.set('date_fin', date_fin);
-        if (selectedFamilles.length > 0) params.set('familles', selectedFamilles.join(','));
+    const params = new URLSearchParams();
+    if (date_debut) params.set('date_debut', date_debut);
+    if (date_fin) params.set('date_fin', date_fin);
+    if (selectedFamilles.length > 0) params.set('familles', selectedFamilles.join(','));
 
-        const newUrl = window.location.pathname + '?' + params.toString();
-
-        // Modifie l'URL dans la barre d'adresse sans recharger la page
-        window.location = newUrl;
-    });
+    window.location = window.location.pathname + '?' + params.toString();
+});
 </script>

@@ -1,116 +1,107 @@
+{# templates/molecules.html.twig - refonte sans Bootstrap (mobile-first) #}
 {% extends 'base.html.twig' %}
 
 {% block title %} {{ page_title }} {% endblock %}
 {% block centerText %} {{ page_title }} {% endblock %}
 
-
-{% block body %} 
-
-
-<div class="d-flex align-items-center gap-3 m-3">
-    
-    <!-- Infos sur le nombre d'échantillons -->
-    <div>
-        <small>Nombre total d'échantillons observés :</small>
-        <p class="display-6 mb-0">{{ results.count }}</p>
+{% block body %}
+<div class="analysis-page">
+  <header class="analysis-header container">
+    <div class="analysis-header__meta">
+      <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
+      <p class="analysis-header__count">{{ results.count }}</p>
     </div>
 
-    <!-- Bouton pour ouvrir le panneau -->
-    <button class="btn btn-primary flex-shrink-0" style="width: 200px;" 
-            type="button" data-bs-toggle="offcanvas" data-bs-target="#formOffcanvas" 
-            aria-controls="formOffcanvas">
+    <div class="analysis-header__actions">
+      <button
+        class="btn btn--primary btn--block"
+        type="button"
+        aria-controls="drawerFilters"
+        aria-expanded="false"
+        data-drawer-target="#drawerFilters"
+      >
         Options de visualisation
-    </button>
-</div>
-
-<!-- Offcanvas gauche -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id:"formOffcanvas" aria-labelledby="formOffcanvasLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id:"formOffcanvasLabel">Formulaire</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+      </button>
     </div>
-    <div class="offcanvas-body">
-        {% include "components/form.html.twig" %}
+  </header>
+
+  <aside
+    id="drawerFilters"
+    class="drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="drawerFiltersTitle"
+    aria-hidden="true"
+  >
+    <div class="drawer__panel">
+      <div class="drawer__handle" aria-hidden="true"></div>
+      <div class="drawer__inner">
+        <div class="drawer__header">
+          <h3 id="drawerFiltersTitle">Options de visualisation</h3>
+          <button class="btn btn--ghost drawer__close" type="button" aria-label="Fermer les options" data-drawer-close>✕</button>
+        </div>
+
+        <div class="drawer__body">
+          {% include "components/form.html.twig" %}
+        </div>
+      </div>
     </div>
+  </aside>
+
+  <section class="analysis-grid container" id="moleculesMain">
+    <article class="analysis-card">
+      <header class="analysis-card__head">Répartition par molécule</header>
+      <div class="analysis-card__body">
+        {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_count | json_encode } %}
+        <p class="analysis-card__desc">Le diagramme présente la proportion des échantillons en fonction de la molécule supposée.</p>
+      </div>
+    </article>
+
+    <article class="analysis-card">
+      <header class="analysis-card__head">Proportion après première consommation</header>
+      <div class="analysis-card__body">
+        {% include "components/pie_chart.html.twig" with { id:"pie_chart_conso", chart_data:results.pie_consumption | json_encode } %}
+        <p class="analysis-card__desc">Proportion des échantillons envoyés après une première consommation.</p>
+      </div>
+    </article>
+
+    <article class="analysis-card">
+      <header class="analysis-card__head">Évolution temporelle — Nombre d'échantillons</header>
+      <div class="analysis-card__body">
+        {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' } %}
+        <p class="analysis-card__desc">Les données sont regroupées par bimestre et montrent l'évolution en nombre d'échantillons par molécule.</p>
+      </div>
+    </article>
+
+    <article class="analysis-card">
+      <header class="analysis-card__head">Évolution temporelle — Proportion</header>
+      <div class="analysis-card__body">
+        {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' } %}
+        <p class="analysis-card__desc">Les données sont regroupées par bimestre et montrent l'évolution en proportion d'échantillons par molécule.</p>
+      </div>
+    </article>
+
+    <article class="analysis-card">
+      <header class="analysis-card__head">Carte — Nombre d'échantillons par région</header>
+      <div class="analysis-card__body">
+        {{ render_map('map_chart_abs', results.geo_count_abs, options:{
+            'start_hsl': [120, 60, 85],
+            'end_hsl': [200, 100, 30],
+        }) }}
+        <p class="analysis-card__desc">La carte montre le nombre d'échantillons reçus en fonction de la région d'envoi.</p>
+      </div>
+    </article>
+
+    <article class="analysis-card">
+      <header class="analysis-card__head">Carte — Échantillons par million d'habitants</header>
+      <div class="analysis-card__body">
+        {{ render_map('map_chart_prop', results.geo_count_prop, options:{
+            'start_hsl': [50, 100, 70],
+            'end_hsl': [0, 100, 40],
+        } ) }}
+        <p class="analysis-card__desc">Nombre d'échantillons reçus par région, rapporté à la population (par million d'habitants).</p>
+      </div>
+    </article>
+  </section>
 </div>
-
-<div class="container py-3">
-    <div class="masonry-grid">
-
-        <!-- Pie Chart - Proportion par molécule -->
-        <div class="card text-center">
-            <div class="card-header">
-                Répartition par molécule
-            </div>
-            <div class="card-body">
-                {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_count | json_encode } %}
-                <p class="mt-3">Le diagramme présente la proportion des échantillons en fonction de la molécule supposée.</p>
-            </div>
-        </div>
-
-          <!-- Pie Chart - Après première consommation -->
-        <div class="card text-center">
-            <div class="card-header">
-                Proportion après première consommation
-            </div>
-            <div class="card-body">
-                {% include "components/pie_chart.html.twig" with { id:"pie_chart_conso", chart_data:results.pie_consumption | json_encode } %}
-                <p class="mt-3">Proportion des échantillons envoyés après une première consommation.</p>
-            </div>
-        </div>
-
-        <!-- Area Chart 1 -->
-        <div class="card text-center">
-            <div class="card-header">
-                Évolution temporelle - Nombre d'échantillons
-            </div>
-            <div class="card-body">
-                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' } %}
-                <p class="mt-3">Les données sont regroupées par bimestre et montrent l'évolution en nombre d'échantillons par molécule.</p>
-            </div>
-        </div>
-
-        <!-- Area Chart 2 -->
-        <div class="card text-center">
-            <div class="card-header">
-                Évolution temporelle - Proportion
-            </div>
-            <div class="card-body">
-                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' } %}
-                <p class="mt-3">Les données sont regroupées par bimestre et montrent l'évolution en proportion d'échantillons par molécule.</p>
-            </div>
-        </div>
-
-       
-        <!-- Map absolute -->
-        <div class="card text-center">
-            <div class="card-header">
-                Carte - Nombre d'échantillons par région
-            </div>
-            <div class="card-body">
-                {{ render_map('map_chart_abs', results.geo_count_abs, options:{
-                    'start_hsl': [120, 60, 85],
-                    'end_hsl': [200, 100, 30],
-                }) }}
-                <p class="mt-3">La carte montre le nombre d'échantillons reçus en fonction de la région d'envoi.</p>
-            </div>
-        </div>
-        
-        <!-- Map proportion -->
-        <div class="card text-center">
-            <div class="card-header">
-                Carte - Échantillons par million d'habitants
-            </div>
-            <div class="card-body">
-                {{ render_map('map_chart_prop', results.geo_count_prop, options:{
-                    'start_hsl': [50, 100, 70],
-                    'end_hsl': [0, 100, 40],
-                } ) }}
-                <p class="mt-3">Nombre d'échantillons reçus par région, rapporté à la population (par million d'habitants).</p>
-            </div>
-        </div>
-
-    </div>
-</div>
-
 {% endblock %}
