@@ -40,7 +40,7 @@
     class="{{ article_classes|join(' ') }}"
     id="{{ card_id }}"
     data-analysis-card
-    data-card-title="{{ title }}"
+    data-card-title="{{ title }}"{% if embed_chart is defined and embed_chart %} data-embed-chart="{{ embed_chart }}"{% endif %}
 >
     <header class="analysis-card__head">
         <h3 class="analysis-card__title">{{ title }}</h3>

@@ -44,7 +44,8 @@
 
         {% embed "components/analysis_card.html.twig" with {
             title: "Répartition par voie d'approvisionnement",
-            description: supply_share_desc
+            description: supply_share_desc,
+            embed_chart: 'distribution'
         } %}
             {% block body %}
                 {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_supply | json_encode } %}
@@ -57,7 +58,8 @@
 
         {% embed "components/analysis_card.html.twig" with {
             title: "Évolution temporelle par voie d'approvisionnement",
-            description: supply_timeline_desc
+            description: supply_timeline_desc,
+            embed_chart: 'timeline'
         } %}
             {% block body %}
                 {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_supply | json_encode, is_stacked:'true', mode:'relatif' }  %}

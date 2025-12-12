@@ -62,7 +62,8 @@
 
         {% embed "components/analysis_card.html.twig" with {
             title: "Histogramme de la pureté",
-            description: tablets_hist_desc
+            description: tablets_hist_desc,
+            embed_chart: 'histogram'
         } %}
             {% block body %}
                 {% include "components/bar_y_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit} %}
@@ -78,7 +79,8 @@
 
         {% embed "components/analysis_card.html.twig" with {
             title: "Évolution temporelle – Moyenne et écarts type",
-            description: tablets_mean_desc
+            description: tablets_mean_desc,
+            embed_chart: 'temporal_mean'
         } %}
             {% block body %}
                 {% include "components/line_chart.html.twig" with {id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false'} %}
@@ -94,7 +96,8 @@
 
         {% embed "components/analysis_card.html.twig" with {
             title: "Évolution temporelle – Médianes et quartiles",
-            description: tablets_median_desc
+            description: tablets_median_desc,
+            embed_chart: 'temporal_median'
         } %}
             {% block body %}
                 {% include "components/line_chart.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
@@ -115,7 +118,8 @@
 
         {% embed "components/analysis_card.html.twig" with {
             title: "Quantité de substance active vs masse des comprimés",
-            description: tablets_scatter_desc
+            description: tablets_scatter_desc,
+            embed_chart: 'scatter'
         } %}
             {% block body %}
                 {% include "components/scatter_line_chart.html.twig" with { id:"scatter_mdma_comprime", chart_data: results.mass_reg_purity | json_encode } %}

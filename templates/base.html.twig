@@ -75,7 +75,8 @@
                     <section class="card-modal__section card-modal__section--share">
                         <p class="card-modal__section-label">Partager</p>
                         <div class="card-modal__section-content">
-                            <div class="card-modal__share">
+                            <div class="card-modal__share card-modal__share-group">
+                                <p class="card-modal__share-label">Lien direct</p>
                                 <input
                                     type="text"
                                     class="card-modal__share-input"
@@ -101,6 +102,31 @@
                                     >
                                         Ouvrir
                                     </a>
+                                </div>
+                            </div>
+                            <div
+                                class="card-modal__share card-modal__share-group"
+                                data-card-modal-share-iframe-wrapper
+                                hidden
+                            >
+                                <p class="card-modal__share-label">Code d'intégration (iframe)</p>
+                                <textarea
+                                    class="card-modal__share-input card-modal__share-textarea"
+                                    rows="4"
+                                    readonly
+                                    spellcheck="false"
+                                    data-card-modal-share-iframe-input
+                                    aria-label="Code iframe à intégrer"
+                                ></textarea>
+                                <div class="card-modal__share-actions">
+                                    <button
+                                        type="button"
+                                        class="card-modal__share-copy"
+                                        data-card-modal-share-iframe-copy
+                                        disabled
+                                    >
+                                        Copier le code
+                                    </button>
                                 </div>
                             </div>
                         </div>
