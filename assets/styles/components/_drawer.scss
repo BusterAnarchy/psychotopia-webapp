@@ -320,6 +320,27 @@ body.has-card-modal {
   color: var(--brand-600);
 }
 
+@media (max-width: 767px) {
+  .card-modal {
+    padding: 8px;
+  }
+
+  .card-modal__body {
+    height: fit-content;
+    overflow: scroll;
+  }
+
+  .card-modal__content {
+    min-height: 40vh;
+  }
+
+  .card-modal__section--description {
+    height: fit-content;
+    max-height: none;
+    overflow: none;
+  }
+}
+
 @media (min-width: 992px) {
   .card-modal__body {
     flex-direction: row;
