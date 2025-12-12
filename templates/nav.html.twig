@@ -3,10 +3,9 @@
 <nav class="site-nav" aria-label="Navigation principale">
     <div class="site-nav__inner">
         <div class="site-nav__brand">
-            <a href="https://www.psychoactif.org" target="_blank" rel="noreferrer">
-                <img src="https://www.psychoactif.org/images/banniere_psychoactif5.png" alt="Logo Psychoactif">
+            <a href="/" class="site-nav__brand-logo">
+                <img src="{{ asset('imgs/logo.svg') }}" alt="Logo Psychotopia">
             </a>
-            <a href="/" class="site-nav__brand-name">Psychotopia</a>
         </div>
 
         <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="primaryNavMenu" data-nav-toggle>
@@ -80,6 +79,10 @@
                         {% endif %}
                     {% endfor %}
                 </div>
+            </li>
+
+            <li class="site-nav__item">
+                <a class="site-nav__link" href="{{ path('app_faq') }}">FAQ</a>
             </li>
         </ul>
     </div>
