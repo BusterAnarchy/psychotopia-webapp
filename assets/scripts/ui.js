@@ -215,9 +215,11 @@ function initCardModal() {
   const modalShareInput = modal.querySelector('[data-card-modal-share-input]');
   const modalShareLink = modal.querySelector('[data-card-modal-share-link]');
   const modalShareCopy = modal.querySelector('[data-card-modal-share-copy]');
+  const modalShareIframeWrapper = modal.querySelector('[data-card-modal-share-iframe-wrapper]');
+  const modalShareIframeInput = modal.querySelector('[data-card-modal-share-iframe-input]');
+  const modalShareIframeCopy = modal.querySelector('[data-card-modal-share-iframe-copy]');
   const dialog = modal.querySelector('.card-modal__dialog');
   if (!modalContent || !modalTitle || !dialog) return;
-  const copyDefaultLabel = modalShareCopy ? modalShareCopy.textContent.trim() : 'Copier';
 
   const cardById = new Map();
   cards.forEach((card) => {
@@ -366,24 +368,8 @@ function initCardModal() {
     }
   });
 
-  if (modalShareCopy && modalShareInput) {
-    modalShareCopy.dataset.label = copyDefaultLabel;
-    modalShareCopy.addEventListener('click', () => {
-      const value = modalShareInput.value.trim();
-      if (!value) return;
-      const fallbackCopy = () => {
-        modalShareInput.select();
-        modalShareInput.setSelectionRange(0, modalShareInput.value.length);
-        document.execCommand('copy');
-        showCopyFeedback();
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(value).then(showCopyFeedback).catch(fallbackCopy);
-      } else {
-        fallbackCopy();
-      }
-    });
-  }
+  setupCopyButton(modalShareCopy, () => (modalShareInput ? modalShareInput.value.trim() : ''));
+  setupCopyButton(modalShareIframeCopy, () => (modalShareIframeInput ? modalShareIframeInput.value.trim() : ''));
 
   window.addEventListener('hashchange', handleHashNavigation);
   handleHashNavigation();
@@ -398,10 +384,17 @@ function initCardModal() {
     if (modalShareLink) {
       modalShareLink.removeAttribute('href');
     }
-    if (modalShareCopy) {
-      modalShareCopy.classList.remove('is-success');
-      modalShareCopy.textContent = copyDefaultLabel;
+    if (modalShareIframeInput) {
+      modalShareIframeInput.value = '';
     }
+    if (modalShareIframeWrapper) {
+      modalShareIframeWrapper.hidden = true;
+    }
+    if (modalShareIframeCopy) {
+      modalShareIframeCopy.disabled = true;
+    }
+    resetCopyButton(modalShareCopy);
+    resetCopyButton(modalShareIframeCopy);
   }
 
   function populateModalDescription(card) {
@@ -415,10 +408,35 @@ function initCardModal() {
   }
 
   function updateModalShare(card) {
-    if (!modalShareInput || !modalShareLink) return;
     const url = buildShareUrl(card);
-    modalShareInput.value = url;
-    modalShareLink.href = url;
+    if (modalShareInput) {
+      modalShareInput.value = url;
+    }
+    if (modalShareLink) {
+      modalShareLink.href = url;
+    }
+    updateEmbedShare(card);
+  }
+
+  function updateEmbedShare(card) {
+    if (!modalShareIframeWrapper || !modalShareIframeInput) return;
+    const embedData = buildEmbedData(card);
+    if (!embedData) {
+      modalShareIframeWrapper.hidden = true;
+      modalShareIframeInput.value = '';
+      if (modalShareIframeCopy) {
+        modalShareIframeCopy.disabled = true;
+      }
+      resetCopyButton(modalShareIframeCopy);
+      return;
+    }
+
+    modalShareIframeWrapper.hidden = false;
+    modalShareIframeInput.value = embedData.code;
+    if (modalShareIframeCopy) {
+      modalShareIframeCopy.disabled = false;
+    }
+    resetCopyButton(modalShareIframeCopy);
   }
 
   function buildShareUrl(card) {
@@ -433,14 +451,91 @@ function initCardModal() {
     }
   }
 
-  function showCopyFeedback() {
-    if (!modalShareCopy) return;
-    modalShareCopy.classList.add('is-success');
-    modalShareCopy.textContent = 'Copié !';
+  function buildEmbedUrl(card) {
+    if (!card) return null;
+    const chartKey = card.dataset ? card.dataset.embedChart : null;
+    if (!chartKey) return null;
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('chart', chartKey);
+      url.hash = '';
+      return url.toString();
+    } catch (error) {
+      const params = new URLSearchParams(window.location.search);
+      params.set('chart', chartKey);
+      const query = params.toString();
+      return query ? `${window.location.pathname}?${query}` : window.location.pathname;
+    }
+  }
+
+  function buildEmbedData(card) {
+    const embedUrl = buildEmbedUrl(card);
+    if (!embedUrl) return null;
+    const title = card && card.dataset && card.dataset.cardTitle ? card.dataset.cardTitle.trim() : 'Visualisation';
+    const code = `<iframe src="${escapeHtml(embedUrl)}" width="100%" height="480" loading="lazy" style="border:0;" title="${escapeHtml(title)}"></iframe>`;
+    return { url: embedUrl, code };
+  }
+
+  function setupCopyButton(button, getValue) {
+    if (!button) return;
+    const defaultLabel = button.textContent.trim() || 'Copier';
+    button.dataset.copyLabel = defaultLabel;
+    button.addEventListener('click', () => {
+      const value = typeof getValue === 'function' ? getValue() : '';
+      if (!value) return;
+      copyTextToClipboard(value, button);
+    });
+  }
+
+  function copyTextToClipboard(value, button) {
+    const fallbackCopy = () => {
+      const textarea = document.createElement('textarea');
+      textarea.value = value;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'absolute';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showCopyFeedback(button);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(value).then(() => showCopyFeedback(button)).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  }
+
+  function showCopyFeedback(button) {
+    if (!button) return;
+    button.classList.add('is-success');
+    button.textContent = 'Copié !';
     setTimeout(() => {
-      modalShareCopy.classList.remove('is-success');
-      modalShareCopy.textContent = copyDefaultLabel;
+      button.classList.remove('is-success');
+      button.textContent = button.dataset.copyLabel || 'Copier';
     }, 1500);
+  }
+
+  function resetCopyButton(button) {
+    if (!button) return;
+    button.classList.remove('is-success');
+    button.textContent = button.dataset.copyLabel || button.textContent;
+  }
+
+  function escapeHtml(value) {
+    if (!value) return '';
+    return value.replace(/[&<>"']/g, (char) => {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      };
+      return map[char] || char;
+    });
   }
 
   function setHashForCard(card) {

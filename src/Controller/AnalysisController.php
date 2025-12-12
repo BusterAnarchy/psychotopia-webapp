@@ -32,6 +32,63 @@ final class AnalysisController extends AbstractController
             ]
         ));
 
+        if ($response = $this->renderChartEmbed($request, $results, [
+            'distribution' => [
+                'title' => 'Répartition par molécule',
+                'template' => 'components/pie_chart.html.twig',
+                'result_key' => 'histo_count',
+                'context' => ['id' => 'embedded_chart'],
+            ],
+            'first_consumption' => [
+                'title' => 'Proportion après première consommation',
+                'template' => 'components/pie_chart.html.twig',
+                'result_key' => 'pie_consumption',
+                'context' => ['id' => 'embedded_chart'],
+            ],
+            'timeline_absolute' => [
+                'title' => "Évolution temporelle — Nombre d'échantillons",
+                'template' => 'components/area_stacked_chart.html.twig',
+                'result_key' => 'temporal_count_abs',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'is_stacked' => 'true',
+                    'mode' => 'absolu',
+                ],
+            ],
+            'timeline_relative' => [
+                'title' => "Évolution temporelle — Proportion",
+                'template' => 'components/area_stacked_chart.html.twig',
+                'result_key' => 'temporal_count_prop',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'is_stacked' => 'true',
+                    'mode' => 'relatif',
+                ],
+            ],
+            'map_absolute' => [
+                'title' => "Carte — Nombre d'échantillons par région",
+                'renderer' => 'map',
+                'result_key' => 'geo_count_abs',
+                'context' => ['id' => 'embedded_map'],
+                'options' => [
+                    'start_hsl' => [120, 60, 85],
+                    'end_hsl' => [200, 100, 30],
+                ],
+            ],
+            'map_relative' => [
+                'title' => "Carte — Échantillons par million d'habitants",
+                'renderer' => 'map',
+                'result_key' => 'geo_count_prop',
+                'context' => ['id' => 'embedded_map'],
+                'options' => [
+                    'start_hsl' => [50, 100, 70],
+                    'end_hsl' => [0, 100, 40],
+                ],
+            ],
+        ], 'Toutes molécules')) {
+            return $response;
+        }
+
         return $this->render('analysis/molecules.html.twig', [
             'page_title' => 'Toutes molécules',
             'results' => $results,
@@ -47,6 +104,27 @@ final class AnalysisController extends AbstractController
             'histo_supply',
             'temporal_supply',
         ]));
+
+        if ($response = $this->renderChartEmbed($request, $results, [
+            'distribution' => [
+                'title' => "Répartition par voie d'approvisionnement",
+                'template' => 'components/pie_chart.html.twig',
+                'result_key' => 'histo_supply',
+                'context' => ['id' => 'embedded_chart'],
+            ],
+            'timeline' => [
+                'title' => "Évolution temporelle par voie d'approvisionnement",
+                'template' => 'components/area_stacked_chart.html.twig',
+                'result_key' => 'temporal_supply',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'is_stacked' => 'true',
+                    'mode' => 'relatif',
+                ],
+            ],
+        ], 'Supply')) {
+            return $response;
+        }
 
         return $this->render('analysis/supply.html.twig', [
             'page_title' => 'Supply',
@@ -94,6 +172,48 @@ final class AnalysisController extends AbstractController
 
         $results["histo_purity"]["ratio_base_sel"] = $molecule->getRatioBaseSel();
 
+        if ($response = $this->renderChartEmbed($request, $results, [
+            'histogram' => [
+                'title' => 'Histogramme de la pureté',
+                'template' => 'components/bar_y_chart.html.twig',
+                'result_key' => 'histo_purity',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'unit' => $unit,
+                ],
+            ],
+            'temporal_mean' => [
+                'title' => 'Évolution temporelle – Moyennes et écarts type',
+                'template' => 'components/line_chart.html.twig',
+                'result_key' => 'temporal_purity_avg',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'is_stacked' => 'false',
+                ],
+            ],
+            'temporal_median' => [
+                'title' => 'Évolution temporelle – Médianes et quartiles',
+                'template' => 'components/line_chart.html.twig',
+                'result_key' => 'temporal_purity_med',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'is_stacked' => 'false',
+                ],
+            ],
+            'map' => [
+                'title' => 'Carte de la pureté moyenne par région',
+                'renderer' => 'map',
+                'result_key' => 'geo_purity',
+                'context' => ['id' => 'embedded_map'],
+                'options' => [
+                    'start_hsl' => [120, 60, 85],
+                    'end_hsl' => [200, 100, 30],
+                ],
+            ],
+        ], sprintf('Pureté - %s', $molecule->getLabel()))) {
+            return $response;
+        }
+
         return $this->render('analysis/purity.html.twig', [
             'molecule' => $molecule,
             'results' => $results,
@@ -123,6 +243,46 @@ final class AnalysisController extends AbstractController
             ],
             $this->buildFilterArgs($request, includeNoCut: true)
         ));
+
+        if ($response = $this->renderChartEmbed($request, $results, [
+            'histogram' => [
+                'title' => 'Histogramme de la pureté',
+                'template' => 'components/bar_y_chart.html.twig',
+                'result_key' => 'histo_purity',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'unit' => $unit,
+                ],
+            ],
+            'temporal_mean' => [
+                'title' => 'Évolution temporelle – Moyenne et écarts type',
+                'template' => 'components/line_chart.html.twig',
+                'result_key' => 'temporal_purity_avg',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'is_stacked' => 'false',
+                ],
+            ],
+            'temporal_median' => [
+                'title' => 'Évolution temporelle – Médianes et quartiles',
+                'template' => 'components/line_chart.html.twig',
+                'result_key' => 'temporal_purity_med',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'is_stacked' => 'false',
+                ],
+            ],
+            'scatter' => [
+                'title' => 'Quantité de substance active vs masse des comprimés',
+                'template' => 'components/scatter_line_chart.html.twig',
+                'result_key' => 'mass_reg_purity',
+                'context' => [
+                    'id' => 'embedded_chart',
+                ],
+            ],
+        ], sprintf('Pureté comprimé - %s', $molecule->getLabel()))) {
+            return $response;
+        }
 
         return $this->render('analysis/purity_tablets.html.twig', [
             'molecule' => $molecule,
@@ -160,6 +320,37 @@ final class AnalysisController extends AbstractController
             default => $this->runner->run($analysis),
         };
 
+        if ($response = $this->renderChartEmbed($request, $results, [
+            'share' => [
+                'title' => 'Proportion des échantillons avec produits de coupe',
+                'template' => 'components/pie_chart.html.twig',
+                'result_key' => 'count_cut_agents',
+                'context' => [
+                    'id' => 'embedded_chart',
+                ],
+            ],
+            'distribution' => [
+                'title' => 'Proportion par produit de coupe',
+                'template' => 'components/bar_x_chart.html.twig',
+                'result_key' => 'histo_cut_agents',
+                'context' => [
+                    'id' => 'embedded_chart',
+                ],
+            ],
+            'timeline' => [
+                'title' => 'Évolution temporelle des produits de coupe',
+                'template' => 'components/area_stacked_chart.html.twig',
+                'result_key' => 'temporal_cut_agents',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'is_stacked' => 'false',
+                    'mode' => 'relatif',
+                ],
+            ],
+        ], sprintf('Coupe - %s', $molecule->getLabel()))) {
+            return $response;
+        }
+
         return $this->render('analysis/cut_agents.html.twig', [
             'molecule' => $molecule,
             'results' => $results,
@@ -186,6 +377,29 @@ final class AnalysisController extends AbstractController
             ]
         ));
 
+        if ($response = $this->renderChartEmbed($request, $results, [
+            'distribution' => [
+                'title' => 'Proportion par sous-produit',
+                'template' => 'components/bar_x_chart.html.twig',
+                'result_key' => 'histo_sub_products',
+                'context' => [
+                    'id' => 'embedded_chart',
+                ],
+            ],
+            'timeline' => [
+                'title' => 'Évolution temporelle des sous-produits',
+                'template' => 'components/area_stacked_chart.html.twig',
+                'result_key' => 'temporal_sub_products',
+                'context' => [
+                    'id' => 'embedded_chart',
+                    'is_stacked' => 'false',
+                    'mode' => 'relatif',
+                ],
+            ],
+        ], sprintf('Sous produits - %s', $molecule->getLabel()))) {
+            return $response;
+        }
+
         return $this->render('analysis/sub_products.html.twig', [
             'molecule' => $molecule,
             'results' => $results,
@@ -193,6 +407,65 @@ final class AnalysisController extends AbstractController
             'delta' => $delta,
             'data_reg_dose_poids' => NULL,
             'filters_summary' => $this->summarizeFilters($request),
+        ]);
+    }
+
+    private function renderChartEmbed(Request $request, array $results, array $charts, string $pageTitle): ?Response
+    {
+        $chartId = $request->query->get('chart');
+
+        if (empty($chartId)) {
+            return null;
+        }
+
+        if (!isset($charts[$chartId])) {
+            throw $this->createNotFoundException(sprintf('Le graphique "%s" est introuvable.', $chartId));
+        }
+
+        $config = $charts[$chartId];
+        $data = null;
+
+        if (isset($config['result_key'])) {
+            $data = $results[$config['result_key']] ?? null;
+            if ($data === null) {
+                throw $this->createNotFoundException(sprintf(
+                    'Aucune donnée n’est disponible pour le graphique "%s".',
+                    $chartId
+                ));
+            }
+        }
+
+        if (($config['renderer'] ?? 'template') === 'map') {
+            $chart = [
+                'type' => 'map',
+                'title' => $config['title'] ?? $pageTitle,
+                'id' => $config['context']['id'] ?? $config['id'] ?? 'embedded_map',
+                'data' => $data ?? [],
+                'options' => $config['options'] ?? [],
+            ];
+        } else {
+            if (!isset($config['template'])) {
+                throw $this->createNotFoundException(sprintf('Modèle introuvable pour "%s".', $chartId));
+            }
+
+            $context = $config['context'] ?? [];
+
+            if ($data !== null) {
+                $key = $config['data_context_key'] ?? 'chart_data';
+                $format = $config['data_format'] ?? 'json';
+                $context[$key] = $format === 'raw' ? $data : json_encode($data);
+            }
+
+            $chart = [
+                'type' => 'template',
+                'title' => $config['title'] ?? $pageTitle,
+                'template' => $config['template'],
+                'context' => $context,
+            ];
+        }
+
+        return $this->render('analysis/embed_chart.html.twig', [
+            'chart' => $chart,
         ]);
     }
 
