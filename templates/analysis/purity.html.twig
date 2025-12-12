@@ -10,6 +10,7 @@
         <div class="analysis-header__meta analysis-header__card">
             <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
             <p class="analysis-header__count">{{ results.histo_purity.count }}</p>
+            {% include "components/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
         </div>
         <article class="analysis-header__info analysis-header__card">
             <p>{{ molecule.definition | raw }}</p>
