@@ -26,22 +26,77 @@
   }
 }
 
+.analysis-header__card,
 .analysis-header__meta,
 .molecules-header__meta {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  background: linear-gradient(120deg, #f8fffc 0%, rgba(62, 124, 115, 0.08) 100%);
+  box-shadow:
+    0 8px 20px rgba(17, 17, 17, 0.08),
+    inset 0 0 0 1px rgba(62, 124, 115, 0.18);
+}
+
+.analysis-header__card::after,
+.analysis-header__meta::after,
+.molecules-header__meta::after {
+  content: "";
+  position: absolute;
+  inset: 10px 10px auto auto;
+  width: 32px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--brand-600);
+  opacity: 0.7;
 }
 
 .analysis-header__label,
 .molecules-header__label {
-  font-size: 0.9rem;
-  color: var(--neutral-400);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand-600);
 }
 
 .analysis-header__count,
 .molecules-header__count {
   margin: 0;
-  font-size: 1.35rem;
+  font-size: 2rem;
   font-weight: 700;
+  color: var(--neutral-900);
+}
+
+.analysis-header__info {
+  flex: 1;
+  min-width: min(320px, 100%);
+  color: var(--neutral-700);
+}
+
+.analysis-header__info::after {
+  display: none;
+}
+
+.analysis-header__info p {
+  margin: 0;
+}
+
+.analysis-header__info a {
+  font-weight: 600;
+  color: var(--brand-600);
+}
+
+.analysis-header__alert {
+  background: rgba(216, 86, 14, 0.08);
+  border: 1px solid rgba(216, 86, 14, 0.4);
+  border-radius: var(--radius);
+  padding: var(--space-2);
+  margin-top: -8px;
+  box-shadow: 0 8px 20px rgba(17, 17, 17, 0.08);
+  color: var(--neutral-900);
+  font-weight: 600;
 }

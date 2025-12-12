@@ -6,10 +6,19 @@
 {% block body %}
 <div class="analysis-page">
     <header class="analysis-header container">
-        <div class="analysis-header__meta">
+        <div class="analysis-header__meta analysis-header__card">
             <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
             <p class="analysis-header__count">{{ results.histo_purity.count }}</p>
         </div>
+        <article class="analysis-header__info analysis-header__card">
+            <p>{{ molecule.definition | raw }}</p>
+            {% if molecule.wikiUrl %}
+                <p>
+                    Pour plus d'informations, vous pouvez consulter la
+                    <a href="{{ molecule.wikiUrl }}" target="_blank" rel="noreferrer">page Wiki de cette substance</a>.
+                </p>
+            {% endif %}
+        </article>
     </header>
 
     <aside
@@ -35,14 +44,6 @@
     </aside>
 
     {% include "components/drawer_trigger.html.twig" %}
-
-    <section class="info-panel container">
-        <p>
-            {{ molecule.definition | raw }}
-            Pour plus d'informations, vous pouvez regarder la
-            <a href="{{ molecule.wikiUrl }}" target="_blank">page Wiki de cette substance</a>.
-        </p>
-    </section>
 
     <section class="analysis-grid container">
         <article class="analysis-card">
