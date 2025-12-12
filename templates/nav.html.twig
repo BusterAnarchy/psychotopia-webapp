@@ -14,7 +14,7 @@
 
         <ul class="site-nav__menu" id="primaryNavMenu" data-nav-menu>
             <li class="site-nav__item">
-                <a class="site-nav__link" href="{{ path('app_molecules') }}">Données</a>
+                <a class="site-nav__link" href="{{ path('app_molecules') }}">Echantillons</a>
             </li>
 
             <li class="site-nav__item">
@@ -23,60 +23,13 @@
 
             <li class="site-nav__item">
                 <button class="site-nav__dropdown-toggle" type="button" aria-expanded="false" aria-controls="nav-purity" data-nav-dropdown="#nav-purity">
-                    Pureté des molécules
+                    Molécules
                 </button>
                 <div class="site-nav__dropdown" id="nav-purity">
                     {% for molecule in molecules  %}
-                        {% if molecule.hasPurityAnalysis %}
-                            <a class="site-nav__dropdown-link" href="{{ path('app_purity', { slug: molecule.slug }) }}">
-                                Pureté — {{ molecule.label }}
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </li>
-
-            <li class="site-nav__item">
-                <button class="site-nav__dropdown-toggle" type="button" aria-expanded="false" aria-controls="nav-cut" data-nav-dropdown="#nav-cut">
-                    Produits de coupe
-                </button>
-                <div class="site-nav__dropdown" id="nav-cut">
-                    {% for molecule in molecules %}
-                        {% if molecule.hasCutAgentsAnalysis %}
-                            <a class="site-nav__dropdown-link" href="{{ path('app_cut', { slug: molecule.slug }) }}">
-                                Coupe — {{ molecule.label }}
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </li>
-
-            <li class="site-nav__item">
-                <button class="site-nav__dropdown-toggle" type="button" aria-expanded="false" aria-controls="nav-sub" data-nav-dropdown="#nav-sub">
-                    Sous-produits
-                </button>
-                <div class="site-nav__dropdown" id="nav-sub">
-                    {% for molecule in molecules  %}
-                        {% if molecule.hasSubProductAnalysis %}
-                            <a class="site-nav__dropdown-link" href="{{ path('app_sub_products', { slug: molecule.slug }) }}">
-                                Sous-produits — {{ molecule.label }}
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </li>
-
-            <li class="site-nav__item">
-                <button class="site-nav__dropdown-toggle" type="button" aria-expanded="false" aria-controls="nav-tablets" data-nav-dropdown="#nav-tablets">
-                    Comprimé
-                </button>
-                <div class="site-nav__dropdown" id="nav-tablets">
-                    {% for molecule in molecules  %}
-                        {% if molecule.hasTabletsAnalysis %}
-                            <a class="site-nav__dropdown-link" href="{{ path('app_purity_tablets', { slug: molecule.slug }) }}">
-                                Comprimé — {{ molecule.label }}
-                            </a>
-                        {% endif %}
+                        <a class="site-nav__dropdown-link" href="{{ path('app_purity', { slug: molecule.slug }) }}">
+                            {{ molecule.label }}
+                        </a>
                     {% endfor %}
                 </div>
             </li>

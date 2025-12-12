@@ -5,6 +5,7 @@
 
 {% block body %}
 <div class="analysis-page">
+    {% include "components/molecule_nav.html.twig" with { molecule: molecule } %}
     <header class="analysis-header container">
         <div class="analysis-header__meta analysis-header__card">
             <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
