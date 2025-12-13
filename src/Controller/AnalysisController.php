@@ -133,11 +133,15 @@ final class AnalysisController extends AbstractController
         ]);
     }
 
+    #[Route('/content/{slug}', name: 'app_content')]
     #[Route('/purity/{slug}', name: 'app_purity')]
     public function app_purity(Request $request, #[MapEntity(expr: 'repository.findOneBySlug(slug)')] Molecule $molecule): Response
     {
         $unit = "pourcent";
         $delta = $this->resolveDelta($request);
+        $isContentRoute = $request->attributes->get('_route') === 'app_content';
+        $analysisLabel = $isContentRoute ? 'Teneur' : 'Pureté';
+        $analysisLabelLower = mb_strtolower($analysisLabel);
 
         $analysis = [
             "-nip",
@@ -178,7 +182,7 @@ final class AnalysisController extends AbstractController
 
         if ($response = $this->renderChartEmbed($request, $results, [
             'histogram' => [
-                'title' => 'Histogramme de la pureté',
+                'title' => sprintf('Histogramme de la %s', $analysisLabelLower),
                 'template' => 'components/bar_y_chart.html.twig',
                 'result_key' => 'histo_purity',
                 'context' => [
@@ -205,7 +209,7 @@ final class AnalysisController extends AbstractController
                 ],
             ],
             'map' => [
-                'title' => 'Carte de la pureté moyenne par région',
+                'title' => sprintf('Carte de la %s moyenne par région', $analysisLabelLower),
                 'renderer' => 'map',
                 'result_key' => 'geo_purity',
                 'context' => ['id' => 'embedded_map'],
@@ -214,7 +218,7 @@ final class AnalysisController extends AbstractController
                     'end_hsl' => [200, 100, 30],
                 ],
             ],
-        ], sprintf('Pureté - %s', $molecule->getLabel()))) {
+        ], sprintf('%s - %s', $analysisLabel, $molecule->getLabel()))) {
             return $response;
         }
 

@@ -1,7 +1,12 @@
 {% extends "base.html.twig" %}
 
-{% block title %} Pureté - {{ molecule.label }} {% endblock %}
-{% block centerText %} Pureté - {{ molecule.label }} {% endblock %}
+{% set is_content_route = app.request.attributes.get('_route') == 'app_content' %}
+{% set analysis_label = is_content_route ? 'Teneur' : 'Pureté' %}
+{% set analysis_label_lower = is_content_route ? 'teneur' : 'pureté' %}
+{% set analysis_label_plural_lower = is_content_route ? 'teneurs' : 'puretés' %}
+
+{% block title %} {{ analysis_label }} - {{ molecule.label }} {% endblock %}
+{% block centerText %} {{ analysis_label }} - {{ molecule.label }} {% endblock %}
 
 {% block body %}
 <div class="analysis-page">
@@ -25,7 +30,7 @@
     {% if molecule.label == "3-MMC" %}
         <div class="analysis-header__alert container">
             Point d'attention : de nombreux échantillons vendus comme de la 3-MMC n'en sont pas (cf. le nombre élevé d'échantillons
-            dont la pureté est nulle). Vous pouvez choisir dans les options de ne regarder que les échantillons qui contiennent de la 3-MMC
+            dont la {{ analysis_label_lower }} est nulle). Vous pouvez choisir dans les options de ne regarder que les échantillons qui contiennent de la 3-MMC
             d'après l'analyse en laboratoire.
         </div>
     {% endif %}
@@ -57,15 +62,15 @@
     <section class="analysis-grid container">
         {% set histogram_desc %}
             <p>
-                Commençons par regarder le nombre d'échantillons en fonction de leur pureté.
-                Les analyses présentent la pureté de deux façons différentes : équivalent base et équivalent chlorhydrate.
+                Commençons par regarder le nombre d'échantillons en fonction de leur {{ analysis_label_lower }}.
+                Les analyses présentent la {{ analysis_label_lower }} de deux façons différentes : équivalent base et équivalent chlorhydrate.
                 Les produits psychoactifs sont souvent vendus sous forme de poudre ou de cristal et ne contiennent pas uniquement
                 la substance psychoactive (cocaïne, héroïne, MDMA, ...). Le pourcentage d'une substance en équivalent base,
                 c'est le pourcentage de la dite molécule dans la poudre. Nous avons choisi de présenter le pourcentage en équivalent base
                 car c'est celui directement mesuré par le laboratoire.
             </p>
             <p>
-                La pureté maximale (en masse) n'est pas 100% (car la poudre ne peut pas contenir que la molécule psychoactive) mais dépend
+                La {{ analysis_label_lower }} maximale (en masse) n'est pas 100% (car la poudre ne peut pas contenir que la molécule psychoactive) mais dépend
                 de la molécule considérée et est représentée par la barre verticale rouge en pointillé.
                 Certains échantillons se situent au-delà de cette limite car les résultats d'analyse sont donnés avec une incertitude de +/- 10%.
                 Pour plus d'information, vous pouvez consulter la
@@ -74,7 +79,7 @@
         {% endset %}
 
         {% embed "components/analysis_card.html.twig" with {
-            title: "Histogramme de la pureté",
+            title: "Histogramme de la " ~ analysis_label_lower,
             description: histogram_desc,
             embed_chart: 'histogram'
         } %}
@@ -85,7 +90,7 @@
 
         {% set purity_mean_desc %}
             <p>
-                Visualisation de l'évolution de la moyenne de pureté et de la zone représentant +/- 1 écart-type autour de cette moyenne.
+                Visualisation de l'évolution de la moyenne de {{ analysis_label_lower }} et de la zone représentant +/- 1 écart-type autour de cette moyenne.
                 Calculée sur une fenêtre glissante de Δ jours autour de chaque échantillon (actuellement Δ = {{ delta }} jours).
             </p>
         {% endset %}
@@ -102,7 +107,7 @@
 
         {% set purity_median_desc %}
             <p>
-                Visualisation de la médiane de pureté au fil du temps, accompagnée d'une zone grisée allant du premier au troisième quartile.
+                Visualisation de la médiane de {{ analysis_label_lower }} au fil du temps, accompagnée d'une zone grisée allant du premier au troisième quartile.
                 Basée sur la même fenêtre glissante de Δ jours (actuellement Δ = {{ delta }} jours).
             </p>
         {% endset %}
@@ -120,8 +125,8 @@
         {% if results.supply_reg_purity %}
             {% set supply_desc %}
                 <p>
-                    Intéressons-nous ensuite à la dépendance de la pureté au mode d'approvisionnement. Pour cela, nous régressons
-                    la pureté sur le mode d'approvisionnement. On choisit le mode privilégié (Deep web / dark web)
+                    Intéressons-nous ensuite à la dépendance de la {{ analysis_label_lower }} au mode d'approvisionnement. Pour cela, nous régressons
+                    la {{ analysis_label_lower }} sur le mode d'approvisionnement. On choisit le mode privilégié (Deep web / dark web)
                     et on regarde si l'écart à ce premier mode est statistiquement significatif. Cette significativité est symbolisée
                     par les "*" dans la colonne écart. "***" si la probabilité que l'écart soit dû au hasard est < 1%, "**" si elle est < 5%
                     et "*" si elle est < 10%. Cette probabilité se nomme la <a href="https://fr.wikipedia.org/wiki/Valeur_p" target="_blank">p-value</a>.
@@ -138,7 +143,11 @@
                 description: supply_desc
             } %}
                 {% block body %}
-                    {% include "components/regression_table.html.twig" with {id:"supply_regression", table_data:results.supply_reg_purity| json_encode} %}
+                    {% include "components/regression_table.html.twig" with {
+                        id:"supply_regression",
+                        table_data:results.supply_reg_purity| json_encode,
+                        analysis_label: analysis_label
+                    } %}
                 {% endblock %}
             {% endembed %}
         {% endif %}
@@ -146,19 +155,19 @@
         {% if results.geo_purity %}
             {% set map_desc %}
                 <p>
-                    Désormais, regardons la géographie de la pureté. Sur la carte suivante est présentée la pureté moyenne
+                    Désormais, regardons la géographie de la {{ analysis_label_lower }}. Sur la carte suivante est présentée la {{ analysis_label_lower }} moyenne
                     par région parmi les échantillons qui ne proviennent pas du dark net.
                     Nous retirons ces échantillons car le marché se passe à l'échelle internationale.
                 </p>
                 <div class="alert-panel">
                     Point d'attention : la représentation sous forme de carte a le bénéfice d'être très visuelle, mais elle possède d'importants défauts.
-                    Il est difficile de savoir si les différences de puretés moyennes entre les régions sont significatives ou le simple fruit du hasard.
+                    Il est difficile de savoir si les différences de {{ analysis_label_plural_lower }} moyennes entre les régions sont significatives ou le simple fruit du hasard.
                     Des comportements de consommation différents peuvent également créer les différences observées. Ainsi, nous conseillons de regarder le tableau qui suit.
                 </div>
             {% endset %}
 
             {% embed "components/analysis_card.html.twig" with {
-                title: "Carte de la pureté moyenne par région",
+                title: "Carte de la " ~ analysis_label_lower ~ " moyenne par région",
                 description: map_desc,
                 embed_chart: 'map'
             } %}
@@ -174,7 +183,7 @@
         {% if results.geo_reg_purity %}
             {% set geo_reg_desc %}
                 <p>
-                    Demandons-nous comment analyser la carte de France présentant la pureté par région.
+                    Demandons-nous comment analyser la carte de France présentant la {{ analysis_label_lower }} par région.
                     Pour prendre en compte les différences de modes d'approvisionnement ou de dates d'achat,
                     nous réalisons une <a href="https://en.wikipedia.org/wiki/Fixed_effects_model" target="_blank">régression à effets fixes</a>
                     en choisissant comme effets fixes le mode d'approvisionnement et le bimestre d'achat. Nous comparons uniquement les variations de qualité à l’intérieur
@@ -183,7 +192,7 @@
             {% endset %}
 
             {% embed "components/analysis_card.html.twig" with {
-                title: "Analyse de la carte de la pureté",
+                title: "Analyse de la carte de la " ~ analysis_label_lower,
                 description: geo_reg_desc
             } %}
                 {% block body %}

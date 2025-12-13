@@ -39,7 +39,8 @@
                 </button>
                 <div class="site-nav__dropdown" id="nav-purity">
                     {% for molecule in molecules  %}
-                        <a class="site-nav__dropdown-link" href="{{ path('app_purity', { slug: molecule.slug }) }}">
+                        {% set analysisRoute = molecule.hasContentAnalysis ? 'app_content' : 'app_purity' %}
+                        <a class="site-nav__dropdown-link" href="{{ path(analysisRoute, { slug: molecule.slug }) }}">
                             {{ molecule.label }}
                         </a>
                     {% endfor %}

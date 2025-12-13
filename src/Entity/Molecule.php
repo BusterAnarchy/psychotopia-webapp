@@ -41,6 +41,9 @@ class Molecule
     #[ORM\Column]
     private ?bool $hasTabletsAnalysis = null;
 
+    #[ORM\Column]
+    private ?bool $hasContentAnalysis = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -150,6 +153,18 @@ class Molecule
     public function setHasTabletsAnalysis(bool $hasTabletsAnalysis): static
     {
         $this->hasTabletsAnalysis = $hasTabletsAnalysis;
+
+        return $this;
+    }
+
+    public function hasContentAnalysis(): ?bool
+    {
+        return $this->hasContentAnalysis;
+    }
+
+    public function setHasContentAnalysis(bool $hasContentAnalysis): static
+    {
+        $this->hasContentAnalysis = $hasContentAnalysis;
 
         return $this;
     }

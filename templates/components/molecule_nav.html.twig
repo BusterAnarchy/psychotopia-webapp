@@ -3,6 +3,9 @@
     {% set currentRoute = app.request.attributes.get('_route') %}
     {% set entries = [] %}
 
+    {% if molecule.hasContentAnalysis %}
+        {% set entries = entries|merge([{ label: 'Teneur', route: 'app_content' }]) %}
+    {% endif %}
     {% if molecule.hasPurityAnalysis %}
         {% set entries = entries|merge([{ label: 'Pureté', route: 'app_purity' }]) %}
     {% endif %}

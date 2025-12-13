@@ -65,15 +65,15 @@ function initLeafletMap(id) {
         });
 
     // Légende
-    const legend = L.control({ position: "bottomright" });
+    const legend = L.control({ position: "topright" });
 
     legend.onAdd = function () {
         const div = L.DomUtil.create("div", "map-legend");
 
         div.innerHTML = `
-            <div>${max.toFixed(2)} ${colorData.mode === "pourcent" ? "%" : ""}</div>
+            <div class="map-legend__value map-legend__value--max">${max.toFixed(2)} ${colorData.mode === "pourcent" ? "%" : ""}</div>
             <div class="map-legend-bar" style="--gradient: linear-gradient(to top, ${start}, ${end})"></div>
-            <div>${min.toFixed(2)} ${colorData.mode === "pourcent" ? "%" : ""}</div>
+            <div class="map-legend__value map-legend__value--min">${min.toFixed(2)} ${colorData.mode === "pourcent" ? "%" : ""}</div>
         `;
 
         return div;
