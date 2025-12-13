@@ -35,19 +35,19 @@ final class AnalysisController extends AbstractController
         if ($response = $this->renderChartEmbed($request, $results, [
             'distribution' => [
                 'title' => 'Répartition par molécule',
-                'template' => 'components/pie_chart.html.twig',
+                'template' => 'components/charts/pie_chart.html.twig',
                 'result_key' => 'histo_count',
                 'context' => ['id' => 'embedded_chart'],
             ],
             'first_consumption' => [
                 'title' => 'Proportion après première consommation',
-                'template' => 'components/pie_chart.html.twig',
+                'template' => 'components/charts/pie_chart.html.twig',
                 'result_key' => 'pie_consumption',
                 'context' => ['id' => 'embedded_chart'],
             ],
             'timeline_absolute' => [
                 'title' => "Évolution temporelle — Nombre d'échantillons",
-                'template' => 'components/area_stacked_chart.html.twig',
+                'template' => 'components/charts/area_stacked_chart.html.twig',
                 'result_key' => 'temporal_count_abs',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -57,7 +57,7 @@ final class AnalysisController extends AbstractController
             ],
             'timeline_relative' => [
                 'title' => "Évolution temporelle — Proportion",
-                'template' => 'components/area_stacked_chart.html.twig',
+                'template' => 'components/charts/area_stacked_chart.html.twig',
                 'result_key' => 'temporal_count_prop',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -108,13 +108,13 @@ final class AnalysisController extends AbstractController
         if ($response = $this->renderChartEmbed($request, $results, [
             'distribution' => [
                 'title' => "Répartition par voie d'approvisionnement",
-                'template' => 'components/pie_chart.html.twig',
+                'template' => 'components/charts/pie_chart.html.twig',
                 'result_key' => 'histo_supply',
                 'context' => ['id' => 'embedded_chart'],
             ],
             'timeline' => [
                 'title' => "Évolution temporelle par voie d'approvisionnement",
-                'template' => 'components/area_stacked_chart.html.twig',
+                'template' => 'components/charts/area_stacked_chart.html.twig',
                 'result_key' => 'temporal_supply',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -183,7 +183,7 @@ final class AnalysisController extends AbstractController
         if ($response = $this->renderChartEmbed($request, $results, [
             'histogram' => [
                 'title' => sprintf('Histogramme de la %s', $analysisLabelLower),
-                'template' => 'components/bar_y_chart.html.twig',
+                'template' => 'components/charts/bar_y_chart.html.twig',
                 'result_key' => 'histo_purity',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -192,7 +192,7 @@ final class AnalysisController extends AbstractController
             ],
             'temporal_mean' => [
                 'title' => 'Évolution temporelle – Moyennes et écarts type',
-                'template' => 'components/line_chart.html.twig',
+                'template' => 'components/charts/line_chart.html.twig',
                 'result_key' => 'temporal_purity_avg',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -201,7 +201,7 @@ final class AnalysisController extends AbstractController
             ],
             'temporal_median' => [
                 'title' => 'Évolution temporelle – Médianes et quartiles',
-                'template' => 'components/line_chart.html.twig',
+                'template' => 'components/charts/line_chart.html.twig',
                 'result_key' => 'temporal_purity_med',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -255,7 +255,7 @@ final class AnalysisController extends AbstractController
         if ($response = $this->renderChartEmbed($request, $results, [
             'histogram' => [
                 'title' => 'Histogramme de la pureté',
-                'template' => 'components/bar_y_chart.html.twig',
+                'template' => 'components/charts/bar_y_chart.html.twig',
                 'result_key' => 'histo_purity',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -264,7 +264,7 @@ final class AnalysisController extends AbstractController
             ],
             'temporal_mean' => [
                 'title' => 'Évolution temporelle – Moyenne et écarts type',
-                'template' => 'components/line_chart.html.twig',
+                'template' => 'components/charts/line_chart.html.twig',
                 'result_key' => 'temporal_purity_avg',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -273,7 +273,7 @@ final class AnalysisController extends AbstractController
             ],
             'temporal_median' => [
                 'title' => 'Évolution temporelle – Médianes et quartiles',
-                'template' => 'components/line_chart.html.twig',
+                'template' => 'components/charts/line_chart.html.twig',
                 'result_key' => 'temporal_purity_med',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -282,7 +282,7 @@ final class AnalysisController extends AbstractController
             ],
             'scatter' => [
                 'title' => 'Quantité de substance active vs masse des comprimés',
-                'template' => 'components/scatter_line_chart.html.twig',
+                'template' => 'components/scatter_charts/line_chart.html.twig',
                 'result_key' => 'mass_reg_purity',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -331,7 +331,7 @@ final class AnalysisController extends AbstractController
         if ($response = $this->renderChartEmbed($request, $results, [
             'share' => [
                 'title' => 'Proportion des échantillons avec produits de coupe',
-                'template' => 'components/pie_chart.html.twig',
+                'template' => 'components/charts/pie_chart.html.twig',
                 'result_key' => 'count_cut_agents',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -339,7 +339,7 @@ final class AnalysisController extends AbstractController
             ],
             'distribution' => [
                 'title' => 'Proportion par produit de coupe',
-                'template' => 'components/bar_x_chart.html.twig',
+                'template' => 'components/charts/bar_x_chart.html.twig',
                 'result_key' => 'histo_cut_agents',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -347,7 +347,7 @@ final class AnalysisController extends AbstractController
             ],
             'timeline' => [
                 'title' => 'Évolution temporelle des produits de coupe',
-                'template' => 'components/area_stacked_chart.html.twig',
+                'template' => 'components/charts/area_stacked_chart.html.twig',
                 'result_key' => 'temporal_cut_agents',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -388,7 +388,7 @@ final class AnalysisController extends AbstractController
         if ($response = $this->renderChartEmbed($request, $results, [
             'distribution' => [
                 'title' => 'Proportion par sous-produit',
-                'template' => 'components/bar_x_chart.html.twig',
+                'template' => 'components/charts/bar_x_chart.html.twig',
                 'result_key' => 'histo_sub_products',
                 'context' => [
                     'id' => 'embedded_chart',
@@ -396,7 +396,7 @@ final class AnalysisController extends AbstractController
             ],
             'timeline' => [
                 'title' => 'Évolution temporelle des sous-produits',
-                'template' => 'components/area_stacked_chart.html.twig',
+                'template' => 'components/charts/area_stacked_chart.html.twig',
                 'result_key' => 'temporal_sub_products',
                 'context' => [
                     'id' => 'embedded_chart',

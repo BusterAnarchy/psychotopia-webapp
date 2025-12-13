@@ -5,12 +5,12 @@
 
 {% block body %}
 <div class="analysis-page">
-    {% include "components/molecule_nav.html.twig" with { molecule: molecule } %}
+    {% include "components/ui/molecule_nav.html.twig" with { molecule: molecule } %}
     <header class="analysis-header container">
         <div class="analysis-header__meta analysis-header__card">
             <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
             <p class="analysis-header__count">{{ results.histo_purity.count }}</p>
-            {% include "components/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
+            {% include "components/ui/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
         </div>
         <article class="analysis-header__info analysis-header__card">
             <p>{{ molecule.definition | raw }}</p>
@@ -45,9 +45,9 @@
         </div>
     </aside>
 
-    {% include "components/drawer_trigger.html.twig" %}
+    {% include "components/ui/drawer_trigger.html.twig" %}
 
-    {% include "components/grid_layout_controls.html.twig" %}
+    {% include "components/ui/grid_layout_controls.html.twig" %}
 
     <section class="analysis-grid container">
         {% set tablets_hist_desc %}
@@ -62,13 +62,13 @@
             </p>
         {% endset %}
 
-        {% embed "components/analysis_card.html.twig" with {
+        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Histogramme de la pureté",
             description: tablets_hist_desc,
             embed_chart: 'histogram'
         } %}
             {% block body %}
-                {% include "components/bar_y_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit} %}
+                {% include "components/charts/bar_y_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit} %}
             {% endblock %}
         {% endembed %}
 
@@ -79,13 +79,13 @@
             </p>
         {% endset %}
 
-        {% embed "components/analysis_card.html.twig" with {
+        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Évolution temporelle – Moyenne et écarts type",
             description: tablets_mean_desc,
             embed_chart: 'temporal_mean'
         } %}
             {% block body %}
-                {% include "components/line_chart.html.twig" with {id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false'} %}
+                {% include "components/charts/line_chart.html.twig" with {id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false'} %}
             {% endblock %}
         {% endembed %}
 
@@ -96,13 +96,13 @@
             </p>
         {% endset %}
 
-        {% embed "components/analysis_card.html.twig" with {
+        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Évolution temporelle – Médianes et quartiles",
             description: tablets_median_desc,
             embed_chart: 'temporal_median'
         } %}
             {% block body %}
-                {% include "components/line_chart.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
+                {% include "components/charts/line_chart.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
             {% endblock %}
         {% endembed %}
 
@@ -118,13 +118,13 @@
             </p>
         {% endset %}
 
-        {% embed "components/analysis_card.html.twig" with {
+        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Quantité de substance active vs masse des comprimés",
             description: tablets_scatter_desc,
             embed_chart: 'scatter'
         } %}
             {% block body %}
-                {% include "components/scatter_line_chart.html.twig" with { id:"scatter_mdma_comprime", chart_data: results.mass_reg_purity | json_encode } %}
+                {% include "components/charts/scatter_line_chart.html.twig" with { id:"scatter_mdma_comprime", chart_data: results.mass_reg_purity | json_encode } %}
             {% endblock %}
         {% endembed %}
     </section>

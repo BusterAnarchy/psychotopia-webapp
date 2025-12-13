@@ -5,12 +5,12 @@
 
 {% block body %}
 <div class="analysis-page">
-    {% include "components/molecule_nav.html.twig" with { molecule: molecule } %}
+    {% include "components/ui/molecule_nav.html.twig" with { molecule: molecule } %}
     <header class="analysis-header container">
         <div class="analysis-header__meta analysis-header__card">
             <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
             <p class="analysis-header__count">{{ results.count }}</p>
-            {% include "components/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
+            {% include "components/ui/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
         </div>
         <article class="analysis-header__info analysis-header__card">
             <p>{{ molecule.definition | raw }}</p>
@@ -45,7 +45,7 @@
         </div>
     </aside>
 
-    {% include "components/drawer_trigger.html.twig" %}
+    {% include "components/ui/drawer_trigger.html.twig" %}
 
     <section class="info-panel container">
         <p>
@@ -56,7 +56,7 @@
         </p>
     </section>
 
-    {% include "components/grid_layout_controls.html.twig" %}
+    {% include "components/ui/grid_layout_controls.html.twig" %}
 
     <section class="analysis-grid container">
         {% set cut_agents_share_desc %}
@@ -65,13 +65,13 @@
             </p>
         {% endset %}
 
-        {% embed "components/analysis_card.html.twig" with {
+        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Proportion des échantillons avec produits de coupe",
             description: cut_agents_share_desc,
             embed_chart: 'share'
         } %}
             {% block body %}
-                {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.count_cut_agents | json_encode } %}
+                {% include "components/charts/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.count_cut_agents | json_encode } %}
             {% endblock %}
         {% endembed %}
 
@@ -81,13 +81,13 @@
             </p>
         {% endset %}
 
-        {% embed "components/analysis_card.html.twig" with {
+        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Proportion par produit de coupe",
             description: cut_agents_distribution_desc,
             embed_chart: 'distribution'
         } %}
             {% block body %}
-                {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_cut_agents | json_encode } %}
+                {% include "components/charts/bar_x_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_cut_agents | json_encode } %}
             {% endblock %}
         {% endembed %}
 
@@ -97,13 +97,13 @@
             </p>
         {% endset %}
 
-        {% embed "components/analysis_card.html.twig" with {
+        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Évolution temporelle des produits de coupe",
             description: cut_agents_timeline_desc,
             embed_chart: 'timeline'
         } %}
             {% block body %}
-                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_cut_agents | json_encode, is_stacked:'false', mode:'relatif' } %}
+                {% include "components/charts/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_cut_agents | json_encode, is_stacked:'false', mode:'relatif' } %}
             {% endblock %}
         {% endembed %}
     </section>
