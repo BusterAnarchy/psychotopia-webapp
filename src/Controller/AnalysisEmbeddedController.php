@@ -244,7 +244,15 @@ final class AnalysisEmbeddedController extends AbstractController
 
         $rRequest = $rRequest
             ->withFilters($filters)
-            ->addAnalysis($config['analysis']);
+            //->addAnalysis($config['analysis']);
+            ->addOption("-nip")
+            ->addAnalysis('count')
+            ->addAnalysis('histo_purity', ['label' => 'histo_purity', 'unit' => 'pourcent'])
+            ->addAnalysis('temporal_purity', ['label' => 'temporal_purity_avg', 'mode' => 'avg', 'delta' => 15, 'unit' => 'pourcent'])
+            ->addAnalysis('temporal_purity', ['label' => 'temporal_purity_med', 'mode' => 'med', 'delta' => 15, 'unit' => 'pourcent'])
+            ->addAnalysis('supply_reg_purity')
+            ->addAnalysis('geo_purity')
+            ->addAnalysis('geo_reg_purity');
         
         $results = $this->runner->run($rRequest);
 
