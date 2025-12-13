@@ -69,7 +69,7 @@
             embed_chart: 'distribution'
         } %}
             {% block body %}
-                {% include "components/charts/bar_x_chart.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
+                {% include "components/charts/chart_bar_x.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
             {% endblock %}
         {% endembed %}
 
@@ -85,7 +85,7 @@
             embed_chart: 'timeline'
         } %}
             {% block body %}
-                {% include "components/charts/area_stacked_chart.html.twig" with { id:"area_chart", chart_data:results.temporal_sub_products | json_encode, is_stacked:'false', mode:'relatif' } %}
+                {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart", chart_data:results.temporal_sub_products | json_encode, is_stacked:'false', mode:'relatif' } %}
             {% endblock %}
         {% endembed %}
     </section>

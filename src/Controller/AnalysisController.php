@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Molecule;
 use App\Service\CachedRRunner;
-use DateTimeImmutable;
+use App\Service\FilterService;
+use App\Service\RRunner;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,12 +14,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class AnalysisController extends AbstractController
 {
-    public function __construct(private readonly CachedRRunner $runner) {}
+    public function __construct(private readonly CachedRRunner $runner, private readonly FilterService $filterService) {}
 
     #[Route('/molecules', name: 'app_molecules')]
     public function app_molecules(Request $request): Response
     {
-        $filters = $this->buildFilterArgs($request, includeFamilies: true, includeForms: true);
+        $filters = $this->filterService->buildFilterArgs($request, includeFamilies: true, includeForms: true);
         $results = $this->runner->run(array_merge(
             $filters,
             [
@@ -92,14 +93,14 @@ final class AnalysisController extends AbstractController
         return $this->render('pages/page_molecules.html.twig', [
             'page_title' => 'Toutes molécules',
             'results' => $results,
-            'filters_summary' => $this->summarizeFilters($request, includeFamilies: true, includeForms: true),
+            'filters_summary' => $this->filterService->summarizeFilters($request, includeFamilies: true, includeForms: true),
         ]);
     }
 
     #[Route('/supply', name: 'app_supply')]
     public function app_supply(Request $request): Response
     {
-        $filters = $this->buildFilterArgs($request, includeFamilies: true, includeForms: true);
+        $filters = $this->filterService->buildFilterArgs($request, includeFamilies: true, includeForms: true);
         $results = $this->runner->run(array_merge($filters, [
             'histo_supply',
             'temporal_supply',
@@ -129,7 +130,7 @@ final class AnalysisController extends AbstractController
         return $this->render('pages/page_supply.html.twig', [
             'page_title' => 'Supply',
             'results' => $results,
-            'filters_summary' => $this->summarizeFilters($request, includeFamilies: true, includeForms: true),
+            'filters_summary' => $this->filterService->summarizeFilters($request, includeFamilies: true, includeForms: true),
         ]);
     }
 
@@ -138,7 +139,7 @@ final class AnalysisController extends AbstractController
     public function app_purity(Request $request, #[MapEntity(expr: 'repository.findOneBySlug(slug)')] Molecule $molecule): Response
     {
         $unit = "pourcent";
-        $delta = $this->resolveDelta($request);
+        $delta = $this->filterService->resolveDelta($request);
         $isContentRoute = $request->attributes->get('_route') === 'app_content';
         $analysisLabel = $isContentRoute ? 'Teneur' : 'Pureté';
         $analysisLabelLower = mb_strtolower($analysisLabel);
@@ -154,27 +155,27 @@ final class AnalysisController extends AbstractController
             'geo_reg_purity',
         ];
 
-        $filters = $this->buildFilterArgs($request, includeNoCut: true);
+        $filters = $this->filterService->buildFilterArgs($request, includeNoCut: true);
 
         $results = match ($molecule->getLabel()) {
             'Cannabis Résine' => $this->runner->run(array_merge([
-                $this->formatOption('-m', 'Cannabis (THC/CBD)'),
-                $this->formatOption('--form', 'Résine'),
+                RRunner::formatOption('-m', 'Cannabis (THC/CBD)'),
+                RRunner::formatOption('--form', 'Résine'),
             ], $filters, $analysis)),
             'Cannabis Herbe' => $this->runner->run(array_merge([
-                $this->formatOption('-m', 'Cannabis (THC/CBD)'),
-                $this->formatOption('--form', 'Herbe'),
+                RRunner::formatOption('-m', 'Cannabis (THC/CBD)'),
+                RRunner::formatOption('--form', 'Herbe'),
             ], $filters, $analysis)),
             '2C-B' => $this->runner->run(array_merge([
-                $this->formatOption('-m', '2C-B'),
-                $this->formatOption('--form', 'Poudre,Cristal'),
+                RRunner::formatOption('-m', '2C-B'),
+                RRunner::formatOption('--form', 'Poudre,Cristal'),
             ], $filters, $analysis)),
             'MDMA' => $this->runner->run(array_merge([
-                $this->formatOption('-m', 'MDMA'),
-                $this->formatOption('--form', 'Poudre,Cristal'),
+                RRunner::formatOption('-m', 'MDMA'),
+                RRunner::formatOption('--form', 'Poudre,Cristal'),
             ], $filters, $analysis)),
             default => $this->runner->run(array_merge([
-                $this->formatOption('-m', $molecule->getLabel()),
+                RRunner::formatOption('-m', $molecule->getLabel()),
             ], $filters, $analysis)),
         };
 
@@ -227,7 +228,7 @@ final class AnalysisController extends AbstractController
             'results' => $results,
             'unit' => $unit,
             'delta' => $delta,
-            'filters_summary' => $this->summarizeFilters($request, includeDelta: true, includeNoCut: true),
+            'filters_summary' => $this->filterService->summarizeFilters($request, includeDelta: true, includeNoCut: true),
         ]);
     }
 
@@ -235,12 +236,12 @@ final class AnalysisController extends AbstractController
     public function app_purity_tablets(Request $request, #[MapEntity(expr: 'repository.findOneBySlug(slug)')] Molecule $molecule): Response
     {
         $unit = "poids";
-        $delta = $this->resolveDelta($request);
+        $delta = $this->filterService->resolveDelta($request);
 
         $results = $this->runner->run(array_merge(
             [
-                $this->formatOption('-m', $molecule->getLabel()),
-                $this->formatOption('--form', 'comprimé'),
+                RRunner::formatOption('-m', $molecule->getLabel()),
+                RRunner::formatOption('--form', 'comprimé'),
                 '-pt',
                 '--tablet_mass',
                 'count',
@@ -249,7 +250,7 @@ final class AnalysisController extends AbstractController
                 "temporal_purity:label=temporal_purity_med,mode=med,delta=$delta,unit=$unit",
                 'mass_reg_purity',
             ],
-            $this->buildFilterArgs($request, includeNoCut: true)
+            $this->filterService->buildFilterArgs($request, includeNoCut: true)
         ));
 
         if ($response = $this->renderChartEmbed($request, $results, [
@@ -297,7 +298,7 @@ final class AnalysisController extends AbstractController
             'results' => $results,
             'unit' => $unit,
             'delta' => $delta,
-            'filters_summary' => $this->summarizeFilters($request, includeDelta: true, includeNoCut: true),
+            'filters_summary' => $this->filterService->summarizeFilters($request, includeDelta: true, includeNoCut: true),
         ]);
     }
 
@@ -307,10 +308,10 @@ final class AnalysisController extends AbstractController
         $delta = 15;
         $unit = "pourcent";
 
-        $filters = $this->buildFilterArgs($request, includeNoCut: true);
+        $filters = $this->filterService->buildFilterArgs($request, includeNoCut: true);
 
         $analysis = array_merge($filters, [
-            $this->formatOption('-m', $molecule->getLabel()),
+            RRunner::formatOption('-m', $molecule->getLabel()),
             'count',
             'count_cut_agents',
             'histo_cut_agents',
@@ -319,7 +320,7 @@ final class AnalysisController extends AbstractController
 
         $results = match ($molecule->getLabel()) {
             '3-MMC' => $this->runner->run(array_merge($filters, [
-                $this->formatOption('-m', '3-MMC'),
+                RRunner::formatOption('-m', '3-MMC'),
                 'count',
                 'count_cut_agents_3MMC:label=count_cut_agents',
                 'histo_cut_agents_3MMC:label=histo_cut_agents',
@@ -365,7 +366,7 @@ final class AnalysisController extends AbstractController
             'unit' => $unit,
             'delta' => $delta,
             'data_reg_dose_poids' => NULL,
-            'filters_summary' => $this->summarizeFilters($request, includeNoCut: true),
+            'filters_summary' => $this->filterService->summarizeFilters($request, includeNoCut: true),
         ]);
     }
 
@@ -376,9 +377,9 @@ final class AnalysisController extends AbstractController
         $unit = "pourcent";
 
         $results = $this->runner->run(array_merge(
-            $this->buildFilterArgs($request, includeNoCut: true),
+            $this->filterService->buildFilterArgs($request, includeNoCut: true),
             [
-                $this->formatOption('-m', $molecule->getLabel()),
+                RRunner::formatOption('-m', $molecule->getLabel()),
                 'count',
                 'histo_sub_products',
                 'temporal_sub_products',
@@ -414,7 +415,7 @@ final class AnalysisController extends AbstractController
             'unit' => $unit,
             'delta' => $delta,
             'data_reg_dose_poids' => NULL,
-            'filters_summary' => $this->summarizeFilters($request, includeNoCut: true),
+            'filters_summary' => $this->filterService->summarizeFilters($request, includeNoCut: true),
         ]);
     }
 
@@ -475,147 +476,5 @@ final class AnalysisController extends AbstractController
         return $this->render('pages/page_embed_chart.html.twig', [
             'chart' => $chart,
         ]);
-    }
-
-    private function buildFilterArgs(
-        Request $request,
-        bool $includeFamilies = false,
-        bool $includeNoCut = false,
-        bool $includeForms = false
-    ): array
-    {
-        $args = [];
-
-        $start = $this->formatDateForCli($request->query->get('date_debut'));
-        $end = $this->formatDateForCli($request->query->get('date_fin'));
-
-        if ($start) {
-            $args[] = $this->formatOption('--start', $start);
-        }
-
-        if ($end) {
-            $args[] = $this->formatOption('--end', $end);
-        }
-
-        if ($includeFamilies) {
-            $families = $this->normalizeCsv($request->query->get('familles'));
-            if (!empty($families)) {
-                $args[] = $this->formatOption('--molecule_families', implode(',', $families));
-            }
-        }
-
-        if ($includeNoCut && $request->query->getBoolean('no_cut')) {
-            $args[] = '--no-purity';
-        }
-
-        if ($includeForms) {
-            $forms = $this->normalizeCsv($request->query->get('formes'));
-            if (!empty($forms)) {
-                $args[] = $this->formatOption('--form', implode(',', $forms));
-            }
-        }
-
-        return $args;
-    }
-
-    private function summarizeFilters(
-        Request $request,
-        bool $includeFamilies = false,
-        bool $includeDelta = false,
-        bool $includeNoCut = false,
-        bool $includeForms = false
-    ): array
-    {
-        $summary = [];
-
-        $start = $this->formatDateForCli($request->query->get('date_debut'));
-        $end = $this->formatDateForCli($request->query->get('date_fin'));
-
-        if ($start && $end) {
-            $summary[] = sprintf('Entre le %s et le %s', $start, $end);
-        } else if ($start) {
-            $summary[] = sprintf('Depuis le %s', $start);
-        } else if ($end) {
-            $summary[] = sprintf('Jusqu\'au %s', $end);
-        }
-
-        if ($includeFamilies) {
-            $families = $this->normalizeCsv($request->query->get('familles'));
-            if (!empty($families)) {
-                $labels = array_map(static fn(string $family) => str_replace('_', ' ', $family), $families);
-                $summary[] = sprintf('Familles : %s', implode(', ', $labels));
-            }
-        }
-
-        if ($includeDelta) {
-            $delta = $this->extractDelta($request);
-            if ($delta !== null) {
-                $summary[] = sprintf('Δ = %d jours', $delta);
-            }
-        }
-
-        if ($includeNoCut && $request->query->getBoolean('no_cut')) {
-            $summary[] = 'Pureté > 0 uniquement';
-        }
-
-        if ($includeForms) {
-            $forms = $this->normalizeCsv($request->query->get('formes'));
-            if (!empty($forms)) {
-                $summary[] = sprintf('Formes : %s', implode(', ', $forms));
-            }
-        }
-
-        return $summary;
-    }
-
-    private function resolveDelta(Request $request, int $default = 15): int
-    {
-        return $this->extractDelta($request) ?? $default;
-    }
-
-    private function extractDelta(Request $request): ?int
-    {
-        $range = $request->query->get('range');
-
-        if ($range !== null && ctype_digit($range)) {
-            $value = (int) $range;
-            if ($value >= 1 && $value <= 30) {
-                return $value;
-            }
-        }
-
-        return null;
-    }
-
-    private function formatDateForCli(?string $value): ?string
-    {
-        if (!$value) {
-            return null;
-        }
-
-        $date = DateTimeImmutable::createFromFormat('Y-m-d', $value);
-        if ($date === false) {
-            return null;
-        }
-
-        return $date->format('d/m/Y');
-    }
-
-    private function normalizeCsv(?string $value): array
-    {
-        if (!$value) {
-            return [];
-        }
-
-        $items = array_filter(array_map('trim', explode(',', $value)));
-
-        return array_values($items);
-    }
-
-    private function formatOption(string $option, ?string $value = null): string
-    {
-        return $value === null
-            ? $option
-            : sprintf('%s %s', $option, escapeshellarg($value));
     }
 }

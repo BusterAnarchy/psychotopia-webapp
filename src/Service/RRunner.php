@@ -31,4 +31,9 @@ class RRunner
 
         return $json;
     }
+
+    public static function formatOption(string $option, ?string $value = null): string
+    {
+        return $value === null ? $option: sprintf('%s %s', $option, escapeshellarg($value));
+    }
 }

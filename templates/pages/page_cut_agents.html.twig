@@ -71,7 +71,7 @@
             embed_chart: 'share'
         } %}
             {% block body %}
-                {% include "components/charts/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.count_cut_agents | json_encode } %}
+                {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart", chart_data: results.count_cut_agents | json_encode } %}
             {% endblock %}
         {% endembed %}
 
@@ -87,7 +87,7 @@
             embed_chart: 'distribution'
         } %}
             {% block body %}
-                {% include "components/charts/bar_x_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_cut_agents | json_encode } %}
+                {% include "components/charts/chart_bar_x.html.twig" with { id:"bar_chart", chart_data: results.histo_cut_agents | json_encode } %}
             {% endblock %}
         {% endembed %}
 
@@ -103,7 +103,7 @@
             embed_chart: 'timeline'
         } %}
             {% block body %}
-                {% include "components/charts/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_cut_agents | json_encode, is_stacked:'false', mode:'relatif' } %}
+                {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart", chart_data: results.temporal_cut_agents | json_encode, is_stacked:'false', mode:'relatif' } %}
             {% endblock %}
         {% endembed %}
     </section>

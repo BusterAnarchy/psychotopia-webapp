@@ -53,7 +53,7 @@
       embed_chart: 'distribution'
     } %}
       {% block body %}
-        {% include "components/charts/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_count | json_encode } %}
+        {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart", chart_data: results.histo_count | json_encode } %}
       {% endblock %}
     {% endembed %}
 
@@ -67,7 +67,7 @@
       embed_chart: 'first_consumption'
     } %}
       {% block body %}
-        {% include "components/charts/pie_chart.html.twig" with { id:"pie_chart_conso", chart_data:results.pie_consumption | json_encode } %}
+        {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart_conso", chart_data:results.pie_consumption | json_encode } %}
       {% endblock %}
     {% endembed %}
 
@@ -81,7 +81,7 @@
       embed_chart: 'timeline_absolute'
     } %}
       {% block body %}
-        {% include "components/charts/area_stacked_chart.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' } %}
+        {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' } %}
       {% endblock %}
     {% endembed %}
 
@@ -95,7 +95,7 @@
       embed_chart: 'timeline_relative'
     } %}
       {% block body %}
-        {% include "components/charts/area_stacked_chart.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' } %}
+        {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' } %}
       {% endblock %}
     {% endembed %}
 

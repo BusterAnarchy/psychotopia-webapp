@@ -15,12 +15,4 @@ final class HomeController extends AbstractController
             'controller_name' => 'Home',
         ]);
     }
-
-    #[Route('/faq', name: 'app_faq')]
-    public function appFaq(): Response
-    {
-        return $this->render('pages/page_faq.html.twig', [
-            'controller_name' => 'FAQ',
-        ]);
-    }
 }

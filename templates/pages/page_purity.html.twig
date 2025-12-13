@@ -86,7 +86,7 @@
             embed_chart: 'histogram'
         } %}
             {% block body %}
-                {% include "components/charts/bar_y_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit} %}
+                {% include "components/charts/chart_bar_y.html.twig" with { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit} %}
             {% endblock %}
         {% endembed %}
 
@@ -103,7 +103,7 @@
             embed_chart: 'temporal_mean'
         } %}
             {% block body %}
-                {% include "components/charts/line_chart.html.twig" with {id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false'} %}
+                {% include "components/charts/chart_line.html.twig" with {id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false'} %}
             {% endblock %}
         {% endembed %}
 
@@ -120,7 +120,7 @@
             embed_chart: 'temporal_median'
         } %}
             {% block body %}
-                {% include "components/charts/line_chart.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
+                {% include "components/charts/chart_line.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
             {% endblock %}
         {% endembed %}
 
@@ -145,7 +145,7 @@
                 description: supply_desc
             } %}
                 {% block body %}
-                    {% include "components/charts/regression_table.html.twig" with {
+                    {% include "components/charts/table_regression.html.twig" with {
                         id:"supply_regression",
                         table_data:results.supply_reg_purity| json_encode,
                         analysis_label: analysis_label
@@ -198,7 +198,7 @@
                 description: geo_reg_desc
             } %}
                 {% block body %}
-                    {% include "components/charts/regression_table_fe.html.twig" with {id:"region_regression", table_data:results.geo_reg_purity | json_encode} %}
+                    {% include "components/charts/table_regression_fe.html.twig" with {id:"region_regression", table_data:results.geo_reg_purity | json_encode} %}
                 {% endblock %}
             {% endembed %}
         {% endif %}

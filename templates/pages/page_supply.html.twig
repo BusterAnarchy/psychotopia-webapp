@@ -50,7 +50,7 @@
             embed_chart: 'distribution'
         } %}
             {% block body %}
-                {% include "components/charts/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_supply | json_encode } %}
+                {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart", chart_data: results.histo_supply | json_encode } %}
             {% endblock %}
         {% endembed %}
 
@@ -64,7 +64,7 @@
             embed_chart: 'timeline'
         } %}
             {% block body %}
-                {% include "components/charts/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_supply | json_encode, is_stacked:'true', mode:'relatif' }  %}
+                {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart", chart_data: results.temporal_supply | json_encode, is_stacked:'true', mode:'relatif' }  %}
             {% endblock %}
         {% endembed %}
     </section>
