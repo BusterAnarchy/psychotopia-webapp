@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Coupe - {{ molecule.label }} {% endblock %}
-{% block centerText %} Coupe - {{ molecule.label }} {% endblock %}
+{% block title %} Sous produits - {{ molecule.label }} {% endblock %}
+{% block centerText %} Sous produits - {{ molecule.label }} {% endblock %}
 
 {% block body %}
 <div class="analysis-page">
@@ -39,7 +39,7 @@
                     <button class="btn btn--ghost drawer__close" type="button" aria-label="Fermer les options" data-drawer-close>✕</button>
                 </div>
                 <div class="drawer__body">
-                    {% include "components/form_coupe.html.twig" %}
+                    {% include "forms/form_coupe.html.twig" %}
                 </div>
             </div>
         </div>
@@ -49,61 +49,43 @@
 
     <section class="info-panel container">
         <p>
-            "Les produits de coupe sont des substances ajoutées au principe actif d’un produit stupéfiant,
-            au cours de son parcours allant de sa production à sa consommation par l’usager final, afin
-            d’augmenter le poids total du produit à la revente et éventuellement en raison de l’action pharmacologique de la ou des substances ajoutées."
-            (Définition de l'OFDT)
+            Un sous-produit est un produit accessoire ou secondaire issu de la fabrication,
+            la production, la réaction ou la synthèse d'une molécule.
         </p>
     </section>
 
     {% include "components/grid_layout_controls.html.twig" %}
 
     <section class="analysis-grid container">
-        {% set cut_agents_share_desc %}
+        {% set sub_products_distribution_desc %}
             <p>
-                Le diagramme présente la proportion d'échantillons contenant un ou plusieurs produits de coupe.
+                Parmi les échantillons contenant un ou plusieurs sous-produits, voici la proportion pour chacun d'entre eux.
             </p>
         {% endset %}
 
         {% embed "components/analysis_card.html.twig" with {
-            title: "Proportion des échantillons avec produits de coupe",
-            description: cut_agents_share_desc,
-            embed_chart: 'share'
-        } %}
-            {% block body %}
-                {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.count_cut_agents | json_encode } %}
-            {% endblock %}
-        {% endembed %}
-
-        {% set cut_agents_distribution_desc %}
-            <p>
-                Parmi les échantillons contenant un ou plusieurs produits de coupe, voici la proportion pour chacun d'eux.
-            </p>
-        {% endset %}
-
-        {% embed "components/analysis_card.html.twig" with {
-            title: "Proportion par produit de coupe",
-            description: cut_agents_distribution_desc,
+            title: "Proportion par sous-produit",
+            description: sub_products_distribution_desc,
             embed_chart: 'distribution'
         } %}
             {% block body %}
-                {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data: results.histo_cut_agents | json_encode } %}
+                {% include "components/bar_x_chart.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
             {% endblock %}
         {% endembed %}
 
-        {% set cut_agents_timeline_desc %}
+        {% set sub_products_timeline_desc %}
             <p>
-                Parmi les échantillons coupés, voici l'évolution temporelle (par bimestre) de la présence de chaque produit de coupe.
+                Parmi les échantillons comportant un ou plusieurs sous-produits, voici l'évolution temporelle (par bimestre) de la présence de chacun.
             </p>
         {% endset %}
 
         {% embed "components/analysis_card.html.twig" with {
-            title: "Évolution temporelle des produits de coupe",
-            description: cut_agents_timeline_desc,
+            title: "Évolution temporelle des sous-produits",
+            description: sub_products_timeline_desc,
             embed_chart: 'timeline'
         } %}
             {% block body %}
-                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_cut_agents | json_encode, is_stacked:'false', mode:'relatif' } %}
+                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data:results.temporal_sub_products | json_encode, is_stacked:'false', mode:'relatif' } %}
             {% endblock %}
         {% endembed %}
     </section>

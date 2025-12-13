@@ -89,7 +89,7 @@ final class AnalysisController extends AbstractController
             return $response;
         }
 
-        return $this->render('analysis/molecules.html.twig', [
+        return $this->render('pages/page_molecules.html.twig', [
             'page_title' => 'Toutes molécules',
             'results' => $results,
             'filters_summary' => $this->summarizeFilters($request, includeFamilies: true, includeForms: true),
@@ -126,7 +126,7 @@ final class AnalysisController extends AbstractController
             return $response;
         }
 
-        return $this->render('analysis/supply.html.twig', [
+        return $this->render('pages/page_supply.html.twig', [
             'page_title' => 'Supply',
             'results' => $results,
             'filters_summary' => $this->summarizeFilters($request, includeFamilies: true, includeForms: true),
@@ -222,7 +222,7 @@ final class AnalysisController extends AbstractController
             return $response;
         }
 
-        return $this->render('analysis/purity.html.twig', [
+        return $this->render('pages/page_purity.html.twig', [
             'molecule' => $molecule,
             'results' => $results,
             'unit' => $unit,
@@ -292,7 +292,7 @@ final class AnalysisController extends AbstractController
             return $response;
         }
 
-        return $this->render('analysis/purity_tablets.html.twig', [
+        return $this->render('pages/page_purity_tablets.html.twig', [
             'molecule' => $molecule,
             'results' => $results,
             'unit' => $unit,
@@ -359,7 +359,7 @@ final class AnalysisController extends AbstractController
             return $response;
         }
 
-        return $this->render('analysis/cut_agents.html.twig', [
+        return $this->render('pages/page_cut_agents.html.twig', [
             'molecule' => $molecule,
             'results' => $results,
             'unit' => $unit,
@@ -408,7 +408,7 @@ final class AnalysisController extends AbstractController
             return $response;
         }
 
-        return $this->render('analysis/sub_products.html.twig', [
+        return $this->render('pages/page_sub_products.html.twig', [
             'molecule' => $molecule,
             'results' => $results,
             'unit' => $unit,
@@ -472,7 +472,7 @@ final class AnalysisController extends AbstractController
             ];
         }
 
-        return $this->render('analysis/embed_chart.html.twig', [
+        return $this->render('pages/page_embed_chart.html.twig', [
             'chart' => $chart,
         ]);
     }
