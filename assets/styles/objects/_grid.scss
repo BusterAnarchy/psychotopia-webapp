@@ -2,6 +2,17 @@
    Grid helpers for cards / charts
 ------------------------------------------- */
 
+:root {
+  --analysis-grid-columns-default: 2;
+  --analysis-chart-height: 400px;
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --analysis-grid-columns-default: 3;
+  }
+}
+
 .analysis-grid,
 .charts-grid {
   display: grid;
@@ -18,14 +29,59 @@
 @media (min-width: 768px) {
   .analysis-grid,
   .charts-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    --grid-column-count: var(--analysis-grid-columns, var(--analysis-grid-columns-default, 2));
+    grid-template-columns: repeat(var(--grid-column-count), minmax(0, 1fr));
     gap: var(--space-3);
   }
 }
 
-@media (min-width: 1200px) {
-  .analysis-grid,
-  .charts-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+.grid-layout-controls {
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  margin: var(--space-2) auto;
+}
+
+.grid-layout-controls__label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--neutral-700);
+}
+
+.grid-layout-controls__buttons {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.grid-layout-controls__button {
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--neutral-700);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.grid-layout-controls__button:is(:hover, :focus-visible) {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.grid-layout-controls__button.is-active {
+  background-color: var(--brand-600);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@media (min-width: 768px) {
+  .grid-layout-controls {
+    display: flex;
   }
 }

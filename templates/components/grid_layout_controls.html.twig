@@ -1,0 +1,17 @@
+{% set options = options|default([2, 3, 4]) %}
+{% set default_columns = default_columns|default(3) %}
+
+<div class="grid-layout-controls container" data-grid-layout>
+    <span class="grid-layout-controls__label">Cartes par ligne</span>
+    <div class="grid-layout-controls__buttons" role="group" aria-label="Nombre de cartes affichées simultanément">
+        {% for option in options %}
+            <button
+                type="button"
+                class="grid-layout-controls__button{% if option == default_columns %} is-active{% endif %}"
+                data-grid-columns="{{ option }}"
+            >
+                {{ option }}
+            </button>
+        {% endfor %}
+    </div>
+</div>

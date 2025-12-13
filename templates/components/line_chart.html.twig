@@ -1,6 +1,6 @@
 <div class="chart-wrapper">
     <div class="chart-wrapper__canvas">
-        <canvas id="{{ id }}" class="chart-canvas" width="400" height="400"></canvas>
+        <canvas id="{{ id }}" class="chart-canvas"></canvas>
     </div>
 </div>
  
@@ -33,6 +33,7 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     x: {
                         stacked: true,

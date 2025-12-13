@@ -29,7 +29,8 @@
 .chart-canvas {
   display: block;
   width: 100%;
-  height: auto;
+  height: var(--analysis-chart-height, 400px);
+  min-height: var(--analysis-chart-height, 400px);
 }
 
 .chart-canvas--map {
