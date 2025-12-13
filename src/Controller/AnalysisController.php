@@ -303,7 +303,7 @@ final class AnalysisController extends AbstractController
         $delta = 15;
         $unit = "pourcent";
 
-        $filters = $this->buildFilterArgs($request);
+        $filters = $this->buildFilterArgs($request, includeNoCut: true);
 
         $analysis = array_merge($filters, [
             $this->formatOption('-m', $molecule->getLabel()),
@@ -361,7 +361,7 @@ final class AnalysisController extends AbstractController
             'unit' => $unit,
             'delta' => $delta,
             'data_reg_dose_poids' => NULL,
-            'filters_summary' => $this->summarizeFilters($request),
+            'filters_summary' => $this->summarizeFilters($request, includeNoCut: true),
         ]);
     }
 
@@ -372,7 +372,7 @@ final class AnalysisController extends AbstractController
         $unit = "pourcent";
 
         $results = $this->runner->run(array_merge(
-            $this->buildFilterArgs($request),
+            $this->buildFilterArgs($request, includeNoCut: true),
             [
                 $this->formatOption('-m', $molecule->getLabel()),
                 'count',
@@ -410,7 +410,7 @@ final class AnalysisController extends AbstractController
             'unit' => $unit,
             'delta' => $delta,
             'data_reg_dose_poids' => NULL,
-            'filters_summary' => $this->summarizeFilters($request),
+            'filters_summary' => $this->summarizeFilters($request, includeNoCut: true),
         ]);
     }
 
@@ -530,9 +530,9 @@ final class AnalysisController extends AbstractController
         if ($start && $end) {
             $summary[] = sprintf('Entre le %s et le %s', $start, $end);
         } else if ($start) {
-            $summary[] = sprintf('Jusqu\'au %s', $start);
+            $summary[] = sprintf('Depuis le %s', $start);
         } else if ($end) {
-            $summary[] = sprintf('Depuis le %s', $end);
+            $summary[] = sprintf('Jusqu\'au %s', $end);
         }
 
         if ($includeFamilies) {

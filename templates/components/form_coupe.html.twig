@@ -1,14 +1,29 @@
+{% set current_start = app.request.query.get('date_debut') %}
+{% set current_end = app.request.query.get('date_fin') %}
+{% set only_real_3mmc = app.request.query.get('no_cut') %}
+
 <div class="form-card">
     <div class="form-card__body">
         <div class="form-field">
             <label for="date_debut" class="form-label">Choisir une date de début :</label>
-            <input type="date" class="form-input" id="date_debut">
+            <input type="date" class="form-input" id="date_debut" value="{{ current_start }}">
         </div>
 
         <div class="form-field">
             <label for="date_fin" class="form-label">Choisir une date de fin :</label>
-            <input type="date" class="form-input" id="date_fin">
+            <input type="date" class="form-input" id="date_fin" value="{{ current_end }}">
         </div>
+
+        {% if molecule is defined and molecule.label == "3-MMC" %}
+        <div class="form-field form-field--center">
+            <span class="form-label">Seulement les échantillons contenant de la 3-MMC</span>
+
+            <label class="switch">
+                <input type="checkbox" id="no_cut" {% if only_real_3mmc %}checked{% endif %}>
+                <span class="slider"></span>
+            </label>
+        </div>
+        {% endif %}
 
         <button id="sendButton" class="btn btn--primary btn--block" type="button">Appliquer</button>
     </div>
@@ -18,10 +33,12 @@
 document.getElementById('sendButton').addEventListener('click', function () {
     const date_debut = document.getElementById('date_debut').value;
     const date_fin = document.getElementById('date_fin').value;
+    const cutBox = document.getElementById('no_cut');
     
     const params = new URLSearchParams();
     if (date_debut) params.set('date_debut', date_debut);
     if (date_fin) params.set('date_fin', date_fin);
+    if (cutBox && cutBox.checked) params.set('no_cut', 'true');
 
     window.location = window.location.pathname + '?' + params.toString();
 });

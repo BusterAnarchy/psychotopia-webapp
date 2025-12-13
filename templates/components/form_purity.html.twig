@@ -1,16 +1,21 @@
 {# templates/components/form_purity.html.twig — version refondue #}
+{% set current_start = app.request.query.get('date_debut') %}
+{% set current_end = app.request.query.get('date_fin') %}
+{% set requested_range = app.request.query.get('range') %}
+{% set range_value = requested_range is not empty ? requested_range : delta|default(15) %}
+{% set only_real_3mmc = app.request.query.get('no_cut') %}
 
 <div class="form-card">
     <div class="form-card__body">
 
         <div class="form-field">
             <label for="date_debut" class="form-label">Choisir une date de début :</label>
-            <input type="date" id="date_debut" class="form-input">
+            <input type="date" id="date_debut" class="form-input" value="{{ current_start }}">
         </div>
 
         <div class="form-field">
             <label for="date_fin" class="form-label">Choisir une date de fin :</label>
-            <input type="date" id="date_fin" class="form-input">
+            <input type="date" id="date_fin" class="form-input" value="{{ current_end }}">
         </div>
 
         <div class="form-field">
@@ -22,9 +27,9 @@
                        min="1"
                        max="30"
                        id="range_val"
-                       value="15"
+                       value="{{ range_value }}"
                        oninput="rangeOutput.value = range_val.value">
-                <output id="rangeOutput" class="form-range__output">15</output>
+                <output id="rangeOutput" class="form-range__output">{{ range_value }}</output>
             </div>
         </div>
 
@@ -33,7 +38,7 @@
             <span class="form-label">Seulement les échantillons contenant de la 3-MMC</span>
 
             <label class="switch">
-                <input type="checkbox" id="no_cut">
+                <input type="checkbox" id="no_cut" {% if only_real_3mmc %}checked{% endif %}>
                 <span class="slider"></span>
             </label>
         </div>
@@ -44,6 +49,12 @@
 </div>
 
 <script>
+const rangeInput = document.getElementById('range_val');
+const rangeOutput = document.getElementById('rangeOutput');
+if (rangeInput && rangeOutput) {
+    rangeOutput.value = rangeInput.value;
+}
+
 document.getElementById('sendButton').addEventListener('click', function () {
     const date_debut = document.getElementById('date_debut').value;
     const date_fin = document.getElementById('date_fin').value;
