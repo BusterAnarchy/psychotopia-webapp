@@ -9,11 +9,22 @@
 
         const data = {{ chart_data | raw }};
 
+        const filterLegendEntries = (legendItem, chartInstance) => {
+            return legendItem.text.length != 0;
+        };
+
         window["{{ id }}_chart"] = new Chart(document.getElementById('{{ id }}').getContext('2d'), {
             type: 'scatter',
             data: data,
             options: {
                 responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            filter: filterLegendEntries
+                        }
+                    }
+                },
                 scales: {
                     x: {
                         min: data.min_x,
