@@ -1,13 +1,18 @@
+{% set current_start = app.request.query.get('date_debut') %}
+{% set current_end = app.request.query.get('date_fin') %}
+{% set selected_families = app.request.query.get('familles') ? app.request.query.get('familles')|split(',') : [] %}
+{% set selected_forms = app.request.query.get('formes') ? app.request.query.get('formes')|split(',') : [] %}
+
 <div class="form-card">
     <div class="form-card__body">
         <div class="form-field">
             <label for="date_debut" class="form-label">Choisir une date de début :</label>
-            <input type="date" class="form-input" id="date_debut">
+            <input type="date" class="form-input" id="date_debut" value="{{ current_start }}">
         </div>
 
         <div class="form-field">
             <label for="date_fin" class="form-label">Choisir une date de fin :</label>
-            <input type="date" class="form-input" id="date_fin">
+            <input type="date" class="form-input" id="date_fin" value="{{ current_end }}">
         </div>
 
         <div class="form-field">
@@ -31,7 +36,12 @@
                 ] %}
                 {% for famille in familles %}
                     <label class="form-checkbox">
-                        <input type="checkbox" name="famille" value="{{ famille.value }}">
+                        <input
+                            type="checkbox"
+                            name="famille"
+                            value="{{ famille.value }}"
+                            {% if famille.value in selected_families %}checked{% endif %}
+                        >
                         <span>{{ famille.label }}</span>
                     </label>
                 {% endfor %}
@@ -53,7 +63,12 @@
                 ] %}
                 {% for form in forms %}
                     <label class="form-checkbox">
-                        <input type="checkbox" name="forme" value="{{ form.value }}">
+                        <input
+                            type="checkbox"
+                            name="forme"
+                            value="{{ form.value }}"
+                            {% if form.value in selected_forms %}checked{% endif %}
+                        >
                         <span>{{ form.label }}</span>
                     </label>
                 {% endfor %}

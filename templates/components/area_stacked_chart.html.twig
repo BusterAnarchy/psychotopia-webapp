@@ -15,7 +15,7 @@
 
         data.datasets_area.forEach((dataset, i) => {
             dataset.borderColor = Chart.defaults.colorPalette[i % Chart.defaults.colorPalette.length];
-            dataset.backgroundColor = '#ff000000';
+            dataset.backgroundColor = Chart.defaults.colorPalette[i % Chart.defaults.colorPalette.length];
         });
 
         new Chart(document.getElementById('{{ id }}').getContext('2d'), {

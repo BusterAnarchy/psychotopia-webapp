@@ -13,7 +13,7 @@
 .page-hero {
   background: linear-gradient(120deg, var(--brand-600), var(--brand-900));
   color: #fff;
-  padding: calc(var(--space-4) * 1.5) 0 var(--space-4);
+  padding: var(--space-4);
 }
 
 .page-hero__content {
@@ -101,7 +101,7 @@
 }
 
 .home-section {
-  padding: var(--space-4) 0;
+  padding: var(--space-4);
   border-top: 1px solid var(--neutral-200);
 }
 

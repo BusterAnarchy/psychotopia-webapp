@@ -54,6 +54,28 @@
         });
     }
     else {
+
+    let annotations = {
+        threshold: {
+            type: 'line',
+            xMin: data.ratio_base_sel/5,
+            xMax: data.ratio_base_sel/5,
+            borderColor: 'red',
+            borderWidth: 3,              // line thickness
+            borderDash: [6, 6],          // dashed line pattern
+            label: {
+                display: true,
+                position: 'start',
+                backgroundColor: 'rgba(255,255,255,0.7)',
+                color: 'red'
+            }
+        }
+    };
+
+    if (unit === 'poids') {
+        annotations = {};
+    }
+
     new Chart(document.getElementById('{{ id }}').getContext('2d'), {
         type: 'bar',
         data: {
@@ -86,22 +108,7 @@
                     display: false
                 },
                 annotation: {
-                    annotations: {
-                        threshold: {
-                            type: 'line',
-                            xMin: data.ratio_base_sel/5,
-                            xMax: data.ratio_base_sel/5,
-                            borderColor: 'red',
-                            borderWidth: 3,              // line thickness
-                            borderDash: [6, 6],          // dashed line pattern
-                            label: {
-                                display: true,
-                                position: 'start',
-                                backgroundColor: 'rgba(255,255,255,0.7)',
-                                color: 'red'
-                            }
-                        }
-                    }
+                    annotations: annotations,
                 }
             }
         }

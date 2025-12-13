@@ -143,8 +143,8 @@ final class AnalysisController extends AbstractController
             "-nip",
             'count',
             "histo_purity:label=histo_purity,unit=$unit",
-            "temporal_purity:label=temporal_purity_avg,mode=avg,delta=$delta",
-            "temporal_purity:label=temporal_purity_med,mode=med,delta=$delta",
+            "temporal_purity:label=temporal_purity_avg,mode=avg,delta=$delta,unit=$unit",
+            "temporal_purity:label=temporal_purity_med,mode=med,delta=$delta,unit=$unit",
             'supply_reg_purity',
             'geo_purity',
             'geo_reg_purity',
@@ -163,6 +163,10 @@ final class AnalysisController extends AbstractController
             ], $filters, $analysis)),
             '2C-B' => $this->runner->run(array_merge([
                 $this->formatOption('-m', '2C-B'),
+                $this->formatOption('--form', 'Poudre,Cristal'),
+            ], $filters, $analysis)),
+            'MDMA' => $this->runner->run(array_merge([
+                $this->formatOption('-m', 'MDMA'),
                 $this->formatOption('--form', 'Poudre,Cristal'),
             ], $filters, $analysis)),
             default => $this->runner->run(array_merge([
@@ -237,8 +241,8 @@ final class AnalysisController extends AbstractController
                 '--tablet_mass',
                 'count',
                 "histo_purity:unit=$unit",
-                "temporal_purity:label=temporal_purity_avg,mode=avg,delta=$delta",
-                "temporal_purity:label=temporal_purity_med,mode=med,delta=$delta",
+                "temporal_purity:label=temporal_purity_avg,mode=avg,delta=$delta,unit=$unit",
+                "temporal_purity:label=temporal_purity_med,mode=med,delta=$delta,unit=$unit",
                 'mass_reg_purity',
             ],
             $this->buildFilterArgs($request, includeNoCut: true)
@@ -481,8 +485,11 @@ final class AnalysisController extends AbstractController
         $start = $this->formatDateForCli($request->query->get('date_debut'));
         $end = $this->formatDateForCli($request->query->get('date_fin'));
 
-        if ($start && $end) {
+        if ($start) {
             $args[] = $this->formatOption('--start', $start);
+        }
+
+        if ($end) {
             $args[] = $this->formatOption('--end', $end);
         }
 
@@ -522,6 +529,10 @@ final class AnalysisController extends AbstractController
 
         if ($start && $end) {
             $summary[] = sprintf('Entre le %s et le %s', $start, $end);
+        } else if ($start) {
+            $summary[] = sprintf('Jusqu\'au %s', $start);
+        } else if ($end) {
+            $summary[] = sprintf('Depuis le %s', $end);
         }
 
         if ($includeFamilies) {
