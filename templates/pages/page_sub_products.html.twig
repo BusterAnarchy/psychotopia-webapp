@@ -66,7 +66,7 @@
         {% embed "components/ui/analysis_card.html.twig" with {
             title: "Proportion par sous-produit",
             description: sub_products_distribution_desc,
-            embed_chart: 'distribution'
+            embed_chart: 'sub_product_distribution'
         } %}
             {% block body %}
                 {% include "components/charts/chart_bar_x.html.twig" with { id:"bar_chart", chart_data:results.histo_sub_products | json_encode } %}
@@ -82,7 +82,7 @@
         {% embed "components/ui/analysis_card.html.twig" with {
             title: "Évolution temporelle des sous-produits",
             description: sub_products_timeline_desc,
-            embed_chart: 'timeline'
+            embed_chart: 'sub_product_timeline'
         } %}
             {% block body %}
                 {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart", chart_data:results.temporal_sub_products | json_encode, is_stacked:'false', mode:'relatif' } %}

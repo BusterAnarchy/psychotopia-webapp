@@ -68,7 +68,7 @@
         {% embed "components/ui/analysis_card.html.twig" with {
             title: "Proportion des échantillons avec produits de coupe",
             description: cut_agents_share_desc,
-            embed_chart: 'share'
+            embed_chart: 'cut_agents_share'
         } %}
             {% block body %}
                 {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart", chart_data: results.count_cut_agents | json_encode } %}
@@ -84,7 +84,7 @@
         {% embed "components/ui/analysis_card.html.twig" with {
             title: "Proportion par produit de coupe",
             description: cut_agents_distribution_desc,
-            embed_chart: 'distribution'
+            embed_chart: 'cut_agents_distribution'
         } %}
             {% block body %}
                 {% include "components/charts/chart_bar_x.html.twig" with { id:"bar_chart", chart_data: results.histo_cut_agents | json_encode } %}
@@ -100,7 +100,7 @@
         {% embed "components/ui/analysis_card.html.twig" with {
             title: "Évolution temporelle des produits de coupe",
             description: cut_agents_timeline_desc,
-            embed_chart: 'timeline'
+            embed_chart: 'cut_agents_timeline'
         } %}
             {% block body %}
                 {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart", chart_data: results.temporal_cut_agents | json_encode, is_stacked:'false', mode:'relatif' } %}

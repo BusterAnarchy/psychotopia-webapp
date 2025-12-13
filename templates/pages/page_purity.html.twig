@@ -83,7 +83,7 @@
         {% embed "components/ui/analysis_card.html.twig" with {
             title: "Histogramme de la " ~ analysis_label_lower,
             description: histogram_desc,
-            embed_chart: 'histogram'
+            embed_chart: 'purity_histogram'
         } %}
             {% block body %}
                 {% include "components/charts/chart_bar_y.html.twig" with { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit} %}
@@ -100,7 +100,7 @@
         {% embed "components/ui/analysis_card.html.twig" with {
             title: "Évolution temporelle – Moyennes et écarts type",
             description: purity_mean_desc,
-            embed_chart: 'temporal_mean'
+            embed_chart: 'purity_temporal_mean'
         } %}
             {% block body %}
                 {% include "components/charts/chart_line.html.twig" with {id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false'} %}
@@ -117,7 +117,7 @@
         {% embed "components/ui/analysis_card.html.twig" with {
             title: "Évolution temporelle – Médianes et quartiles",
             description: purity_median_desc,
-            embed_chart: 'temporal_median'
+            embed_chart: 'purity_temporal_median'
         } %}
             {% block body %}
                 {% include "components/charts/chart_line.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
@@ -171,7 +171,7 @@
             {% embed "components/ui/analysis_card.html.twig" with {
                 title: "Carte de la " ~ analysis_label_lower ~ " moyenne par région",
                 description: map_desc,
-                embed_chart: 'map'
+                embed_chart: 'purity_map'
             } %}
                 {% block body %}
                     {{ render_map('map_chart_prop', results.geo_purity, options:{

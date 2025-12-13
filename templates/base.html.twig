@@ -27,7 +27,14 @@
 {% if _theme not in _supported_themes %}
     {% set _theme = 'navy' %}
 {% endif %}
-<body data-theme="{{ _theme }}">
+{% set _embed_molecule_slug = molecule is defined ? molecule.slug : null %}
+<body
+    data-theme="{{ _theme }}"
+    data-embed-route="{{ path('app_embedded') }}"
+    {% if _embed_molecule_slug %}
+        data-embed-molecule="{{ _embed_molecule_slug }}"
+    {% endif %}
+>
   
     {% include "nav.html.twig" %}
 

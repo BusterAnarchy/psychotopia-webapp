@@ -50,7 +50,7 @@
     {% embed "components/ui/analysis_card.html.twig" with {
       title: "Répartition par molécule",
       description: mol_distribution_desc,
-      embed_chart: 'distribution'
+      embed_chart: 'samples_distribution'
     } %}
       {% block body %}
         {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart", chart_data: results.histo_count | json_encode } %}
@@ -64,7 +64,7 @@
     {% embed "components/ui/analysis_card.html.twig" with {
       title: "Proportion après première consommation",
       description: mol_first_consumption_desc,
-      embed_chart: 'first_consumption'
+      embed_chart: 'samples_first_consumption'
     } %}
       {% block body %}
         {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart_conso", chart_data:results.pie_consumption | json_encode } %}
@@ -78,7 +78,7 @@
     {% embed "components/ui/analysis_card.html.twig" with {
       title: "Évolution temporelle — Nombre d'échantillons",
       description: mol_timeline_abs_desc,
-      embed_chart: 'timeline_absolute'
+      embed_chart: 'samples_timeline_absolute'
     } %}
       {% block body %}
         {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' } %}
@@ -92,7 +92,7 @@
     {% embed "components/ui/analysis_card.html.twig" with {
       title: "Évolution temporelle — Proportion",
       description: mol_timeline_prop_desc,
-      embed_chart: 'timeline_relative'
+      embed_chart: 'samples_timeline_relative'
     } %}
       {% block body %}
         {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' } %}
@@ -106,7 +106,7 @@
     {% embed "components/ui/analysis_card.html.twig" with {
       title: "Carte — Nombre d'échantillons par région",
       description: mol_map_abs_desc,
-      embed_chart: 'map_absolute'
+      embed_chart: 'samples_map_absolute'
     } %}
       {% block body %}
         {{ render_map('map_chart_abs', results.geo_count_abs, options:{
@@ -123,7 +123,7 @@
     {% embed "components/ui/analysis_card.html.twig" with {
       title: "Carte — Échantillons par million d'habitants",
       description: mol_map_prop_desc,
-      embed_chart: 'map_relative'
+      embed_chart: 'samples_map_relative'
     } %}
       {% block body %}
         {{ render_map('map_chart_prop', results.geo_count_prop, options:{

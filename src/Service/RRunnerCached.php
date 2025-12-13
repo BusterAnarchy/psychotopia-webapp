@@ -23,9 +23,9 @@ class RRunnerCached
             return $cached->getResult();
         }
 
-        if ($cached && $cached->getCreatedAt() > (new \DateTime('-6 hours'))) {
-            return $cached->getResult();
-        }
+        // if ($cached && $cached->getCreatedAt() > (new \DateTime('-6 hours'))) {
+        //     return $cached->getResult();
+        // }
 
         $result = $this->runner->run($args);
 
