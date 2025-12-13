@@ -6,7 +6,7 @@ use App\Entity\RCache;
 use App\Repository\RCacheRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class CachedRRunner
+class RRunnerCached
 {
     public function __construct(
         private RRunner $runner,
@@ -14,9 +14,9 @@ class CachedRRunner
         private RCacheRepository $cachedRepository,
     ) {}
 
-    public function run(array $args = []): mixed
+    public function run(RRunnerBuilder $args): mixed
     {
-        $hash = md5(json_encode($args));
+        $hash = md5(json_encode($args->build()));
 
         $cached = $this->cachedRepository->findOneBy(['hash' => $hash]);
         if ($cached) {

@@ -9,11 +9,16 @@ class RRunner
 
     }
 
-    public function run(array $args = []): mixed
+    public static function builder(): RRunnerBuilder
+    {
+        return RRunnerBuilder::create();
+    }
+
+    public function run(RRunnerBuilder $args): mixed
     {
         $cmd = [$this->rCliPath, '-f json'];
         
-        foreach ($args as $arg) {
+        foreach ($args->build() as $arg) {
             $cmd[] = $arg;
         }
 
@@ -30,10 +35,5 @@ class RRunner
         }
 
         return $json;
-    }
-
-    public static function formatOption(string $option, ?string $value = null): string
-    {
-        return $value === null ? $option: sprintf('%s %s', $option, escapeshellarg($value));
     }
 }
