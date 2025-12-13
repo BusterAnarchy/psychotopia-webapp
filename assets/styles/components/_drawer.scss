@@ -198,6 +198,13 @@ body.has-card-modal {
   border: 1px solid var(--neutral-100);
   border-radius: 14px;
   background: linear-gradient(180deg, #fff 0%, rgba(250, 250, 250, 0.8) 100%);
+  display: flex;
+  flex-direction: column;
+  --analysis-chart-height: clamp(360px, 70vh, 900px);
+}
+
+.card-modal__content > * {
+  flex: 1;
 }
 
 .card-modal__content .analysis-card,
@@ -205,6 +212,20 @@ body.has-card-modal {
   box-shadow: none;
   border: none;
   padding: 0;
+}
+
+.card-modal__content .analysis-card__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-modal__content .chart-wrapper {
+  flex: 1;
+}
+
+.card-modal__content .chart-wrapper__canvas {
+  flex: 1;
 }
 
 .card-modal__sidebar {
