@@ -319,12 +319,9 @@ function initCardModal() {
   const modalContent = modal.querySelector('[data-card-modal-content]');
   const modalTitle = modal.querySelector('[data-card-modal-title]');
   const modalDescription = modal.querySelector('[data-card-modal-description]');
-  const modalShareInput = modal.querySelector('[data-card-modal-share-input]');
-  const modalShareLink = modal.querySelector('[data-card-modal-share-link]');
-  const modalShareCopy = modal.querySelector('[data-card-modal-share-copy]');
-  const modalShareIframeWrapper = modal.querySelector('[data-card-modal-share-iframe-wrapper]');
-  const modalShareIframeInput = modal.querySelector('[data-card-modal-share-iframe-input]');
-  const modalShareIframeCopy = modal.querySelector('[data-card-modal-share-iframe-copy]');
+  const modalShareButton = modal.querySelector('[data-card-modal-share-button]');
+  const modalShareIframeButton = modal.querySelector('[data-card-modal-share-iframe-button]');
+  const modalExportButton = modal.querySelector('[data-card-modal-export-button]');
   const dialog = modal.querySelector('.card-modal__dialog');
   if (!modalContent || !modalTitle || !dialog) return;
 
@@ -475,8 +472,19 @@ function initCardModal() {
     }
   });
 
-  setupCopyButton(modalShareCopy, () => (modalShareInput ? modalShareInput.value.trim() : ''));
-  setupCopyButton(modalShareIframeCopy, () => (modalShareIframeInput ? modalShareIframeInput.value.trim() : ''));
+  setupCopyButton(modalShareButton, () => (modalShareButton ? modalShareButton.dataset.copyValue || '' : ''));
+  setupCopyButton(modalShareIframeButton, () => (modalShareIframeButton ? modalShareIframeButton.dataset.copyValue || '' : ''));
+  if (modalExportButton) {
+    modalExportButton.addEventListener('click', () => {
+      if (modalExportButton.disabled) return;
+      if (!state.card) return;
+      const tableContainer = state.card.querySelector('[data-chart-table]');
+      if (!tableContainer) return;
+      const tableState = chartTableState.get(tableContainer);
+      if (!tableState) return;
+      downloadTableAsCsv(tableState.headers, tableState.rows, tableState.fileName);
+    });
+  }
 
   window.addEventListener('hashchange', handleHashNavigation);
   handleHashNavigation();
@@ -485,23 +493,19 @@ function initCardModal() {
     if (modalDescription) {
       modalDescription.innerHTML = '';
     }
-    if (modalShareInput) {
-      modalShareInput.value = '';
+    if (modalShareButton) {
+      modalShareButton.dataset.copyValue = '';
+      modalShareButton.disabled = true;
+      resetCopyButton(modalShareButton);
     }
-    if (modalShareLink) {
-      modalShareLink.removeAttribute('href');
+    if (modalShareIframeButton) {
+      modalShareIframeButton.dataset.copyValue = '';
+      modalShareIframeButton.disabled = true;
+      resetCopyButton(modalShareIframeButton);
     }
-    if (modalShareIframeInput) {
-      modalShareIframeInput.value = '';
+    if (modalExportButton) {
+      modalExportButton.disabled = true;
     }
-    if (modalShareIframeWrapper) {
-      modalShareIframeWrapper.hidden = true;
-    }
-    if (modalShareIframeCopy) {
-      modalShareIframeCopy.disabled = true;
-    }
-    resetCopyButton(modalShareCopy);
-    resetCopyButton(modalShareIframeCopy);
   }
 
   function populateModalDescription(card) {
@@ -516,34 +520,34 @@ function initCardModal() {
 
   function updateModalShare(card) {
     const url = buildShareUrl(card);
-    if (modalShareInput) {
-      modalShareInput.value = url;
-    }
-    if (modalShareLink) {
-      modalShareLink.href = url;
+    if (modalShareButton) {
+      modalShareButton.dataset.copyValue = url || '';
+      modalShareButton.disabled = !url;
+      resetCopyButton(modalShareButton);
     }
     updateEmbedShare(card);
+    updateExportAction(card);
   }
 
   function updateEmbedShare(card) {
-    if (!modalShareIframeWrapper || !modalShareIframeInput) return;
+    if (!modalShareIframeButton) return;
     const embedData = buildEmbedData(card);
     if (!embedData) {
-      modalShareIframeWrapper.hidden = true;
-      modalShareIframeInput.value = '';
-      if (modalShareIframeCopy) {
-        modalShareIframeCopy.disabled = true;
-      }
-      resetCopyButton(modalShareIframeCopy);
+      modalShareIframeButton.dataset.copyValue = '';
+      modalShareIframeButton.disabled = true;
+      resetCopyButton(modalShareIframeButton);
       return;
     }
 
-    modalShareIframeWrapper.hidden = false;
-    modalShareIframeInput.value = embedData.code;
-    if (modalShareIframeCopy) {
-      modalShareIframeCopy.disabled = false;
-    }
-    resetCopyButton(modalShareIframeCopy);
+    modalShareIframeButton.dataset.copyValue = embedData.code;
+    modalShareIframeButton.disabled = false;
+    resetCopyButton(modalShareIframeButton);
+  }
+
+  function updateExportAction(card) {
+    if (!modalExportButton) return;
+    const tableContainer = card ? card.querySelector('[data-chart-table]') : null;
+    modalExportButton.disabled = !tableContainer;
   }
 
   function buildShareUrl(card) {
@@ -596,16 +600,26 @@ function initCardModal() {
     return { url: embedUrl, code };
   }
 
-  function setupCopyButton(button, getValue) {
-    if (!button) return;
-    const defaultLabel = button.textContent.trim() || 'Copier';
-    button.dataset.copyLabel = defaultLabel;
-    button.addEventListener('click', () => {
-      const value = typeof getValue === 'function' ? getValue() : '';
-      if (!value) return;
-      copyTextToClipboard(value, button);
-    });
+function setupCopyButton(button, getValue) {
+  if (!button) return;
+  const status = button.querySelector('[data-tool-status]');
+  const defaultLabel =
+    button.dataset.copyLabel ||
+    (status ? status.textContent.trim() : button.textContent.trim()) ||
+    'Copier';
+  button.dataset.copyLabel = defaultLabel;
+  if (status) {
+    status.textContent = defaultLabel;
+  } else {
+    button.textContent = defaultLabel;
   }
+  button.addEventListener('click', () => {
+    if (button.disabled) return;
+    const value = typeof getValue === 'function' ? getValue() : '';
+    if (!value) return;
+    copyTextToClipboard(value, button);
+  });
+}
 
   function copyTextToClipboard(value, button) {
     const fallbackCopy = () => {
@@ -631,17 +645,33 @@ function initCardModal() {
   function showCopyFeedback(button) {
     if (!button) return;
     button.classList.add('is-success');
-    button.textContent = 'Copié !';
+    const status = button.querySelector('[data-tool-status]');
+    if (status) {
+      status.textContent = 'Copié !';
+    } else {
+      button.textContent = 'Copié !';
+    }
     setTimeout(() => {
       button.classList.remove('is-success');
-      button.textContent = button.dataset.copyLabel || 'Copier';
+      const defaultLabel = button.dataset.copyLabel || 'Copier';
+      if (status) {
+        status.textContent = defaultLabel;
+      } else {
+        button.textContent = defaultLabel;
+      }
     }, 1500);
   }
 
   function resetCopyButton(button) {
     if (!button) return;
     button.classList.remove('is-success');
-    button.textContent = button.dataset.copyLabel || button.textContent;
+    const status = button.querySelector('[data-tool-status]');
+    const defaultLabel = button.dataset.copyLabel || 'Copier';
+    if (status) {
+      status.textContent = defaultLabel;
+    } else {
+      button.textContent = defaultLabel;
+    }
   }
 
   function escapeHtml(value) {
@@ -719,7 +749,7 @@ function initChartTables() {
       rows: tableData.rows,
       fileName,
     });
-    bindExportButton(container);
+    setupChartTableToggle(container);
   });
 }
 
@@ -919,16 +949,37 @@ function renderChartTable(table, headers, rows) {
   });
 }
 
-function bindExportButton(container) {
-  const button = container.querySelector('[data-chart-export]');
-  if (!button || button.dataset.chartExportBound === 'true') return;
+function setupChartTableToggle(container) {
+  const toggle = container.querySelector('[data-chart-table-toggle]');
+  const panel = container.querySelector('[data-chart-table-panel]');
+  if (!toggle || !panel) return;
 
-  button.dataset.chartExportBound = 'true';
-  button.addEventListener('click', () => {
-    const state = chartTableState.get(container);
-    if (!state) return;
-    downloadTableAsCsv(state.headers, state.rows, state.fileName);
+  const defaultState = toggle.dataset.chartTableDefault === 'closed' ? false : true;
+  setChartTablePanelState(panel, toggle, defaultState);
+
+  toggle.addEventListener('click', (event) => {
+    event.preventDefault();
+    const nextState = !panel.classList.contains('is-open');
+    setChartTablePanelState(panel, toggle, nextState);
   });
+}
+
+function setChartTablePanelState(panel, toggle, isOpen) {
+  if (!panel || !toggle) return;
+  panel.classList.toggle('is-open', Boolean(isOpen));
+  toggle.classList.toggle('is-open', Boolean(isOpen));
+  if (isOpen) {
+    panel.removeAttribute('hidden');
+  } else {
+    panel.setAttribute('hidden', '');
+  }
+  toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  const labelEl = toggle.querySelector('[data-chart-table-toggle-label]');
+  const openLabel = toggle.dataset.labelOpen || 'Masquer le tableau';
+  const closedLabel = toggle.dataset.labelClosed || 'Afficher le tableau';
+  if (labelEl) {
+    labelEl.textContent = isOpen ? openLabel : closedLabel;
+  }
 }
 
 function buildExportFileName(container, config) {

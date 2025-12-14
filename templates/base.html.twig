@@ -62,63 +62,48 @@
                             <p class="card-modal__muted">Aucune description disponible.</p>
                         </div>
                     </section>
-                    <section class="card-modal__section card-modal__section--share">
-                        <p class="card-modal__section-label">Partager</p>
-                        <div class="card-modal__section-content">
-                            <div class="card-modal__share card-modal__share-group">
-                                <p class="card-modal__share-label">Lien direct</p>
-                                <input
-                                    type="text"
-                                    class="card-modal__share-input"
-                                    value=""
-                                    readonly
-                                    data-card-modal-share-input
-                                    aria-label="Lien de partage"
-                                />
-                                <div class="card-modal__share-actions">
-                                    <button
-                                        type="button"
-                                        class="card-modal__share-copy"
-                                        data-card-modal-share-copy
-                                    >
-                                        Copier
-                                    </button>
-                                    <a
-                                        class="card-modal__share-link"
-                                        href="#"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        data-card-modal-share-link
-                                    >
-                                        Ouvrir
-                                    </a>
-                                </div>
-                            </div>
-                            <div
-                                class="card-modal__share card-modal__share-group"
-                                data-card-modal-share-iframe-wrapper
-                                hidden
+                    <section class="card-modal__section card-modal__section--tools">
+                        <p class="card-modal__section-label">Outils</p>
+                        <div class="card-modal__tools" data-card-modal-tools>
+                            <button
+                                type="button"
+                                class="card-modal__tool card-modal__tool--share"
+                                data-card-modal-share-button
+                                disabled
                             >
-                                <p class="card-modal__share-label">Code d'intégration (iframe)</p>
-                                <textarea
-                                    class="card-modal__share-input card-modal__share-textarea"
-                                    rows="4"
-                                    readonly
-                                    spellcheck="false"
-                                    data-card-modal-share-iframe-input
-                                    aria-label="Code iframe à intégrer"
-                                ></textarea>
-                                <div class="card-modal__share-actions">
-                                    <button
-                                        type="button"
-                                        class="card-modal__share-copy"
-                                        data-card-modal-share-iframe-copy
-                                        disabled
-                                    >
-                                        Copier le code
-                                    </button>
-                                </div>
-                            </div>
+                                <span class="card-modal__tool-icon" aria-hidden="true">🔗</span>
+                                <span class="card-modal__tool-content">
+                                    <span class="card-modal__tool-title">Partager le graphique</span>
+                                    <span class="card-modal__tool-desc">Copier le lien direct vers cette vue.</span>
+                                </span>
+                                <span class="card-modal__tool-status" data-tool-status>Copier</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="card-modal__tool card-modal__tool--iframe"
+                                data-card-modal-share-iframe-button
+                                disabled
+                            >
+                                <span class="card-modal__tool-icon" aria-hidden="true">🧩</span>
+                                <span class="card-modal__tool-content">
+                                    <span class="card-modal__tool-title">Partager via iframe</span>
+                                    <span class="card-modal__tool-desc">Génère le code d’intégration.</span>
+                                </span>
+                                <span class="card-modal__tool-status" data-tool-status>Copier</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="card-modal__tool card-modal__tool--export"
+                                data-card-modal-export-button
+                                disabled
+                            >
+                                <span class="card-modal__tool-icon" aria-hidden="true">⬇️</span>
+                                <span class="card-modal__tool-content">
+                                    <span class="card-modal__tool-title">Exporter les données</span>
+                                    <span class="card-modal__tool-desc">Télécharger le tableau au format CSV.</span>
+                                </span>
+                                <span class="card-modal__tool-status">Télécharger</span>
+                            </button>
                         </div>
                     </section>
                 </aside>
