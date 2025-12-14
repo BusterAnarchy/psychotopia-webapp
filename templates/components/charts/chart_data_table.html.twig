@@ -1,0 +1,40 @@
+{% set table_id = (chart_id ~ '_table') %}
+{% set caption_id = table_id ~ '_caption' %}
+{% set title_id = table_id ~ '_title' %}
+{% set region_label = table_title|default('Lecture alternative du graphique') %}
+{% set caption_text = table_caption|default('Tableau des données correspondant au graphique ci-dessus.') %}
+
+<div
+    class="chart-data-table chart-wrapper__table"
+    data-chart-table
+    data-chart-id="{{ chart_id }}"
+    data-chart-payload="{{ chart_data_json|e('html_attr') }}"
+    data-chart-config="{{ table_config|json_encode|e('html_attr') }}"
+>
+    <div class="chart-data-table__header">
+        <h3 id="{{ title_id }}" class="chart-data-table__title">{{ region_label }}</h3>
+        <button
+            type="button"
+            class="btn btn--ghost chart-data-table__export"
+            data-chart-export
+            aria-describedby="{{ title_id }}"
+        >
+            Exporter en CSV
+        </button>
+    </div>
+    <div
+        class="chart-data-table__wrapper"
+        role="region"
+        aria-live="polite"
+        aria-labelledby="{{ title_id }}"
+    >
+        <table class="chart-table" id="{{ table_id }}">
+            <caption id="{{ caption_id }}">{{ caption_text }}</caption>
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <p class="chart-data-table__notice">
+        Ces valeurs sont strictement identiques à celles utilisées pour générer le graphique.
+    </p>
+</div>

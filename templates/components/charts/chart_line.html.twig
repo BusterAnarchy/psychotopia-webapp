@@ -2,6 +2,18 @@
     <div class="chart-wrapper__canvas">
         <canvas id="{{ id }}" class="chart-canvas"></canvas>
     </div>
+    {% include "components/charts/chart_data_table.html.twig" with {
+        chart_id: id,
+        chart_data_json: chart_data,
+        table_config: {
+            type: 'timeseries',
+            labelsKey: 'labels_line',
+            datasetsKey: 'datasets_line',
+            labelHeading: 'Période',
+            datasetHeading: 'Série',
+            valueHeading: 'Pourcentage de pureté'
+        }
+    } %}
 </div>
  
 <script>

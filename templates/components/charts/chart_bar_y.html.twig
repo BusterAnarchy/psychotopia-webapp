@@ -1,7 +1,19 @@
+{% set histogram_value_heading = unit == 'poids' ? 'Masse de la substance (mg)' : 'Pourcentage de pureté' %}
 <div class="chart-wrapper">
     <div class="chart-wrapper__canvas">
         <canvas id="{{ id }}" class="chart-canvas"></canvas>
     </div>
+    {% include "components/charts/chart_data_table.html.twig" with {
+        chart_id: id,
+        chart_data_json: chart_data,
+        table_config: {
+            type: 'categorical',
+            labelsKey: 'labels',
+            dataKey: 'data',
+            labelHeading: histogram_value_heading,
+            valueHeading: 'Occurences'
+        }
+    } %}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,10 +24,7 @@
 
     const data = {{ chart_data | raw }};
     const unit = '{{unit}}'
-    let x_axis_label = ''
-    
-    if (unit === 'pourcent'){x_axis_label='Pourcentage de pureté'}
-    if (unit === 'poids'){x_axis_label='Masse de la substance (mg)'}
+    const x_axis_label = '{{ histogram_value_heading|e('js') }}';
 
     if (data.ratio_base_sel === null) {
         new Chart(document.getElementById('{{ id }}').getContext('2d'), {

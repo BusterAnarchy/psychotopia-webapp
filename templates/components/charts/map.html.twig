@@ -1,14 +1,24 @@
+{% set chart_payload = chart_data|json_encode %}
 <div class="chart-wrapper chart-wrapper--map">
     <div class="chart-wrapper__canvas chart-wrapper__canvas--flush">
         <div
             id="{{ id }}"
             class="map chart-canvas chart-canvas--map"
-            data-chart="{{ chart_data|json_encode|e('html_attr') }}"
+            data-chart="{{ chart_payload|e('html_attr') }}"
             data-colors="{{ color_data|json_encode|e('html_attr') }}"
             data-options="{{ options|json_encode|e('html_attr') }}"
         >
         </div>
     </div>
+    {% include "components/charts/chart_data_table.html.twig" with {
+        chart_id: id,
+        chart_data_json: chart_payload,
+        table_config: {
+            type: 'map',
+            labelHeading: 'Territoire',
+            valueHeading: 'Valeur'
+        }
+    } %}
 </div>
 
 <script type="module">
