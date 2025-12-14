@@ -28,7 +28,7 @@ class MapExtension extends AbstractExtension
      */
     public function renderMap(string $id, array $chartData, array $options = []): string
     {
-        return $this->twig->render('components/map.html.twig', [
+        return $this->twig->render('components/charts/map.html.twig', [
             'id'         => $id,
             'chart_data' => $chartData,
             'color_data' => $this->generate_color_map(

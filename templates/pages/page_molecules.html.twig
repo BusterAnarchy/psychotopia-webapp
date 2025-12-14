@@ -10,7 +10,7 @@
     <div class="analysis-header__meta analysis-header__card">
       <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
       <p class="analysis-header__count">{{ results.count }}</p>
-      {% include "components/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
+      {% include "components/ui/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
     </div>
 
   </header>
@@ -32,28 +32,28 @@
         </div>
 
         <div class="drawer__body">
-          {% include "components/form.html.twig" %}
+          {% include "components/forms/form_molecules.html.twig" %}
         </div>
       </div>
     </div>
   </aside>
 
-  {% include "components/drawer_trigger.html.twig" %}
+  {% include "components/ui/drawer_trigger.html.twig" %}
 
-  {% include "components/grid_layout_controls.html.twig" %}
+  {% include "components/ui/grid_layout_controls.html.twig" %}
 
   <section class="analysis-grid container" id="moleculesMain">
     {% set mol_distribution_desc %}
       <p>Le diagramme présente la proportion des échantillons en fonction de la molécule supposée.</p>
     {% endset %}
 
-    {% embed "components/analysis_card.html.twig" with {
+    {% embed "components/ui/analysis_card.html.twig" with {
       title: "Répartition par molécule",
       description: mol_distribution_desc,
-      embed_chart: 'distribution'
+      embed_chart: 'samples_distribution'
     } %}
       {% block body %}
-        {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_count | json_encode } %}
+        {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart", chart_data: results.histo_count | json_encode } %}
       {% endblock %}
     {% endembed %}
 
@@ -61,13 +61,13 @@
       <p>Proportion des échantillons envoyés après une première consommation.</p>
     {% endset %}
 
-    {% embed "components/analysis_card.html.twig" with {
+    {% embed "components/ui/analysis_card.html.twig" with {
       title: "Proportion après première consommation",
       description: mol_first_consumption_desc,
-      embed_chart: 'first_consumption'
+      embed_chart: 'samples_first_consumption'
     } %}
       {% block body %}
-        {% include "components/pie_chart.html.twig" with { id:"pie_chart_conso", chart_data:results.pie_consumption | json_encode } %}
+        {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart_conso", chart_data:results.pie_consumption | json_encode } %}
       {% endblock %}
     {% endembed %}
 
@@ -75,13 +75,13 @@
       <p>Les données sont regroupées par bimestre et montrent l'évolution en nombre d'échantillons par molécule.</p>
     {% endset %}
 
-    {% embed "components/analysis_card.html.twig" with {
+    {% embed "components/ui/analysis_card.html.twig" with {
       title: "Évolution temporelle — Nombre d'échantillons",
       description: mol_timeline_abs_desc,
-      embed_chart: 'timeline_absolute'
+      embed_chart: 'samples_timeline_absolute'
     } %}
       {% block body %}
-        {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' } %}
+        {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart_1", chart_data:results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' } %}
       {% endblock %}
     {% endembed %}
 
@@ -89,13 +89,13 @@
       <p>Les données sont regroupées par bimestre et montrent l'évolution en proportion d'échantillons par molécule.</p>
     {% endset %}
 
-    {% embed "components/analysis_card.html.twig" with {
+    {% embed "components/ui/analysis_card.html.twig" with {
       title: "Évolution temporelle — Proportion",
       description: mol_timeline_prop_desc,
-      embed_chart: 'timeline_relative'
+      embed_chart: 'samples_timeline_relative'
     } %}
       {% block body %}
-        {% include "components/area_stacked_chart.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' } %}
+        {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart_2", chart_data:results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' } %}
       {% endblock %}
     {% endembed %}
 
@@ -103,10 +103,10 @@
       <p>La carte montre le nombre d'échantillons reçus en fonction de la région d'envoi.</p>
     {% endset %}
 
-    {% embed "components/analysis_card.html.twig" with {
+    {% embed "components/ui/analysis_card.html.twig" with {
       title: "Carte — Nombre d'échantillons par région",
       description: mol_map_abs_desc,
-      embed_chart: 'map_absolute'
+      embed_chart: 'samples_map_absolute'
     } %}
       {% block body %}
         {{ render_map('map_chart_abs', results.geo_count_abs, options:{
@@ -120,10 +120,10 @@
       <p>Nombre d'échantillons reçus par région, rapporté à la population (par million d'habitants).</p>
     {% endset %}
 
-    {% embed "components/analysis_card.html.twig" with {
+    {% embed "components/ui/analysis_card.html.twig" with {
       title: "Carte — Échantillons par million d'habitants",
       description: mol_map_prop_desc,
-      embed_chart: 'map_relative'
+      embed_chart: 'samples_map_relative'
     } %}
       {% block body %}
         {{ render_map('map_chart_prop', results.geo_count_prop, options:{

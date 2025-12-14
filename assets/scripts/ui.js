@@ -560,16 +560,29 @@ function initCardModal() {
     if (!card) return null;
     const chartKey = card.dataset ? card.dataset.embedChart : null;
     if (!chartKey) return null;
+    const embedRoute = document.body && document.body.dataset ? document.body.dataset.embedRoute : null;
+    if (!embedRoute) return null;
+    const slug = document.body && document.body.dataset ? document.body.dataset.embedMolecule : '';
+    const pageParams = new URLSearchParams(window.location.search);
     try {
-      const url = new URL(window.location.href);
+      const base = window.location.origin || `${window.location.protocol}//${window.location.host}`;
+      const url = new URL(embedRoute, base);
+      pageParams.forEach((value, key) => {
+        url.searchParams.set(key, value);
+      });
       url.searchParams.set('chart', chartKey);
+      if (slug) {
+        url.searchParams.set('molecule', slug);
+      }
       url.hash = '';
       return url.toString();
     } catch (error) {
-      const params = new URLSearchParams(window.location.search);
-      params.set('chart', chartKey);
-      const query = params.toString();
-      return query ? `${window.location.pathname}?${query}` : window.location.pathname;
+      pageParams.set('chart', chartKey);
+      if (slug) {
+        pageParams.set('molecule', slug);
+      }
+      const query = pageParams.toString();
+      return query ? `${embedRoute}?${query}` : embedRoute;
     }
   }
 

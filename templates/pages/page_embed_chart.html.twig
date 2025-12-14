@@ -5,16 +5,17 @@
 {% block body %}
 <div class="chart-embed container">
     <header class="chart-embed__head">
-        <p class="chart-embed__source">Psychotopia</p>
         <h1 class="chart-embed__title">{{ chart.title }}</h1>
     </header>
 
     <div class="chart-embed__body">
         {% if chart.type == 'map' %}
-            {{ render_map(chart.id, chart.data, chart.options|default({})) }}
+            {{ render_map('embedded_map', chart.context.chart_data, chart.context.options|default({})) }}
         {% else %}
             {% include chart.template with chart.context %}
         {% endif %}
     </div>
+
+    <p class="chart-embed__source">Psychotopia</p>
 </div>
 {% endblock %}

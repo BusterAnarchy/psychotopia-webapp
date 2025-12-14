@@ -9,7 +9,7 @@
         <div class="analysis-header__meta analysis-header__card">
             <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
             <p class="analysis-header__count">{{ results.histo_supply.count }}</p>
-            {% include "components/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
+            {% include "components/ui/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
         </div>
     </header>
 
@@ -29,28 +29,28 @@
                     <button class="btn btn--ghost drawer__close" type="button" aria-label="Fermer les options" data-drawer-close>✕</button>
                 </div>
                 <div class="drawer__body">
-                    {% include "components/form.html.twig" %}
+                    {% include "components/forms/form_molecules.html.twig" %}
                 </div>
             </div>
         </div>
     </aside>
 
-    {% include "components/drawer_trigger.html.twig" %}
+    {% include "components/ui/drawer_trigger.html.twig" %}
 
-    {% include "components/grid_layout_controls.html.twig" %}
+    {% include "components/ui/grid_layout_controls.html.twig" %}
 
     <section class="analysis-grid container">
         {% set supply_share_desc %}
             <p>Répartition des échantillons selon les différentes voies d'approvisionnement.</p>
         {% endset %}
 
-        {% embed "components/analysis_card.html.twig" with {
+        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Répartition par voie d'approvisionnement",
             description: supply_share_desc,
-            embed_chart: 'distribution'
+            embed_chart: 'supply_distribution'
         } %}
             {% block body %}
-                {% include "components/pie_chart.html.twig" with { id:"pie_chart", chart_data: results.histo_supply | json_encode } %}
+                {% include "components/charts/chart_pie.html.twig" with { id:"pie_chart", chart_data: results.histo_supply | json_encode } %}
             {% endblock %}
         {% endembed %}
 
@@ -58,13 +58,13 @@
             <p>Proportion des échantillons par voie d'approvisionnement, regroupée par bimestre.</p>
         {% endset %}
 
-        {% embed "components/analysis_card.html.twig" with {
+        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Évolution temporelle par voie d'approvisionnement",
             description: supply_timeline_desc,
-            embed_chart: 'timeline'
+            embed_chart: 'supply_timeline'
         } %}
             {% block body %}
-                {% include "components/area_stacked_chart.html.twig" with { id:"area_chart", chart_data: results.temporal_supply | json_encode, is_stacked:'true', mode:'relatif' }  %}
+                {% include "components/charts/chart_area_stacked.html.twig" with { id:"area_chart", chart_data: results.temporal_supply | json_encode, is_stacked:'true', mode:'relatif' }  %}
             {% endblock %}
         {% endembed %}
     </section>
