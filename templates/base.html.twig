@@ -10,46 +10,31 @@
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
 
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/patternomaly@1.3.0/dist/patternomaly.min.js"></script>
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('chart-defaults', attributes={ defer: false }) }}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
  
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <script>
-        Chart.defaults.color = '#000'; // couleur par défaut du texte
-        Chart.defaults.plugins.legend.labels.color = '#000'; // couleur légende
-
-        // Définir 15 couleurs fixes
-        Chart.defaults.colorPalette = [
-        '#D3C2CD', // Lilac Grey
-        '#849E15', // Spring Leaves
-        '#92A2A6', // Good Surf
-        '#B28622', // Gold Velvet
-        '#F8CABA', // Brink of Pink
-        '#D8560E', // Poppy
-        '#EFCE7B', // Butter Yellow
-        '#E1903E', // Florida Oranges
-        '#6777B6', // Pea Flower
-        '#2B2B23', // Night Forest
-        '#D17089', // Dusty Berry
-        '#CBD183', // Pistachio
-        '#7E4F2F', // Walnut Brown (warmer dark neutral)
-        '#A1B6D6', // Powder Blue (cool pastel)
-        '#F4A6A0'  // Coral Pink (soft warm)
-        ];
-    </script>
 </head>
 {% set _supported_themes = ['navy', 'nocturne', 'neon'] %}
 {% set _theme = app.request.query.get('theme') %}
 {% if _theme not in _supported_themes %}
     {% set _theme = 'navy' %}
 {% endif %}
-<body data-theme="{{ _theme }}">
+{% set _embed_molecule_slug = molecule is defined ? molecule.slug : null %}
+<body
+    data-theme="{{ _theme }}"
+    data-embed-route="{{ path('app_embedded') }}"
+    {% if _embed_molecule_slug %}
+        data-embed-molecule="{{ _embed_molecule_slug }}"
+    {% endif %}
+>
   
     {% include "nav.html.twig" %}
 
@@ -77,63 +62,48 @@
                             <p class="card-modal__muted">Aucune description disponible.</p>
                         </div>
                     </section>
-                    <section class="card-modal__section card-modal__section--share">
-                        <p class="card-modal__section-label">Partager</p>
-                        <div class="card-modal__section-content">
-                            <div class="card-modal__share card-modal__share-group">
-                                <p class="card-modal__share-label">Lien direct</p>
-                                <input
-                                    type="text"
-                                    class="card-modal__share-input"
-                                    value=""
-                                    readonly
-                                    data-card-modal-share-input
-                                    aria-label="Lien de partage"
-                                />
-                                <div class="card-modal__share-actions">
-                                    <button
-                                        type="button"
-                                        class="card-modal__share-copy"
-                                        data-card-modal-share-copy
-                                    >
-                                        Copier
-                                    </button>
-                                    <a
-                                        class="card-modal__share-link"
-                                        href="#"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        data-card-modal-share-link
-                                    >
-                                        Ouvrir
-                                    </a>
-                                </div>
-                            </div>
-                            <div
-                                class="card-modal__share card-modal__share-group"
-                                data-card-modal-share-iframe-wrapper
-                                hidden
+                    <section class="card-modal__section card-modal__section--tools">
+                        <p class="card-modal__section-label">Outils</p>
+                        <div class="card-modal__tools" data-card-modal-tools>
+                            <button
+                                type="button"
+                                class="card-modal__tool card-modal__tool--share"
+                                data-card-modal-share-button
+                                disabled
                             >
-                                <p class="card-modal__share-label">Code d'intégration (iframe)</p>
-                                <textarea
-                                    class="card-modal__share-input card-modal__share-textarea"
-                                    rows="4"
-                                    readonly
-                                    spellcheck="false"
-                                    data-card-modal-share-iframe-input
-                                    aria-label="Code iframe à intégrer"
-                                ></textarea>
-                                <div class="card-modal__share-actions">
-                                    <button
-                                        type="button"
-                                        class="card-modal__share-copy"
-                                        data-card-modal-share-iframe-copy
-                                        disabled
-                                    >
-                                        Copier le code
-                                    </button>
-                                </div>
-                            </div>
+                                <span class="card-modal__tool-icon" aria-hidden="true">🔗</span>
+                                <span class="card-modal__tool-content">
+                                    <span class="card-modal__tool-title">Partager le graphique</span>
+                                    <span class="card-modal__tool-desc">Copier le lien direct vers cette vue.</span>
+                                </span>
+                                <span class="card-modal__tool-status" data-tool-status>Copier</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="card-modal__tool card-modal__tool--iframe"
+                                data-card-modal-share-iframe-button
+                                disabled
+                            >
+                                <span class="card-modal__tool-icon" aria-hidden="true">🧩</span>
+                                <span class="card-modal__tool-content">
+                                    <span class="card-modal__tool-title">Partager via iframe</span>
+                                    <span class="card-modal__tool-desc">Génère le code d’intégration.</span>
+                                </span>
+                                <span class="card-modal__tool-status" data-tool-status>Copier</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="card-modal__tool card-modal__tool--export"
+                                data-card-modal-export-button
+                                disabled
+                            >
+                                <span class="card-modal__tool-icon" aria-hidden="true">⬇️</span>
+                                <span class="card-modal__tool-content">
+                                    <span class="card-modal__tool-title">Exporter les données</span>
+                                    <span class="card-modal__tool-desc">Télécharger le tableau au format CSV.</span>
+                                </span>
+                                <span class="card-modal__tool-status">Télécharger</span>
+                            </button>
                         </div>
                     </section>
                 </aside>

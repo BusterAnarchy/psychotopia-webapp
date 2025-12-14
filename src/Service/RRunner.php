@@ -9,11 +9,16 @@ class RRunner
 
     }
 
-    public function run(array $args = []): mixed
+    public static function builder(): RRunnerBuilder
+    {
+        return RRunnerBuilder::create();
+    }
+
+    public function run(RRunnerBuilder $args): mixed
     {
         $cmd = [$this->rCliPath, '-f json'];
         
-        foreach ($args as $arg) {
+        foreach ($args->build() as $arg) {
             $cmd[] = $arg;
         }
 

@@ -5,6 +5,7 @@ const GRID_COLUMN_CONFIG = {
   4: { chartHeight: 300 },
 };
 let pendingChartResizeFrame = null;
+const chartTableState = new WeakMap();
 
 function initNav() {
   const navToggle = document.querySelector('[data-nav-toggle]');
@@ -251,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDrawers();
   initTabs();
   initGridLayoutControls();
+  initChartTables();
   initCardDescriptions();
   initCardModal();
 });
@@ -317,12 +319,9 @@ function initCardModal() {
   const modalContent = modal.querySelector('[data-card-modal-content]');
   const modalTitle = modal.querySelector('[data-card-modal-title]');
   const modalDescription = modal.querySelector('[data-card-modal-description]');
-  const modalShareInput = modal.querySelector('[data-card-modal-share-input]');
-  const modalShareLink = modal.querySelector('[data-card-modal-share-link]');
-  const modalShareCopy = modal.querySelector('[data-card-modal-share-copy]');
-  const modalShareIframeWrapper = modal.querySelector('[data-card-modal-share-iframe-wrapper]');
-  const modalShareIframeInput = modal.querySelector('[data-card-modal-share-iframe-input]');
-  const modalShareIframeCopy = modal.querySelector('[data-card-modal-share-iframe-copy]');
+  const modalShareButton = modal.querySelector('[data-card-modal-share-button]');
+  const modalShareIframeButton = modal.querySelector('[data-card-modal-share-iframe-button]');
+  const modalExportButton = modal.querySelector('[data-card-modal-export-button]');
   const dialog = modal.querySelector('.card-modal__dialog');
   if (!modalContent || !modalTitle || !dialog) return;
 
@@ -473,8 +472,19 @@ function initCardModal() {
     }
   });
 
-  setupCopyButton(modalShareCopy, () => (modalShareInput ? modalShareInput.value.trim() : ''));
-  setupCopyButton(modalShareIframeCopy, () => (modalShareIframeInput ? modalShareIframeInput.value.trim() : ''));
+  setupCopyButton(modalShareButton, () => (modalShareButton ? modalShareButton.dataset.copyValue || '' : ''));
+  setupCopyButton(modalShareIframeButton, () => (modalShareIframeButton ? modalShareIframeButton.dataset.copyValue || '' : ''));
+  if (modalExportButton) {
+    modalExportButton.addEventListener('click', () => {
+      if (modalExportButton.disabled) return;
+      if (!state.card) return;
+      const tableContainer = state.card.querySelector('[data-chart-table]');
+      if (!tableContainer) return;
+      const tableState = chartTableState.get(tableContainer);
+      if (!tableState) return;
+      downloadTableAsCsv(tableState.headers, tableState.rows, tableState.fileName);
+    });
+  }
 
   window.addEventListener('hashchange', handleHashNavigation);
   handleHashNavigation();
@@ -483,23 +493,19 @@ function initCardModal() {
     if (modalDescription) {
       modalDescription.innerHTML = '';
     }
-    if (modalShareInput) {
-      modalShareInput.value = '';
+    if (modalShareButton) {
+      modalShareButton.dataset.copyValue = '';
+      modalShareButton.disabled = true;
+      resetCopyButton(modalShareButton);
     }
-    if (modalShareLink) {
-      modalShareLink.removeAttribute('href');
+    if (modalShareIframeButton) {
+      modalShareIframeButton.dataset.copyValue = '';
+      modalShareIframeButton.disabled = true;
+      resetCopyButton(modalShareIframeButton);
     }
-    if (modalShareIframeInput) {
-      modalShareIframeInput.value = '';
+    if (modalExportButton) {
+      modalExportButton.disabled = true;
     }
-    if (modalShareIframeWrapper) {
-      modalShareIframeWrapper.hidden = true;
-    }
-    if (modalShareIframeCopy) {
-      modalShareIframeCopy.disabled = true;
-    }
-    resetCopyButton(modalShareCopy);
-    resetCopyButton(modalShareIframeCopy);
   }
 
   function populateModalDescription(card) {
@@ -514,34 +520,34 @@ function initCardModal() {
 
   function updateModalShare(card) {
     const url = buildShareUrl(card);
-    if (modalShareInput) {
-      modalShareInput.value = url;
-    }
-    if (modalShareLink) {
-      modalShareLink.href = url;
+    if (modalShareButton) {
+      modalShareButton.dataset.copyValue = url || '';
+      modalShareButton.disabled = !url;
+      resetCopyButton(modalShareButton);
     }
     updateEmbedShare(card);
+    updateExportAction(card);
   }
 
   function updateEmbedShare(card) {
-    if (!modalShareIframeWrapper || !modalShareIframeInput) return;
+    if (!modalShareIframeButton) return;
     const embedData = buildEmbedData(card);
     if (!embedData) {
-      modalShareIframeWrapper.hidden = true;
-      modalShareIframeInput.value = '';
-      if (modalShareIframeCopy) {
-        modalShareIframeCopy.disabled = true;
-      }
-      resetCopyButton(modalShareIframeCopy);
+      modalShareIframeButton.dataset.copyValue = '';
+      modalShareIframeButton.disabled = true;
+      resetCopyButton(modalShareIframeButton);
       return;
     }
 
-    modalShareIframeWrapper.hidden = false;
-    modalShareIframeInput.value = embedData.code;
-    if (modalShareIframeCopy) {
-      modalShareIframeCopy.disabled = false;
-    }
-    resetCopyButton(modalShareIframeCopy);
+    modalShareIframeButton.dataset.copyValue = embedData.code;
+    modalShareIframeButton.disabled = false;
+    resetCopyButton(modalShareIframeButton);
+  }
+
+  function updateExportAction(card) {
+    if (!modalExportButton) return;
+    const tableContainer = card ? card.querySelector('[data-chart-table]') : null;
+    modalExportButton.disabled = !tableContainer;
   }
 
   function buildShareUrl(card) {
@@ -560,16 +566,29 @@ function initCardModal() {
     if (!card) return null;
     const chartKey = card.dataset ? card.dataset.embedChart : null;
     if (!chartKey) return null;
+    const embedRoute = document.body && document.body.dataset ? document.body.dataset.embedRoute : null;
+    if (!embedRoute) return null;
+    const slug = document.body && document.body.dataset ? document.body.dataset.embedMolecule : '';
+    const pageParams = new URLSearchParams(window.location.search);
     try {
-      const url = new URL(window.location.href);
+      const base = window.location.origin || `${window.location.protocol}//${window.location.host}`;
+      const url = new URL(embedRoute, base);
+      pageParams.forEach((value, key) => {
+        url.searchParams.set(key, value);
+      });
       url.searchParams.set('chart', chartKey);
+      if (slug) {
+        url.searchParams.set('molecule', slug);
+      }
       url.hash = '';
       return url.toString();
     } catch (error) {
-      const params = new URLSearchParams(window.location.search);
-      params.set('chart', chartKey);
-      const query = params.toString();
-      return query ? `${window.location.pathname}?${query}` : window.location.pathname;
+      pageParams.set('chart', chartKey);
+      if (slug) {
+        pageParams.set('molecule', slug);
+      }
+      const query = pageParams.toString();
+      return query ? `${embedRoute}?${query}` : embedRoute;
     }
   }
 
@@ -581,16 +600,26 @@ function initCardModal() {
     return { url: embedUrl, code };
   }
 
-  function setupCopyButton(button, getValue) {
-    if (!button) return;
-    const defaultLabel = button.textContent.trim() || 'Copier';
-    button.dataset.copyLabel = defaultLabel;
-    button.addEventListener('click', () => {
-      const value = typeof getValue === 'function' ? getValue() : '';
-      if (!value) return;
-      copyTextToClipboard(value, button);
-    });
+function setupCopyButton(button, getValue) {
+  if (!button) return;
+  const status = button.querySelector('[data-tool-status]');
+  const defaultLabel =
+    button.dataset.copyLabel ||
+    (status ? status.textContent.trim() : button.textContent.trim()) ||
+    'Copier';
+  button.dataset.copyLabel = defaultLabel;
+  if (status) {
+    status.textContent = defaultLabel;
+  } else {
+    button.textContent = defaultLabel;
   }
+  button.addEventListener('click', () => {
+    if (button.disabled) return;
+    const value = typeof getValue === 'function' ? getValue() : '';
+    if (!value) return;
+    copyTextToClipboard(value, button);
+  });
+}
 
   function copyTextToClipboard(value, button) {
     const fallbackCopy = () => {
@@ -616,17 +645,33 @@ function initCardModal() {
   function showCopyFeedback(button) {
     if (!button) return;
     button.classList.add('is-success');
-    button.textContent = 'Copié !';
+    const status = button.querySelector('[data-tool-status]');
+    if (status) {
+      status.textContent = 'Copié !';
+    } else {
+      button.textContent = 'Copié !';
+    }
     setTimeout(() => {
       button.classList.remove('is-success');
-      button.textContent = button.dataset.copyLabel || 'Copier';
+      const defaultLabel = button.dataset.copyLabel || 'Copier';
+      if (status) {
+        status.textContent = defaultLabel;
+      } else {
+        button.textContent = defaultLabel;
+      }
     }, 1500);
   }
 
   function resetCopyButton(button) {
     if (!button) return;
     button.classList.remove('is-success');
-    button.textContent = button.dataset.copyLabel || button.textContent;
+    const status = button.querySelector('[data-tool-status]');
+    const defaultLabel = button.dataset.copyLabel || 'Copier';
+    if (status) {
+      status.textContent = defaultLabel;
+    } else {
+      button.textContent = defaultLabel;
+    }
   }
 
   function escapeHtml(value) {
@@ -682,6 +727,296 @@ function initCardModal() {
     if (!window.location.hash) return null;
     return decodeURIComponent(window.location.hash.slice(1));
   }
+}
+
+function initChartTables() {
+  const containers = document.querySelectorAll('[data-chart-table]');
+  if (!containers.length) return;
+
+  containers.forEach((container) => {
+    const payload = parseJsonAttribute(container.dataset.chartPayload);
+    const config = parseJsonAttribute(container.dataset.chartConfig);
+    const table = container.querySelector('table');
+    if (!payload || !config || !table) return;
+
+    const tableData = buildChartTableData(payload, config);
+    if (!tableData) return;
+
+    renderChartTable(table, tableData.headers, tableData.rows);
+    const fileName = buildExportFileName(container, config);
+    chartTableState.set(container, {
+      headers: tableData.headers,
+      rows: tableData.rows,
+      fileName,
+    });
+    setupChartTableToggle(container);
+  });
+}
+
+function parseJsonAttribute(value) {
+  if (!value) return null;
+  try {
+    return JSON.parse(value);
+  } catch (error) {
+    return null;
+  }
+}
+
+function buildChartTableData(data, config) {
+  const type = config && config.type ? config.type : 'categorical';
+  switch (type) {
+    case 'timeseries':
+      return buildTimeseriesTable(data, config);
+    case 'scatter':
+      return buildScatterTable(data, config);
+    case 'map':
+      return buildMapTable(data, config);
+    case 'categorical':
+    default:
+      return buildCategoricalTable(data, config);
+  }
+}
+
+function buildCategoricalTable(data, config) {
+  const labelsKey = config.labelsKey || 'labels';
+  const dataKey = config.dataKey || 'data';
+  const labels = Array.isArray(data[labelsKey]) ? data[labelsKey] : [];
+  const values = Array.isArray(data[dataKey]) ? data[dataKey] : [];
+  const headers = [
+    config.labelHeading || 'Catégorie',
+    config.valueHeading || 'Valeur',
+  ];
+
+  const length = Math.max(labels.length, values.length);
+  const rows = [];
+  for (let i = 0; i < length; i += 1) {
+    rows.push([
+      formatCellValue(labels[i]),
+      formatCellValue(values[i]),
+    ]);
+  }
+
+  return { headers, rows };
+}
+
+function buildTimeseriesTable(data, config) {
+  const labelsKey = config.labelsKey || 'labels';
+  const datasetsKey = config.datasetsKey || 'datasets';
+  const labels = Array.isArray(data[labelsKey]) ? data[labelsKey] : [];
+  const datasets = Array.isArray(data[datasetsKey]) ? data[datasetsKey] : [];
+  const headers = [
+    config.labelHeading || 'Période',
+    config.datasetHeading || 'Série',
+    config.valueHeading || 'Valeur',
+  ];
+
+  const rows = [];
+  datasets.forEach((dataset, datasetIndex) => {
+    if (!dataset || !Array.isArray(dataset.data)) {
+      return;
+    }
+    const seriesLabel = dataset.label && dataset.label.trim()
+      ? dataset.label.trim()
+      : `Série ${datasetIndex + 1}`;
+
+    const points = dataset.data;
+    const length = Math.max(points.length, labels.length);
+    for (let i = 0; i < length; i += 1) {
+      const point = points[i];
+      const labelValue = labels[i] !== undefined
+        ? labels[i]
+        : (point && typeof point === 'object' && 'x' in point ? point.x : i + 1);
+      let value = point;
+      if (point && typeof point === 'object') {
+        if (typeof point.y !== 'undefined') {
+          value = point.y;
+        } else if (typeof point.value !== 'undefined') {
+          value = point.value;
+        }
+      }
+      rows.push([
+        formatCellValue(labelValue),
+        formatCellValue(seriesLabel),
+        formatCellValue(value),
+      ]);
+    }
+  });
+
+  return { headers, rows };
+}
+
+function buildScatterTable(data, config) {
+  const datasets = Array.isArray(data.datasets) ? data.datasets : [];
+  const headers = [
+    config.datasetHeading || 'Série',
+    config.xHeading || 'Valeur X',
+    config.yHeading || 'Valeur Y',
+  ];
+  const rows = [];
+
+  datasets.forEach((dataset, datasetIndex) => {
+    if (!dataset || !Array.isArray(dataset.data)) return;
+    const seriesLabel = dataset.label && dataset.label.trim()
+      ? dataset.label.trim()
+      : `Série ${datasetIndex + 1}`;
+
+    dataset.data.forEach((point, pointIndex) => {
+      const safePoint = point && typeof point === 'object' ? point : null;
+      const xValue = safePoint ? safePoint.x : pointIndex + 1;
+      const yValue = safePoint && typeof safePoint.y !== 'undefined'
+        ? safePoint.y
+        : '';
+      rows.push([
+        formatCellValue(seriesLabel),
+        formatCellValue(xValue),
+        formatCellValue(yValue),
+      ]);
+    });
+  });
+
+  return { headers, rows };
+}
+
+function buildMapTable(data, config) {
+  const entries = Object.entries(data || {}).filter(([, value]) => (
+    typeof value === 'number' ||
+    typeof value === 'string'
+  ));
+
+  const headers = [
+    config.labelHeading || 'Territoire',
+    config.valueHeading || 'Valeur',
+  ];
+
+  const rows = entries.map(([region, value]) => [
+    formatCellValue(region),
+    formatCellValue(value),
+  ]);
+
+  return { headers, rows };
+}
+
+function formatCellValue(value) {
+  if (value === null || typeof value === 'undefined') {
+    return '';
+  }
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? String(value) : '';
+  }
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (typeof value === 'boolean') {
+    return value ? 'Oui' : 'Non';
+  }
+  return JSON.stringify(value);
+}
+
+function renderChartTable(table, headers, rows) {
+  const thead = table.querySelector('thead');
+  const tbody = table.querySelector('tbody');
+  if (!thead || !tbody) return;
+
+  thead.innerHTML = '';
+  const headerRow = document.createElement('tr');
+  headers.forEach((header) => {
+    const th = document.createElement('th');
+    th.scope = 'col';
+    th.textContent = header;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+
+  tbody.innerHTML = '';
+  if (!rows.length) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = headers.length;
+    td.textContent = 'Aucune donnée disponible pour le moment.';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  rows.forEach((row) => {
+    const tr = document.createElement('tr');
+    row.forEach((cell) => {
+      const td = document.createElement('td');
+      td.textContent = cell;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function setupChartTableToggle(container) {
+  const toggle = container.querySelector('[data-chart-table-toggle]');
+  const panel = container.querySelector('[data-chart-table-panel]');
+  if (!toggle || !panel) return;
+
+  const defaultState = toggle.dataset.chartTableDefault === 'closed' ? false : true;
+  setChartTablePanelState(panel, toggle, defaultState);
+
+  toggle.addEventListener('click', (event) => {
+    event.preventDefault();
+    const nextState = !panel.classList.contains('is-open');
+    setChartTablePanelState(panel, toggle, nextState);
+  });
+}
+
+function setChartTablePanelState(panel, toggle, isOpen) {
+  if (!panel || !toggle) return;
+  panel.classList.toggle('is-open', Boolean(isOpen));
+  toggle.classList.toggle('is-open', Boolean(isOpen));
+  if (isOpen) {
+    panel.removeAttribute('hidden');
+  } else {
+    panel.setAttribute('hidden', '');
+  }
+  toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  const labelEl = toggle.querySelector('[data-chart-table-toggle-label]');
+  const openLabel = toggle.dataset.labelOpen || 'Masquer le tableau';
+  const closedLabel = toggle.dataset.labelClosed || 'Afficher le tableau';
+  if (labelEl) {
+    labelEl.textContent = isOpen ? openLabel : closedLabel;
+  }
+}
+
+function buildExportFileName(container, config) {
+  const fallback = container.dataset.chartId
+    ? `donnees-${container.dataset.chartId}`
+    : 'donnees-graphique';
+  const explicit = typeof config.exportFileName === 'string'
+    ? config.exportFileName.trim()
+    : '';
+  const base = (explicit || fallback || 'donnees').toLowerCase();
+  const sanitized = base.replace(/[^\w.-]+/g, '-');
+  return sanitized.endsWith('.csv') ? sanitized : `${sanitized}.csv`;
+}
+
+function downloadTableAsCsv(headers, rows, fileName) {
+  const csvRows = [headers, ...rows];
+  const csvContent = csvRows
+    .map((row) => row.map(escapeCsvValue).join(';'))
+    .join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(() => {
+    URL.revokeObjectURL(link.href);
+    link.remove();
+  }, 0);
+}
+
+function escapeCsvValue(value) {
+  const text = value === null || typeof value === 'undefined' ? '' : String(value);
+  if (text.includes('"') || text.includes(';') || text.includes('\n')) {
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+  return text;
 }
 
 function lockDescriptionForModal(card) {

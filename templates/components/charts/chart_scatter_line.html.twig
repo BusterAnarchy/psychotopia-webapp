@@ -2,6 +2,17 @@
     <div class="chart-wrapper__canvas">
         <canvas id="{{ id }}" class="chart-canvas"></canvas>
     </div>
+    {% include "components/charts/chart_data_table.html.twig" with {
+        chart_id: id,
+        chart_data_json: chart_data,
+        table_config: {
+            type: 'scatter',
+            labelsKey: 'datasets',
+            datasetHeading: 'Série',
+            xHeading: 'Masse du comprimé (mg)',
+            yHeading: 'Quantité de substance (mg)'
+        }
+    } %}
 </div>
  
 <script>
