@@ -101,5 +101,23 @@
             updatePickers();
         })();
     </script>
+    {% if matomo.enabled and matomo.baseUrl and matomo.siteId %}
+        {% set _matomo_base = matomo.baseUrl %}
+        {% if not _matomo_base ends with '/' %}
+            {% set _matomo_base = _matomo_base ~ '/' %}
+        {% endif %}
+        <script>
+            var _paq = window._paq = window._paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+                var u={{ _matomo_base|json_encode|raw }};
+                _paq.push(['setTrackerUrl', u + 'matomo.php']);
+                _paq.push(['setSiteId', {{ matomo.siteId|json_encode|raw }}]);
+                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+                g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+            })();
+        </script>
+    {% endif %}
 </body>
 </html>

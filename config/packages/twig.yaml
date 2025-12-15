@@ -1,5 +1,10 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        matomo:
+            enabled: '%app.matomo_enabled%'
+            baseUrl: '%app.matomo_base_url%'
+            siteId: '%app.matomo_site_id%'
 
 when@test:
     twig:
