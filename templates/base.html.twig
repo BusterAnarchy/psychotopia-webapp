@@ -44,72 +44,8 @@
 
     {% include 'footer.html.twig' %}
 
-    <div class="card-modal" data-card-modal aria-hidden="true">
-        <div class="card-modal__backdrop" data-card-modal-close></div>
-        <div class="card-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="cardModalTitle" tabindex="-1">
-            <header class="card-modal__header">
-                <div class="card-modal__header-text">
-                    <h2 id="cardModalTitle" class="card-modal__title" data-card-modal-title>Visualisation</h2>
-                </div>
-                <button class="card-modal__close" type="button" aria-label="Fermer la fenêtre" data-card-modal-close>✕</button>
-            </header>
-            <div class="card-modal__body">
-                <div class="card-modal__content" data-card-modal-content></div>
-                <aside class="card-modal__sidebar">
-                    <section class="card-modal__section card-modal__section--description">
-                        <p class="card-modal__section-label">Description</p>
-                        <div class="card-modal__section-content" data-card-modal-description>
-                            <p class="card-modal__muted">Aucune description disponible.</p>
-                        </div>
-                    </section>
-                    <section class="card-modal__section card-modal__section--tools">
-                        <p class="card-modal__section-label">Outils</p>
-                        <div class="card-modal__tools" data-card-modal-tools>
-                            <button
-                                type="button"
-                                class="card-modal__tool card-modal__tool--share"
-                                data-card-modal-share-button
-                                disabled
-                            >
-                                <span class="card-modal__tool-icon" aria-hidden="true">🔗</span>
-                                <span class="card-modal__tool-content">
-                                    <span class="card-modal__tool-title">Partager le graphique</span>
-                                    <span class="card-modal__tool-desc">Copier le lien direct vers cette vue.</span>
-                                </span>
-                                <span class="card-modal__tool-status" data-tool-status>Copier</span>
-                            </button>
-                            <button
-                                type="button"
-                                class="card-modal__tool card-modal__tool--iframe"
-                                data-card-modal-share-iframe-button
-                                disabled
-                            >
-                                <span class="card-modal__tool-icon" aria-hidden="true">🧩</span>
-                                <span class="card-modal__tool-content">
-                                    <span class="card-modal__tool-title">Partager via iframe</span>
-                                    <span class="card-modal__tool-desc">Génère le code d’intégration.</span>
-                                </span>
-                                <span class="card-modal__tool-status" data-tool-status>Copier</span>
-                            </button>
-                            <button
-                                type="button"
-                                class="card-modal__tool card-modal__tool--export"
-                                data-card-modal-export-button
-                                disabled
-                            >
-                                <span class="card-modal__tool-icon" aria-hidden="true">⬇️</span>
-                                <span class="card-modal__tool-content">
-                                    <span class="card-modal__tool-title">Exporter les données</span>
-                                    <span class="card-modal__tool-desc">Télécharger le tableau au format CSV.</span>
-                                </span>
-                                <span class="card-modal__tool-status">Télécharger</span>
-                            </button>
-                        </div>
-                    </section>
-                </aside>
-            </div>
-        </div>
-    </div>
+    {% include 'components/ui/analysis_card_modal.html.twig' %}
+
     <script>
         (function() {
             const storageKey = 'psychotopia-theme';
