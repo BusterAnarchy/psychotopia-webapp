@@ -30,6 +30,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'samples_first_consumption' => [
             'title' => 'Proportion après première consommation',
             'template' => 'components/charts/chart_pie.html.twig',
+            'analysis' => 'pie_consumption',
             'result_key' => 'pie_consumption',
             'context' => ['id' => 'embedded_chart'],
         ],
@@ -85,12 +86,14 @@ final class AnalysisEmbeddedController extends AbstractController
         'supply_distribution' => [
             'title' => "Répartition par voie d'approvisionnement",
             'template' => 'components/charts/chart_pie.html.twig',
+            'analysis' => 'histo_supply',
             'result_key' => 'histo_supply',
             'context' => ['id' => 'embedded_chart'],
         ],
         'supply_timeline' => [
             'title' => "Évolution temporelle par voie d'approvisionnement",
             'template' => 'components/charts/chart_area_stacked.html.twig',
+            'analysis' => 'temporal_supply',
             'result_key' => 'temporal_supply',
             'context' => [
                 'id' => 'embedded_chart',
@@ -111,6 +114,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'purity_temporal_mean' => [
             'title' => 'Évolution temporelle – Moyennes et écarts type',
             'template' => 'components/charts/chart_line.html.twig',
+            'analysis' => '-nip temporal_purity:label=temporal_purity_avg,mode=avg,delta=15,unit=pourcent',
             'result_key' => 'temporal_purity_avg',
             'context' => [
                 'id' => 'embedded_chart',
@@ -120,6 +124,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'purity_temporal_median' => [
             'title' => 'Évolution temporelle – Médianes et quartiles',
             'template' => 'components/charts/chart_line.html.twig',
+            'analysis' => '-nip temporal_purity:label=temporal_purity_med,mode=med,delta=15,unit=pourcent',
             'result_key' => 'temporal_purity_med',
             'context' => [
                 'id' => 'embedded_chart',
@@ -129,6 +134,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'purity_map' => [
             'title' => 'Carte de la pureté moyenne par région',
             'renderer' => 'map',
+            'analysis' => '-nip geo_purity',
             'result_key' => 'geo_purity',
             'context' => [
                 'id' => 'embedded_map',
@@ -141,6 +147,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'purity_tablets_histogram' => [
             'title' => 'Histogramme de la pureté',
             'template' => 'components/charts/chart_bar_y.html.twig',
+            'analysis' => '-pt --tablet_mass histo_purity:unit=poids',
             'result_key' => 'histo_purity',
             'context' => [
                 'id' => 'embedded_chart',
@@ -150,6 +157,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'purity_tablets_temporal_mean' => [
             'title' => 'Évolution temporelle – Moyenne et écarts type',
             'template' => 'components/charts/chart_line.html.twig',
+            'analysis' => '-pt --tablet_mass temporal_purity:label=temporal_purity_avg,mode=avg,delta=15,unit=poids',
             'result_key' => 'temporal_purity_avg',
             'context' => [
                 'id' => 'embedded_chart',
@@ -159,6 +167,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'purity_tablets_temporal_median' => [
             'title' => 'Évolution temporelle – Médianes et quartiles',
             'template' => 'components/charts/chart_line.html.twig',
+            'analysis' => '-pt --tablet_mass temporal_purity:label=temporal_purity_med,mode=med,delta=15,unit=poids',
             'result_key' => 'temporal_purity_med',
             'context' => [
                 'id' => 'embedded_chart',
@@ -168,6 +177,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'purity_tablets_scatter' => [
             'title' => 'Quantité de substance active vs masse des comprimés',
             'template' => 'components/scatter_charts/chart_line.html.twig',
+            'analysis' => '-pt --tablet_mass mass_reg_purity',
             'result_key' => 'mass_reg_purity',
             'context' => [
                 'id' => 'embedded_chart',
@@ -176,6 +186,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'cut_agents_share' => [
             'title' => 'Proportion des échantillons avec produits de coupe',
             'template' => 'components/charts/chart_pie.html.twig',
+            'analysis' => 'count_cut_agents',
             'result_key' => 'count_cut_agents',
             'context' => [
                 'id' => 'embedded_chart',
@@ -184,6 +195,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'cut_agents_distribution' => [
             'title' => 'Proportion par produit de coupe',
             'template' => 'components/charts/chart_bar_x.html.twig',
+            'analysis' => 'histo_cut_agents',
             'result_key' => 'histo_cut_agents',
             'context' => [
                 'id' => 'embedded_chart',
@@ -192,6 +204,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'cut_agents_timeline' => [
             'title' => 'Évolution temporelle des produits de coupe',
             'template' => 'components/charts/chart_area_stacked.html.twig',
+            'analysis' => 'temporal_cut_agents',
             'result_key' => 'temporal_cut_agents',
             'context' => [
                 'id' => 'embedded_chart',
@@ -202,6 +215,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'sub_product_distribution' => [
             'title' => 'Proportion par sous-produit',
             'template' => 'components/charts/chart_bar_x.html.twig',
+            'analysis' => 'histo_sub_products',
             'result_key' => 'histo_sub_products',
             'context' => [
                 'id' => 'embedded_chart',
@@ -210,6 +224,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'sub_product_timeline' => [
             'title' => 'Évolution temporelle des sous-produits',
             'template' => 'components/charts/chart_area_stacked.html.twig',
+            'analysis' => 'temporal_sub_products',
             'result_key' => 'temporal_sub_products',
             'context' => [
                 'id' => 'embedded_chart',
@@ -243,7 +258,28 @@ final class AnalysisEmbeddedController extends AbstractController
 
             $molecule = $this->moleculeRepository->findOneBy(['slug' => $slug]);
             if ($molecule) {
-                $rRequest = $rRequest->forMolecule($molecule->getLabel());
+
+                $rRequest = match ($molecule->getLabel()) {
+                    'Cannabis Résine' => RRunner::builder()
+                            ->forMolecule('Cannabis (THC/CBD)')
+                            ->withForms('Résine'),
+
+                    'Cannabis Herbe' => RRunner::builder()
+                            ->forMolecule('Cannabis (THC/CBD)')
+                            ->withForms('Herbe'),
+
+                    '2C-B' => RRunner::builder()
+                            ->forMolecule('2C-B')
+                            ->withForms('Poudre,Cristal'),
+
+                    'MDMA' =>RRunner::builder()
+                            ->forMolecule('MDMA')
+                            ->withForms('Poudre,Cristal'),
+
+                    default => 
+                        RRunner::builder()
+                            ->forMolecule($molecule->getLabel())
+                };
             }
         }
 
@@ -258,8 +294,6 @@ final class AnalysisEmbeddedController extends AbstractController
         }
 
         $data = $results[$config['result_key']];
-
-
 
         if ($data === null) {
             throw $this->createNotFoundException(sprintf('Aucune donnée n’est disponible pour le graphique "%s".',$chartId));
