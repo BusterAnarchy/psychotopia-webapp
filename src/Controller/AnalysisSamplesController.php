@@ -31,7 +31,7 @@ final class AnalysisSamplesController extends AbstractController
         );
 
         return $this->render('pages/page_samples.html.twig', [
-            'page_title' => 'Toutes molécules',
+            'page_title' => 'Échantillons',
             'results' => $results,
             'filters_summary' => $this->filterService->summarizeFilters($request, includeFamilies: true, includeForms: true),
         ]);

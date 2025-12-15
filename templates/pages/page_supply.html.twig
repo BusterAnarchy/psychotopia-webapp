@@ -5,12 +5,20 @@
 
 {% block body %}
 <div class="analysis-page">
+
+    <nav class="molecule-subnav container" aria-label="Analyses des modes d'approvisionnements">
+        <h1 class="molecule-subnav__title"> {{ page_title }}</h1>
+    </nav>
+
     <header class="analysis-header container">
         <div class="analysis-header__meta analysis-header__card">
             <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
             <p class="analysis-header__count">{{ results.histo_supply.count }}</p>
             {% include "components/ui/filter/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
         </div>
+        <article class="analysis-header__info analysis-header__card">
+            <p>Cette page met en perspective les modes d'approvisionnement déclarés par les personnes qui envoient un produit à analyser. Les échantillons proviennent du dispositif d'analyses à distance co-porté par Psychoactif et Analyse ton Prod.</p>
+        </article>
     </header>
 
     {% include "components/ui/filter/filter_drawer.html.twig" with { form_template: "components/forms/form_molecules.html.twig" } %}

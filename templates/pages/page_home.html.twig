@@ -51,5 +51,49 @@
             </article>
         </div>
     </section>
+
+    <section class="home-section container">
+        <div class="section-head">
+            <p class="section-head__eyebrow">Données clés</p>
+            <h2>Où en est l'observatoire&nbsp;?</h2>
+            <p>Un aperçu rapide des analyses réalisées et de leur fraîcheur.</p>
+        </div>
+        <div class="home-summary">
+            <article class="summary-card">
+                <p class="summary-card__label">Échantillons analysés</p>
+                <p class="summary-card__value">
+                    <span class="summary-card__icon" aria-hidden="true">🧪</span>
+                    {{ data_summary.samples_count|default(0)|number_format(0, ',', ' ') }}
+                </p>
+                <p class="summary-card__hint">Total cumulé</p>
+            </article>
+            <article class="summary-card">
+                <p class="summary-card__label">Molécules suivies</p>
+                <p class="summary-card__value">
+                    <span class="summary-card__icon" aria-hidden="true">🧬</span>
+                    {{ data_summary.molecules_count|default('—') }}
+                </p>
+                <p class="summary-card__hint">Valeur provisoire</p>
+            </article>
+            <article class="summary-card">
+                <p class="summary-card__label">Dernière mise à jour</p>
+                <p class="summary-card__value">
+                    <span class="summary-card__icon" aria-hidden="true">🗓️</span>
+                    {{ data_summary.last_update|default('—') }}
+                </p>
+                <p class="summary-card__hint">Mise à jour des données</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="home-section container">
+        <div class="section-head">
+            <p class="section-head__eyebrow">Réduction des risques</p>
+            <h2>Une brique dans un écosystème collectif</h2>
+        </div>
+        <p>
+            Les données de l’observatoire communautaire éclairent les dynamiques liées aux substances, aux usages et aux contextes d’analyse ; elles permettent d’orienter plus finement les messages de prévention, de documenter les alertes et d’ajuster les accompagnements. Psychotopia s’inscrit ainsi dans un réseau plus large d’acteurs de réduction des risques — associations, modérateurs de forums, équipes de terrain et dispositifs d’analyse à distance — en leur offrant un socle commun d’informations actualisées pour renforcer leurs actions.
+        </p>
+    </section>
 </div>
 {% endblock %}
