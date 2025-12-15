@@ -36,6 +36,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'samples_timeline_absolute' => [
             'title' => "Évolution temporelle — Nombre d'échantillons",
             'template' => 'components/charts/chart_area_stacked.html.twig',
+            'analysis' => 'temporal_count:label=temporal_count_abs,scale=abs',
             'result_key' => 'temporal_count_abs',
             'context' => [
                 'id' => 'embedded_chart',
@@ -46,6 +47,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'samples_timeline_relative' => [
             'title' => "Évolution temporelle — Proportion",
             'template' => 'components/charts/chart_area_stacked.html.twig',
+            'analysis' => 'temporal_count:label=temporal_count_prop,scale=prop',
             'result_key' => 'temporal_count_prop',
             'context' => [
                 'id' => 'embedded_chart',
@@ -56,6 +58,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'samples_map_absolute' => [
             'title' => "Carte — Nombre d'échantillons par région",
             'renderer' => 'map',
+            'analysis' => 'geo_count:label=geo_count_abs,scale=abs',
             'result_key' => 'geo_count_abs',
             'context' => [
                 'id' => 'embedded_map',
@@ -68,6 +71,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'samples_map_relative' => [
             'title' => "Carte — Échantillons par million d'habitants",
             'renderer' => 'map',
+            'analysis' => 'geo_count:label=geo_count_prop,scale=prop',
             'result_key' => 'geo_count_prop',
             'context' => [
                 'id' => 'embedded_map',
@@ -97,6 +101,7 @@ final class AnalysisEmbeddedController extends AbstractController
         'purity_histogram' => [
             'title' => 'Histogramme de la pureté',
             'template' => 'components/charts/chart_bar_y.html.twig',
+            'analysis' => '-nip histo_purity:unit=pourcent',
             'result_key' => 'histo_purity',
             'context' => [
                 'id' => 'embedded_chart',
@@ -244,19 +249,17 @@ final class AnalysisEmbeddedController extends AbstractController
 
         $rRequest = $rRequest
             ->withFilters($filters)
-            //->addAnalysis($config['analysis']);
-            ->addOption("-nip")
-            ->addAnalysis('count')
-            ->addAnalysis('histo_purity', ['label' => 'histo_purity', 'unit' => 'pourcent'])
-            ->addAnalysis('temporal_purity', ['label' => 'temporal_purity_avg', 'mode' => 'avg', 'delta' => 15, 'unit' => 'pourcent'])
-            ->addAnalysis('temporal_purity', ['label' => 'temporal_purity_med', 'mode' => 'med', 'delta' => 15, 'unit' => 'pourcent'])
-            ->addAnalysis('supply_reg_purity')
-            ->addAnalysis('geo_purity')
-            ->addAnalysis('geo_reg_purity');
-        
+            ->addAnalysis($config['analysis'] ?? $config['result_key']);
+            
         $results = $this->runner->run($rRequest);
 
+        if ($results['histo_purity']) {
+            $results["histo_purity"]["ratio_base_sel"] = $molecule->getRatioBaseSel();
+        }
+
         $data = $results[$config['result_key']];
+
+
 
         if ($data === null) {
             throw $this->createNotFoundException(sprintf('Aucune donnée n’est disponible pour le graphique "%s".',$chartId));
