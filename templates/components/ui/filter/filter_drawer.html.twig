@@ -1,0 +1,35 @@
+{#
+  Reusable drawer for display options filters.
+  Required context:
+    - form_template: path to the form partial to render inside the drawer body.
+#}
+
+<aside
+  id="drawerFilters"
+  class="drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="drawerFilters-Title"
+  aria-hidden="true"
+>
+  <div class="drawer__panel">
+    <div class="drawer__handle" aria-hidden="true"></div>
+    <div class="drawer__inner">
+      <div class="drawer__header">
+        <h3 id="drawerFilters-Title">Options de visualisation</h3>
+        <button
+          class="btn btn--ghost drawer__close"
+          type="button"
+          aria-label="Fermer les options"
+          data-drawer-close
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="drawer__body">
+        {% include form_template %}
+      </div>
+    </div>
+  </div>
+</aside>

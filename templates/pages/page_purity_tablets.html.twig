@@ -10,7 +10,7 @@
         <div class="analysis-header__meta analysis-header__card">
             <small class="analysis-header__label">Nombre total d'échantillons observés :</small>
             <p class="analysis-header__count">{{ results.histo_purity.count }}</p>
-            {% include "components/ui/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
+            {% include "components/ui/filter/filter_summary.html.twig" with { summary: filters_summary|default([]) } %}
         </div>
         <article class="analysis-header__info analysis-header__card">
             <p>{{ molecule.definition | raw }}</p>
@@ -23,110 +23,60 @@
         </article>
     </header>
 
-    <aside
-        id="drawerFilters"
-        class="drawer"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="drawerFiltersTitle"
-        aria-hidden="true"
-    >
-        <div class="drawer__panel">
-            <div class="drawer__handle" aria-hidden="true"></div>
-            <div class="drawer__inner">
-                <div class="drawer__header">
-                    <h3 id="drawerFiltersTitle">Options de visualisation</h3>
-                    <button class="btn btn--ghost drawer__close" type="button" aria-label="Fermer les options" data-drawer-close>✕</button>
-                </div>
-                <div class="drawer__body">
-                    {% include "components/forms/form_purity.html.twig" %}
-                </div>
-            </div>
-        </div>
-    </aside>
+    {% include "components/ui/filter/filter_drawer.html.twig" with {
+        form_template: "components/forms/form_purity.html.twig"
+    } %}
 
-    {% include "components/ui/drawer_trigger.html.twig" %}
+    {% include "components/ui/filter/filter_drawer_trigger.html.twig" %}
 
     {% include "components/ui/grid_layout_controls.html.twig" %}
 
     <section class="analysis-grid container">
-        {% set tablets_hist_desc %}
-            <p>
-                Commençons par regarder le nombre d'échantillons en fonction de leur pureté.
-                Les analyses présentent la pureté de deux façons différentes : équivalent base et équivalent chlorhydrate.
-                Nous présentons le pourcentage en équivalent base car c'est celui directement mesuré par le laboratoire.
-            </p>
-            <p>
-                La pureté maximale n'est pas 100% mais dépend de la molécule considérée et est représentée par la barre verticale rouge en pointillé.
-                Certains échantillons peuvent dépasser cette limite car les résultats sont donnés avec une incertitude de +/- 10%.
-            </p>
-        {% endset %}
-
-        {% embed "components/ui/analysis_card.html.twig" with {
+        {% include "components/ui/analysis_card.html.twig" with {
+            embed_chart: 'purity_tablets_histogram',
+            
             title: "Histogramme de la pureté",
-            description: tablets_hist_desc,
-            embed_chart: 'purity_tablets_histogram'
+            description: "
+                <p>Commençons par regarder le nombre d'échantillons en fonction de leur pureté. Les analyses présentent la pureté de deux façons différentes : équivalent base et équivalent chlorhydrate. Nous présentons le pourcentage en équivalent base car c'est celui directement mesuré par le laboratoire.</p>
+                <p>La pureté maximale n'est pas 100% mais dépend de la molécule considérée et est représentée par la barre verticale rouge en pointillé. Certains échantillons peuvent dépasser cette limite car les résultats sont donnés avec une incertitude de +/- 10%.</p>
+                ",
+            
+            body_template: "components/charts/chart_bar_y.html.twig",
+            body_context: { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit }
         } %}
-            {% block body %}
-                {% include "components/charts/chart_bar_y.html.twig" with { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit} %}
-            {% endblock %}
-        {% endembed %}
 
-        {% set tablets_mean_desc %}
-            <p>
-                La courbe ci-dessous présente l'évolution de la moyenne de pureté des échantillons, avec une zone grisée représentant
-                l'espace autour de la moyenne à +/- 1 écart-type. Lissage réalisé sur une fenêtre glissante de Δ jours (actuellement Δ = {{ delta }}).
-            </p>
-        {% endset %}
-
-        {% embed "components/ui/analysis_card.html.twig" with {
+        {% include "components/ui/analysis_card.html.twig" with {
+            embed_chart: 'purity_tablets_temporal_mean',
+            
             title: "Évolution temporelle – Moyenne et écarts type",
-            description: tablets_mean_desc,
-            embed_chart: 'purity_tablets_temporal_mean'
+            description: "La courbe ci-dessous présente l'évolution de la moyenne de pureté des échantillons, avec une zone grisée représentant l'espace autour de la moyenne à +/- 1 écart-type. Lissage réalisé sur une fenêtre glissante de Δ jours (actuellement Δ = " ~ delta ~ ").",
+            
+            body_template: "components/charts/chart_line.html.twig",
+            body_context: { id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false' }
         } %}
-            {% block body %}
-                {% include "components/charts/chart_line.html.twig" with {id:"line_1", chart_data: results.temporal_purity_avg | json_encode, is_stacked:'false'} %}
-            {% endblock %}
-        {% endembed %}
 
-        {% set tablets_median_desc %}
-            <p>
-                Cette visualisation montre l'évolution de la médiane de pureté, encadrée par une zone allant du premier au troisième quartile.
-                Calcul effectué sur une fenêtre glissante de Δ jours (actuellement Δ = {{ delta }}).
-            </p>
-        {% endset %}
-
-        {% embed "components/ui/analysis_card.html.twig" with {
+        {% include "components/ui/analysis_card.html.twig" with {
+            embed_chart: 'purity_tablets_temporal_median',
+            
             title: "Évolution temporelle – Médianes et quartiles",
-            description: tablets_median_desc,
-            embed_chart: 'purity_tablets_temporal_median'
+            description: "Cette visualisation montre l'évolution de la médiane de pureté, encadrée par une zone allant du premier au troisième quartile. Calcul effectué sur une fenêtre glissante de Δ jours (actuellement Δ = " ~ delta ~ ").",
+            
+            body_template: "components/charts/chart_line.html.twig",
+            body_context: { id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false' }
         } %}
-            {% block body %}
-                {% include "components/charts/chart_line.html.twig" with {id:"line_2", chart_data: results.temporal_purity_med | json_encode, is_stacked:'false'} %}
-            {% endblock %}
-        {% endembed %}
 
-        {% set tablets_scatter_desc %}
-            <p>
-                Ce nuage de points représente la relation entre la masse des comprimés envoyés (en milligrammes)
-                et la quantité de substance psychoactive mesurée en laboratoire. Chaque point correspond à un échantillon individuel.
-            </p>
-            <p>
-                La droite rouge représente le meilleur modèle linéaire pour lier la teneur en substance psychoactive au poids des comprimés.
-                La zone grisée décrit un intervalle de confiance à 95%. Elle peut être utilisée pour estimer l'erreur commise
-                lors de la prédiction de la quantité de substance active lorsque seule la masse du comprimé est connue.
-            </p>
-        {% endset %}
+        {% include "components/ui/analysis_card.html.twig" with {
+            embed_chart: 'purity_tablets_scatter',
 
-        {% embed "components/ui/analysis_card.html.twig" with {
             title: "Quantité de substance active vs masse des comprimés",
-            description: tablets_scatter_desc,
-            embed_chart: 'purity_tablets_scatter'
+            description: "
+                <p>Ce nuage de points représente la relation entre la masse des comprimés envoyés (en milligrammes) et la quantité de substance psychoactive mesurée en laboratoire. Chaque point correspond à un échantillon individuel. </p>
+                <p>La droite rouge représente le meilleur modèle linéaire pour lier la teneur en substance psychoactive au poids des comprimés. La zone grisée décrit un intervalle de confiance à 95%. Elle peut être utilisée pour estimer l'erreur commise lors de la prédiction de la quantité de substance active lorsque seule la masse du comprimé est connue.</p>
+                ",
+        
+            body_template: "components/charts/chart_scatter_line.html.twig",
+            body_context: { id:"scatter_mdma_comprime", chart_data: results.mass_reg_purity | json_encode }
         } %}
-            {% block body %}
-                {% include "components/charts/chart_scatter_line.html.twig" with { id:"scatter_mdma_comprime", chart_data: results.mass_reg_purity | json_encode } %}
-            {% endblock %}
-        {% endembed %}
     </section>
 </div>
 
