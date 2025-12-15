@@ -30,7 +30,7 @@ final class AnalysisSamplesController extends AbstractController
                 ->addAnalysis('pie_consumption')
         );
 
-        return $this->render('pages/page_molecules.html.twig', [
+        return $this->render('pages/page_samples.html.twig', [
             'page_title' => 'Toutes molécules',
             'results' => $results,
             'filters_summary' => $this->filterService->summarizeFilters($request, includeFamilies: true, includeForms: true),
