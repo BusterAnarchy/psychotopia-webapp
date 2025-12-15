@@ -14,6 +14,7 @@ export function initCardModal() {
   const modalShareButton = modal.querySelector('[data-card-modal-share-button]');
   const modalShareIframeButton = modal.querySelector('[data-card-modal-share-iframe-button]');
   const modalExportButton = modal.querySelector('[data-card-modal-export-button]');
+  const modalExportChartButton = modal.querySelector('[data-card-modal-export-chart-button]');
   const dialog = modal.querySelector('.card-modal__dialog');
   if (!modalContent || !modalTitle || !dialog) return;
 
@@ -177,6 +178,15 @@ export function initCardModal() {
       downloadTableAsCsv(tableState.headers, tableState.rows, tableState.fileName);
     });
   }
+  if (modalExportChartButton) {
+    modalExportChartButton.addEventListener('click', () => {
+      if (modalExportChartButton.disabled) return;
+      if (!state.card) return;
+      const canvas = findChartCanvas(state.card);
+      if (!canvas) return;
+      downloadCanvasAsPng(canvas, buildChartImageFileName(state.card));
+    });
+  }
 
   window.addEventListener('hashchange', handleHashNavigation);
   handleHashNavigation();
@@ -197,6 +207,9 @@ export function initCardModal() {
     }
     if (modalExportButton) {
       modalExportButton.disabled = true;
+    }
+    if (modalExportChartButton) {
+      modalExportChartButton.disabled = true;
     }
   }
 
@@ -237,9 +250,14 @@ export function initCardModal() {
   }
 
   function updateExportAction(card) {
-    if (!modalExportButton) return;
     const tableContainer = card ? card.querySelector('[data-chart-table]') : null;
-    modalExportButton.disabled = !tableContainer;
+    if (modalExportButton) {
+      modalExportButton.disabled = !tableContainer;
+    }
+    if (modalExportChartButton) {
+      const hasCanvas = !!findChartCanvas(card);
+      modalExportChartButton.disabled = !hasCanvas;
+    }
   }
 
   function buildShareUrl(card) {
@@ -418,5 +436,108 @@ export function initCardModal() {
   function getHashId() {
     if (!window.location.hash) return null;
     return decodeURIComponent(window.location.hash.slice(1));
+  }
+
+  function findChartCanvas(card) {
+    if (!card || typeof card.querySelector !== 'function') return null;
+    const selectors = ['.chart-wrapper__canvas canvas', '.chart-wrapper canvas', 'canvas.chart-canvas', 'canvas'];
+    for (let i = 0; i < selectors.length; i += 1) {
+      const selector = selectors[i];
+      const canvas = card.querySelector(selector);
+      if (isExportableCanvas(canvas)) {
+        return canvas;
+      }
+    }
+    return null;
+  }
+
+  function isExportableCanvas(canvas) {
+    if (!canvas) return false;
+    if (typeof canvas.toDataURL !== 'function') return false;
+    return canvas.width > 0 && canvas.height > 0;
+  }
+
+  function downloadCanvasAsPng(canvas, fileName) {
+    if (!canvas) return;
+    const exportCanvas = document.createElement('canvas');
+    exportCanvas.width = canvas.width;
+    exportCanvas.height = canvas.height;
+    const exportContext = exportCanvas.getContext('2d');
+    if (exportContext) {
+      exportContext.fillStyle = getCanvasBackgroundColor(canvas);
+      exportContext.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+      exportContext.drawImage(canvas, 0, 0);
+    }
+    const safeFileName = fileName || 'graphique.png';
+    if (exportCanvas.toBlob) {
+      exportCanvas.toBlob(
+        (blob) => {
+          if (!blob) return;
+          triggerBlobDownload(blob, safeFileName);
+        },
+        'image/png',
+        1
+      );
+      return;
+    }
+    const dataUrl = exportCanvas.toDataURL('image/png');
+    triggerDataUrlDownload(dataUrl, safeFileName);
+  }
+
+  function triggerBlobDownload(blob, fileName) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function triggerDataUrlDownload(dataUrl, fileName) {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function getCanvasBackgroundColor(canvas) {
+    if (typeof window === 'undefined' || !window.getComputedStyle) {
+      return '#ffffff';
+    }
+    const parent =
+      (typeof canvas.closest === 'function' && canvas.closest('.chart-wrapper')) || canvas.parentElement;
+    if (!parent) return '#ffffff';
+    const color = window.getComputedStyle(parent).backgroundColor;
+    if (!color || color === 'transparent' || color === 'rgba(0, 0, 0, 0)') {
+      return '#ffffff';
+    }
+    return color;
+  }
+
+  function buildChartImageFileName(card) {
+    const rawTitle = card && card.dataset && card.dataset.cardTitle ? card.dataset.cardTitle : 'graphique';
+    const slug = slugify(rawTitle) || 'graphique';
+    const date = new Date();
+    const stamp = `${date.getFullYear()}${padNumber(date.getMonth() + 1)}${padNumber(date.getDate())}`;
+    return `${slug}-${stamp}.png`;
+  }
+
+  function slugify(value) {
+    if (!value) return '';
+    const text = value.toString();
+    const normalized = typeof text.normalize === 'function' ? text.normalize('NFD') : text;
+    return normalized
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60);
+  }
+
+  function padNumber(value) {
+    return value < 10 ? `0${value}` : `${value}`;
   }
 }
