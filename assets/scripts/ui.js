@@ -4,6 +4,9 @@ import { initGridLayoutControls } from './ui/grid-layout';
 import { initCardDescriptions } from './ui/cards';
 import { initCardModal } from './ui/card-modal';
 import { initChartTables } from './ui/chart-tables';
+import { initFilterPersistence } from './ui/filter-persistence';
+
+initFilterPersistence();
 
 document.addEventListener('DOMContentLoaded', () => {
   initNav();

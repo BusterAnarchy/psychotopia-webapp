@@ -68,6 +68,12 @@ document.getElementById('sendButton').addEventListener('click', function () {
     const cutBox = document.getElementById('no_cut');
     if (cutBox && cutBox.checked) params.set('no_cut', 'true');
 
-    window.location = window.location.pathname + '?' + params.toString();
+    const query = params.toString();
+    const nextUrl = query ? window.location.pathname + '?' + query : window.location.pathname;
+
+    const eventName = query ? 'filters:applied' : 'filters:cleared';
+    window.dispatchEvent(new CustomEvent(eventName, { detail: { search: query } }));
+
+    window.location = nextUrl;
 });
 </script>

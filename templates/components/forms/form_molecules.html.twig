@@ -93,6 +93,11 @@ document.getElementById('sendButton').addEventListener('click', function () {
     if (selectedFamilles.length > 0) params.set('familles', selectedFamilles.join(','));
     if (selectedFormes.length > 0) params.set('formes', selectedFormes.join(','));
 
-    window.location = window.location.pathname + '?' + params.toString();
+    const query = params.toString();
+    const nextUrl = query ? window.location.pathname + '?' + query : window.location.pathname;
+    const eventName = query ? 'filters:applied' : 'filters:cleared';
+    window.dispatchEvent(new CustomEvent(eventName, { detail: { search: query } }));
+
+    window.location = nextUrl;
 });
 </script>
