@@ -159,26 +159,50 @@
 
 .card-zoom-button {
   appearance: none;
-  border: none;
-  background: transparent;
-  padding: 4px;
+  border: 1px solid rgba(29, 120, 116, 0.3);
+  background: linear-gradient(120deg, rgba(29, 120, 116, 0.12), rgba(29, 120, 116, 0.03));
+  padding: 3px 12px;
   margin-left: auto;
-  color: var(--neutral-400);
-  border-radius: 6px;
+  color: var(--brand-600);
+  border-radius: 999px;
   cursor: pointer;
   line-height: 1;
-  font-size: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease, background 0.2s ease;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+  box-shadow: 0 8px 18px rgba(29, 120, 116, 0.18);
 }
 
 .card-zoom-button:hover,
 .card-zoom-button:focus-visible,
 .card-zoom-button.is-active {
-  color: var(--neutral-600);
-  background: rgba(15, 23, 42, 0.08);
+  color: var(--brand-700, var(--brand-600));
+  background: linear-gradient(120deg, rgba(29, 120, 116, 0.2), rgba(29, 120, 116, 0.08));
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(29, 120, 116, 0.25);
+}
+
+.card-zoom-button__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #fff;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.card-zoom-button__label {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
 }
 
 .info-panel p,

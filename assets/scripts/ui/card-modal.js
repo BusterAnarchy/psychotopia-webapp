@@ -137,7 +137,8 @@ export function initCardModal() {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'card-zoom-button';
-    button.innerHTML = '<span aria-hidden="true">⤢</span>';
+    button.innerHTML =
+      '<span class="card-zoom-button__icon" aria-hidden="true">⤢</span><span class="card-zoom-button__label">Zoom</span>';
     button.setAttribute('aria-label', 'Agrandir la visualisation');
     button.dataset.cardModalTrigger = 'true';
 
