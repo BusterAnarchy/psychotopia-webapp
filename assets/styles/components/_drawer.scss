@@ -186,8 +186,7 @@ body.has-card-modal {
   flex-direction: column;
   padding: var(--space-3);
   gap: var(--space-2);
-  height: 100%;
-  overflow: hidden;
+  height: 80vh;
 }
 
 .card-modal__content {
@@ -233,6 +232,7 @@ body.has-card-modal {
   flex-direction: column;
   gap: var(--space-2);
   height: 100%;
+  overflow-y: scroll;
 }
 
 .card-modal__section {
@@ -243,11 +243,6 @@ body.has-card-modal {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-}
-
-.card-modal__section--description {
-  max-height: 350px;
-  overflow: auto;
 }
 
 .card-modal__section--tools {
@@ -378,12 +373,6 @@ body.has-card-modal {
 
   .card-modal__content {
     min-height: 40vh;
-  }
-
-  .card-modal__section--description {
-    height: fit-content;
-    max-height: none;
-    overflow: none;
   }
 }
 
