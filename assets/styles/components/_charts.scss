@@ -44,8 +44,8 @@
 }
 
 .chart-canvas--map {
-  min-height: 320px;
-  height: clamp(280px, 45vw, 460px);
+  min-height: 0;
+  height: 100%;
 }
 
 .map-legend {
