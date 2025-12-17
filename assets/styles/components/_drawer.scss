@@ -363,7 +363,13 @@ body.has-card-modal {
 
 @media (max-width: 767px) {
   .card-modal {
-    padding: 8px;
+    padding: 0;
+  }
+
+  .card-modal__dialog {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
   }
 
   .card-modal__body {
