@@ -199,7 +199,6 @@ body.has-card-modal {
   background: linear-gradient(180deg, #fff 0%, rgba(250, 250, 250, 0.8) 100%);
   display: flex;
   flex-direction: column;
-  --analysis-chart-height: clamp(360px, 70vh, 900px);
 }
 
 .card-modal__content > * {

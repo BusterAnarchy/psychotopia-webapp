@@ -4,6 +4,16 @@
 {% if body_template is defined and body_template %}
     {% set body_content = include(body_template, body_context|default({})) %}
 {% endif %}
+{% set chart_aspect_ratio = chart_aspect_ratio is defined ? chart_aspect_ratio : null %}
+{% set chart_aspect_ratio_mobile = chart_aspect_ratio_mobile is defined ? chart_aspect_ratio_mobile : null %}
+{% set card_inline_styles = [] %}
+{% if chart_aspect_ratio %}
+    {% set card_inline_styles = card_inline_styles|merge(['--analysis-chart-aspect-ratio: ' ~ chart_aspect_ratio ~ ';']) %}
+{% endif %}
+{% if chart_aspect_ratio_mobile %}
+    {% set card_inline_styles = card_inline_styles|merge(['--analysis-chart-aspect-ratio-mobile: ' ~ chart_aspect_ratio_mobile ~ ';']) %}
+{% endif %}
+{% set card_inline_style = card_inline_styles ? card_inline_styles|join(' ') : null %}
 
 <article
     id="card-{{ embed_chart }}"
@@ -12,6 +22,7 @@
     data-analysis-card
     data-card-title="{{ title }}" 
     data-embed-chart="{{ embed_chart }}"
+    {% if card_inline_style %}style="{{ card_inline_style }}"{% endif %}
 >
     <header class="analysis-card__head">
         <h3 class="analysis-card__title">{{ title }}</h3>

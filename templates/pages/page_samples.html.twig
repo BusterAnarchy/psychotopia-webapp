@@ -54,7 +54,8 @@
       description: "Les données sont regroupées par bimestre et montrent l'évolution en nombre d'échantillons par molécule.",
       
       body_template: "components/charts/chart_area_stacked.html.twig",
-      body_context: { id:"area_chart_1", chart_data: results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' }
+      body_context: { id:"area_chart_1", chart_data: results.temporal_count_abs | json_encode, is_stacked:'true', mode:'absolu' },
+      chart_aspect_ratio_mobile: '1 / 2'
     } %}
 
     {% include "components/ui/analysis_card.html.twig" with {
@@ -64,7 +65,8 @@
       description: "Les données sont regroupées par bimestre et montrent l'évolution en proportion d'échantillons par molécule.",
       
       body_template: "components/charts/chart_area_stacked.html.twig",
-      body_context: { id:"area_chart_2", chart_data: results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' }
+      body_context: { id:"area_chart_2", chart_data: results.temporal_count_prop | json_encode, is_stacked:'true', mode:'relatif' },
+      chart_aspect_ratio_mobile: '1 / 2'
     } %}
 
     {% include "components/ui/analysis_card.html.twig" with {

@@ -20,7 +20,22 @@ function initLeafletMap(id) {
         attributionControl: false,
     });
 
-    map.fitBounds(options.bounds || [[41.2, -5], [51.3, 10.5]], { padding: [10, 10] });
+    const defaultBounds = options.bounds || [[41.2, -5], [51.3, 10.5]];
+
+    function getPaddingPoint() {
+        const width = el.clientWidth || 0;
+        const height = el.clientHeight || 0;
+        const horizontal = Math.max(10, Math.round(width * 0.04));
+        const vertical = Math.max(10, Math.round(height * 0.04));
+        return L.point(horizontal, vertical);
+    }
+
+    function fitMapToContainer() {
+        if (!defaultBounds) return;
+        map.fitBounds(defaultBounds, { padding: getPaddingPoint(), animate: false });
+    }
+
+    fitMapToContainer();
 
     const values = Object.values(chartData).filter(v => !isNaN(v));
     const min = Math.min(...values);
@@ -80,6 +95,18 @@ function initLeafletMap(id) {
     };
 
     legend.addTo(map);
+
+    function handleResize() {
+        map.invalidateSize();
+        fitMapToContainer();
+    }
+
+    if (typeof ResizeObserver !== 'undefined') {
+        const resizeObserver = new ResizeObserver(handleResize);
+        resizeObserver.observe(el);
+    } else if (typeof window !== 'undefined') {
+        window.addEventListener('resize', handleResize);
+    }
 }
 
 if (typeof window !== 'undefined') {

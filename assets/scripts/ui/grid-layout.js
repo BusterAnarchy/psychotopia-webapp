@@ -1,9 +1,4 @@
 const GRID_COLUMNS_STORAGE_KEY = 'psychotopia:grid-columns';
-const GRID_COLUMN_CONFIG = {
-  2: { chartHeight: 600 },
-  3: { chartHeight: 400 },
-  4: { chartHeight: 300 },
-};
 let pendingChartResizeFrame = null;
 
 export function initGridLayoutControls() {
@@ -90,14 +85,7 @@ function applyGridColumnPreference(columns) {
   if (!root) return;
   if (Number.isFinite(columns) && columns > 0) {
     root.style.setProperty('--analysis-grid-columns', String(columns));
-    const settings = GRID_COLUMN_CONFIG[columns];
-    if (settings && settings.chartHeight) {
-      root.style.setProperty('--analysis-chart-height', `${settings.chartHeight}px`);
-    } else {
-      root.style.removeProperty('--analysis-chart-height');
-    }
   } else {
     root.style.removeProperty('--analysis-grid-columns');
-    root.style.removeProperty('--analysis-chart-height');
   }
 }

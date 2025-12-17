@@ -37,7 +37,8 @@
                 ",
             embed_chart: 'purity_histogram',
             body_template: "components/charts/chart_bar_y.html.twig",
-            body_context: { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit }
+            body_context: { id:"bar_chart", chart_data: results.histo_purity | json_encode, unit:unit },
+            chart_aspect_ratio: '1 / 1'
         } %}
 
         {% include "components/ui/analysis_card.html.twig" with {

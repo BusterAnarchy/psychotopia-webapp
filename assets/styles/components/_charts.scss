@@ -16,6 +16,9 @@
   border-radius: calc(var(--radius) - 2px);
   background: #fff;
   overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  aspect-ratio: var(--analysis-chart-aspect-ratio, 3 / 2);
 }
 
 .chart-wrapper__canvas--flush {
@@ -29,8 +32,15 @@
 .chart-canvas {
   display: block;
   width: 100%;
-  height: var(--analysis-chart-height, 400px);
-  min-height: var(--analysis-chart-height, 400px);
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+}
+
+@media (max-width: 767px) {
+  .chart-wrapper__canvas {
+    aspect-ratio: var(--analysis-chart-aspect-ratio-mobile, var(--analysis-chart-aspect-ratio, 3 / 2));
+  }
 }
 
 .chart-canvas--map {

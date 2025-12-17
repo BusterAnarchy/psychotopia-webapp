@@ -30,6 +30,20 @@
             },
             options: {
                 responsive : true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        align: 'center',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            boxWidth: 12,
+                            boxHeight: 12,
+                            padding: 12
+                        }
+                    }
+                }
             }
         });
         
