@@ -23,22 +23,9 @@
         </div>
 
         <aside
-            class="analysis-card__desc-panel {% if desc_open %} is-open{% endif %}"
+            class="analysis-card__desc-panel is-open"
             data-card-description
         >
-            <button
-                type="button"
-                class="analysis-card__desc-toggle"
-                data-card-description-toggle
-                aria-expanded="{{ desc_open ? 'true' : 'false' }}"
-                data-label-open="{{ description_toggle_label_open|default('Masquer la description') }}"
-                data-label-closed="{{ description_toggle_label_closed|default('Afficher la description') }}"
-            >
-                <span data-card-description-toggle-label>
-                    {{ desc_open ? description_toggle_label_open|default('Masquer la description') : description_toggle_label_closed|default('Afficher la description') }}
-                </span>
-                <span class="analysis-card__desc-toggle-icon" aria-hidden="true"></span>
-            </button>
             <div class="analysis-card__desc-content" data-card-description-content>
                 {{ description | raw }}
             </div>

@@ -123,15 +123,11 @@
 }
 
 .analysis-card__desc-content {
-  display: none;
+  display: block;
   font-size: 0.95rem;
   color: var(--neutral-600);
   line-height: 1.6;
   padding-bottom: 4px;
-}
-
-[data-card-description].is-open .analysis-card__desc-content {
-  display: block;
 }
 
 .analysis-card.is-modal-open .analysis-card__head {
