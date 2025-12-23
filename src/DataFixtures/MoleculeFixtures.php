@@ -31,10 +31,10 @@ class MoleculeFixtures extends Fixture
                         apparue en 2011 et peut se présenter comme une poudre planche ou comme de petits cristaux blancs.",
         'mdma' => "La MDMA est une molécule de synthèse de la famille des amphétamines et se présente sous deux formes => soit sous forme de cristaux/poudre
                     translucide, soit sous forme de cachets de taille et de couleur variable appelés \"ecstasy\". Sur cette page, vous retrouverez l'analyse
-                    pour la forme cristal/poudre. L'analyse des cachets d'ecstasy possède aussi sa <a href='http://psychotopia.psychoactif.org/histo-comprime-mdma/' target='_blank'>page dédiée</a>.",
+                    pour la forme cristal/poudre. L'analyse des cachets d'ecstasy possède aussi sa <a href='https://psychotopia.psychoactif.org/purity/tablets-mdma' target='_blank'>page dédiée</a>.",
         'Comprimés de MDMA' => "La MDMA est une molécule de synthèse de la famille des amphétamines et se présente sous deux formes => soit sous forme de cristaux/poudre
                     translucide, soit sous forme de cachets de taille et de couleur variable appelés \"ecstasy\". Sur cette page, vous retrouverez l'analyse
-                    pour les cachets d'ecstasy. L'analyse des échantillons sous forme de cristal ou de poudre possède aussi sa <a href='http://psychotopia.psychoactif.org/purity-mdma/' target='_blank'>page dédiée</a>.",
+                    pour les cachets d'ecstasy. L'analyse des échantillons sous forme de cristal ou de poudre possède aussi sa <a href='https://psychotopia.psychoactif.org/purity/mdma' target='_blank'>page dédiée</a>.",
         'ketamine' => "La kétamine est une molécule de la famille des cycloalkylarylamines utilisée comme anesthésique général en médecine humaine et en médecine vétérinaire.
                     Elle provoque une anesthésie dissociative (dissociation entre le cortex frontal et le reste du cerveau), ainsi que des possibles hallucinations lors de la période de réveil.
                         Elle se présente sous la forme d'une poudre cristalline ou d'un liquide incolore, inodore et sans saveur.",
