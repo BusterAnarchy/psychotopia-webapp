@@ -28,7 +28,7 @@ class FilterService
         }
 
         if ($includeFamilies) {
-            $families = $this->normalizeCsv($request->query->get('familles'));
+            $families = $this->normalizeCsvForCli($request->query->get('familles'));
             if (!empty($families)) {
                 $args[] = $this->formatOption('--molecule_families', implode(',', $families));
             }
@@ -39,7 +39,7 @@ class FilterService
         }
 
         if ($includeForms) {
-            $forms = $this->normalizeCsv($request->query->get('formes'));
+            $forms = $this->normalizeCsvForCli($request->query->get('formes'));
             if (!empty($forms)) {
                 $args[] = $this->formatOption('--form', implode(',', $forms));
             }
@@ -140,6 +140,49 @@ class FilterService
         $items = array_filter(array_map('trim', explode(',', $value)));
 
         return array_values($items);
+    }
+
+    private function normalizeCsvForCli(?string $value): array
+    {
+        $items = $this->normalizeCsv($value);
+        if (empty($items)) {
+            return [];
+        }
+
+        $normalized = array_map(function (string $item): string {
+            $item = $this->stripAccents($item);
+
+            if (function_exists('mb_strtolower')) {
+                return mb_strtolower($item, 'UTF-8');
+            }
+
+            return strtolower($item);
+        }, $items);
+
+        return array_values(array_filter($normalized, static fn(string $item) => $item !== ''));
+    }
+
+    private function stripAccents(string $value): string
+    {
+        $value = trim($value);
+
+        if ($value === '') {
+            return '';
+        }
+
+        if (class_exists(\Transliterator::class)) {
+            $transliterator = \Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC');
+            if ($transliterator !== null) {
+                $value = $transliterator->transliterate($value);
+            }
+        }
+
+        $converted = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+        if ($converted !== false) {
+            $value = $converted;
+        }
+
+        return $value;
     }
 
     private function formatOption(string $option, ?string $value = null): string

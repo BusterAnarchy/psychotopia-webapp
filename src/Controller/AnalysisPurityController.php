@@ -27,24 +27,25 @@ final class AnalysisPurityController extends AbstractController
 
         $rRequest = match ($molecule->getLabel()) {
             'Cannabis Résine' => RRunner::builder()
-                    ->forMolecule('Cannabis (THC/CBD)')
-                    ->withForms('Résine'),
+                    ->forMolecule('cannabis')
+                    ->withForms('resine'),
 
             'Cannabis Herbe' => RRunner::builder()
-                    ->forMolecule('Cannabis (THC/CBD)')
-                    ->withForms('Herbe'),
+                    ->forMolecule('cannabis')
+                    ->withForms('herbe'),
 
             '2C-B' => RRunner::builder()
-                    ->forMolecule('2C-B')
-                    ->withForms('Poudre,Cristal'),
+                    ->forMolecule('2c-b')
+                    ->withForms('cristal'),
 
             'MDMA' =>RRunner::builder()
-                    ->forMolecule('MDMA')
-                    ->withForms('Poudre,Cristal'),
+                    ->forMolecule('mdma')
+                    ->withForms('cristal'),
 
             default => 
                 RRunner::builder()
                     ->forMolecule($molecule->getLabel())
+                    ->withForms('cristal')
         };
 
         $rRequest = $rRequest
