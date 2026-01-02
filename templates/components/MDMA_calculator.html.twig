@@ -1,6 +1,6 @@
-<p>Veuillez indiquer la masse de votre comprimé d'ecstasy : </p>
+<p>Veuillez indiquer la masse de votre comprimé d'ecstasy&#8239;: </p>
 <input type="number" id="userInput" placeholder="Masse de votre comprimé en mg">
-<button id="calcBtn">Calculer</button>
+<button id="calcBtn" class="btn btn--primary btn--block" type="button">Calculer</button>
 <p>Estimation de la quantité de MDMA : <span id="result"></span> mg</p>
 <p>Intervalle de confiance à 95% de l'estimation : <span id="low_lim"></span> mg - <span id="up_lim"></span> mg</p>
 
@@ -9,11 +9,11 @@
     const data = {{ data | raw }};
     const [origin, coef_dir] = data.coef;
 
-    const tablet_mass = data.datasets[2].data.map(p => p.x[0])
+    const tablet_mass = data.datasets[2].data.map(p => p.x)
     const min_tablet_mass = Math.min(...tablet_mass);
     const max_tablet_mass = Math.max(...tablet_mass);
-    const low_lim = data.datasets[2].data.map(p => p.y[0]);
-    const up_lim = data.datasets[3].data.map(p => p.y[0]);
+    const low_lim = data.datasets[2].data.map(p => p.y);
+    const up_lim = data.datasets[3].data.map(p => p.y);
 
     const inputEl = document.getElementById("userInput");
     const resultEl = document.getElementById("result");
