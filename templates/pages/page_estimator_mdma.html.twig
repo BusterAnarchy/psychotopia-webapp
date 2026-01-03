@@ -3,7 +3,51 @@
 {% block title %}Estimateur quantité de MDMA dans un comprimé{% endblock %}
 
 {% block estimator_form %}
-    {% include "components/MDMA_calculator.html.twig" with { id:"estimator_mdmda", data: results.mass_reg_purity | json_encode } %}
+
+    {{ form_start(form, { attr: { class: 'form-card__body', novalidate: true } }) }}
+        <div class="form-field">
+            {{ form_label(form.mass, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.mass) }}
+        </div>
+        {{ form_widget(form.submit) }}
+    {{ form_end(form) }}
+
+    {% if estimate %}
+        <p class="estimator-result-label">Estimation de la quantité de MDMA</p>
+        <div class="form-card estimator-result-card">
+            <div class="form-card__body">
+                <div class="estimator-result-row">
+                    {% if estimate.low_lim is defined %}   
+                        <small class="estimator-result-range estimator-result-range--low">
+                            {{ estimate.low_lim|number_format(2, '.', ' ')}} mg -
+                        </small>
+                    {% endif %}
+                    <strong>{{ estimate.value|number_format(2, '.', ' ')}} mg </strong>
+                    {% if estimate.up_lim is defined %}   
+                        <small class="estimator-result-range estimator-result-range--high">
+                            - {{ estimate.up_lim|number_format(2, '.', ' ')}} mg
+                        </small>
+                    {% endif %}
+                </div>
+                <p class="estimator-result-caption">Intervalle de confiance à 95%</p>
+            </div>
+        </div>
+
+        {% include "components/ui/analysis_card.html.twig" with {
+            embed_chart: 'purity_tablets_scatter',
+
+            title: "Quantité de substance active vs masse des comprimés",
+            description: "
+                <p>Ce nuage de points représente la relation entre la masse des comprimés envoyés (en milligrammes) et la quantité de substance psychoactive mesurée en laboratoire. Chaque point correspond à un échantillon individuel. </p>
+                <p>La droite rouge représente le meilleur modèle linéaire pour lier la teneur en substance psychoactive au poids des comprimés. La zone grisée décrit un intervalle de confiance à 95% pour un nouvel échantillon. Elle peut être utilisée pour estimer l'erreur commise lors de la prédiction de la quantité de substance active lorsque seule la masse du comprimé est connue.</p>
+                ",
+        
+            body_template: "components/charts/chart_scatter_line.html.twig",
+            body_context: { id:"scatter_mdma_comprime", chart_data: results.mass_reg_purity | json_encode },
+            chart_aspect_ratio: '1 / 1'
+        } %}
+    {% endif %}
+
 {% endblock %}
 
 {% block estimator_intro %}

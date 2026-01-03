@@ -58,7 +58,8 @@
                 ",
         
             body_template: "components/charts/chart_scatter_line.html.twig",
-            body_context: { id:"scatter_mdma_comprime", chart_data: results.mass_reg_purity | json_encode }
+            body_context: { id:"scatter_mdma_comprime", chart_data: results.mass_reg_purity | json_encode },
+            chart_aspect_ratio: '1 / 1'
         } %}
     </section>
 </div>

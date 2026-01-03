@@ -82,6 +82,19 @@ final class RRunnerBuilder
         return $this->addOption('--form', $forms);
     }
 
+    public function withSupply(string|array $supplies): self
+    {
+        if (is_array($supplies)) {
+            $supplies = implode(',', array_filter($supplies));
+        }
+
+        if ($supplies === '') {
+            return $this;
+        }
+
+        return $this->addOption('--supply', $supplies);
+    }
+
     public function withFilters(array $filters): self
     {
         foreach ($filters as $argument) {

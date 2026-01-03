@@ -1,0 +1,454 @@
+{% extends "layouts/estimator.html.twig" %}
+
+{% block title %}Ma conso{% endblock %}
+
+{% block estimator_form %}
+
+    {% set molecule_emojis = {
+        'cocaine': '❄️',
+        'mdma': '💎',
+        'ketamine': '🧪',
+        'heroine': '🩹',
+        'speed': '⚡',
+        '3-mmc': '🌀',
+        '2c-b': '🌈',
+        '4-mmc': '✨'
+    } %}
+    
+    {% set form_emojis = { 
+        'comprime': '💊', 
+        'cristal': '💎' 
+    } %}
+    
+    {% set supply_emojis = {
+        'all': '🌍',
+        'deep web / dark web': '🕶️',
+        'dealer de rue (four)': '🚦',
+        'livreur': '🚚',
+        'boutique en ligne': '🛒',
+        'reseaux sociaux en ligne': '💬',
+        'don entre partenaire de conso': '🤝',
+        'dealer en soiree': '🎉',
+        'boutique physique': '🏪'
+    } %}
+
+    {{ form_start(form, { attr: { class: 'form-card__body estimator-wizard', novalidate: true, 'data-estimator-wizard': true } }) }}
+        <div class="estimator-form-header">
+            <button type="button" class="estimator-back estimator-back--light" data-back="results">Retour</button>
+            <span>Ma conso</span>
+        </div>
+
+        <div class="estimator-hidden-fields">
+            {{ form_widget(form.molecule, { attr: { class: 'estimator-hidden', 'data-choice-field': 'molecule' } }) }}
+            {{ form_widget(form.form_type, { attr: { class: 'estimator-hidden', 'data-choice-field': 'form_type' } }) }}
+            {{ form_widget(form.supply, { attr: { class: 'estimator-hidden', 'data-choice-field': 'supply' } }) }}
+        </div>
+
+        <div class="estimator-step" data-step="molecule">
+            <div class="estimator-step__header">
+                <h3 class="estimator-step__title">Choisis ta molécule</h3>
+            </div>
+            <div class="estimator-choice-grid">
+                {% for choice in form.molecule.vars.choices %}
+                    <button type="button" class="estimator-choice-card" data-choice="molecule" data-value="{{ choice.value }}">
+                        <span class="estimator-choice-card__emoji">{{ molecule_emojis[choice.value]|default('🧪') }}</span>
+                        <span class="estimator-choice-card__label">{{ choice.label }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="estimator-step is-hidden" data-step="form">
+            <div class="estimator-step__header">
+                <h3 class="estimator-step__title">Choisis la forme</h3>
+            </div>
+            <div class="estimator-choice-grid">
+                {% for choice in form.form_type.vars.choices %}
+                    <button
+                        type="button"
+                        class="estimator-choice-card"
+                        data-choice="form_type"
+                        data-value="{{ choice.value }}"
+                        {% if choice.value == 'comprime' %}data-allowed-molecules="mdma,2c-b"{% endif %}
+                    >
+                        <span class="estimator-choice-card__emoji">{{ form_emojis[choice.value]|default('📦') }}</span>
+                        <span class="estimator-choice-card__label">{{ choice.label }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="estimator-step is-hidden" data-step="supply">
+            <div class="estimator-step__header">
+                <h3 class="estimator-step__title">Choisis la provenance</h3>
+            </div>
+            <div class="estimator-choice-grid estimator-choice-grid--supply">
+                {% for choice in form.supply.vars.choices %}
+                    <button type="button" class="estimator-choice-card estimator-choice-card--compact" data-choice="supply" data-value="{{ choice.value }}">
+                        <span class="estimator-choice-card__emoji">{{ supply_emojis[choice.value]|default('📦') }}</span>
+                        <span class="estimator-choice-card__label">{{ choice.label }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="estimator-step is-hidden" data-step="details">
+            <div class="estimator-step__header">
+                <h3 class="estimator-step__title">Finaliser</h3>
+            </div>
+            <div class="form-field estimator-mass-field is-hidden" data-mass-field>
+                {{ form_label(form.mass, null, { label_attr: { class: 'form-label' } }) }}
+                {{ form_widget(form.mass) }}
+            </div>
+            {{ form_widget(form.submit) }}
+        </div>
+    {{ form_end(form) }}
+
+    {% if selection.molecule %}
+        <div class="estimator-results" data-estimator-results>
+        {% set molecule_label = null %}
+        {% for choice in form.molecule.vars.choices %}
+            {% if choice.value == selection.molecule %}
+                {% set molecule_label = choice.label %}
+            {% endif %}
+        {% endfor %}
+        {% set form_label = selection.form_type == 'comprime'
+            ? 'Comprimé'
+            : (selection.form_type == 'cristal' ? 'Cristaux' : '—') %}
+        {% set supply_label = 'Toutes provenances' %}
+        {% for choice in form.supply.vars.choices %}
+            {% if choice.value == selection.supply %}
+                {% set supply_label = choice.label %}
+            {% endif %}
+        {% endfor %}
+
+        <div class="estimator-summary">
+            <span class="estimator-summary__item">
+                Molécule : 
+                <span class="estimator-summary__emoji">{{ molecule_emojis[selection.molecule]|default('🧪') }}</span>
+                <strong>{{ molecule_label|default('—') }}</strong>
+            </span>
+            <span class="estimator-summary__item">
+                Forme : 
+                <span class="estimator-summary__emoji">{{ form_emojis[selection.form_type]|default('📦') }}</span>
+                <strong>{{ form_label }}</strong>
+            </span>
+            <span class="estimator-summary__item">
+                Provenance : 
+                <span class="estimator-summary__emoji">{{ supply_emojis[selection.supply]|default('🌍') }}</span>
+                <strong>{{ supply_label }}</strong>
+            </span>
+        </div>
+
+        {% if estimate_type == 'comprime' %}
+            {% if estimate %}
+                <p class="estimator-result-label">Estimation de la quantité de MDMA sur {{ estimate.count }} échantillons</p>
+                <div class="form-card estimator-result-card">
+                    <div class="form-card__body">
+                        <div class="estimator-result-row">
+                            {% if estimate.low_lim is defined %}
+                                <small class="estimator-result-range estimator-result-range--low">
+                                    {{ estimate.low_lim|number_format(2, '.', ' ') }} mg
+                                </small>
+                            {% endif %}
+                            <strong>{{ estimate.value|number_format(2, '.', ' ') }} mg</strong>
+                            {% if estimate.up_lim is defined %}
+                                <small class="estimator-result-range estimator-result-range--high">
+                                    {{ estimate.up_lim|number_format(2, '.', ' ') }} mg
+                                </small>
+                            {% endif %}
+                        </div>
+                        <p class="estimator-result-caption">Intervalle de confiance à 95%</p>
+                    </div>
+                </div>
+
+                {% include "components/ui/analysis_card.html.twig" with {
+                    embed_chart: 'purity_tablets_scatter',
+
+                    title: "Quantité de substance active vs masse des comprimés",
+                    description: "
+                        <p>Ce nuage de points représente la relation entre la masse des comprimés envoyés (en milligrammes) et la quantité de substance psychoactive mesurée en laboratoire. Chaque point correspond à un échantillon individuel. </p>
+                        <p>La droite rouge représente le meilleur modèle linéaire pour lier la teneur en substance psychoactive au poids des comprimés. La zone grisée décrit un intervalle de confiance à 95% pour un nouvel échantillon. Elle peut être utilisée pour estimer l'erreur commise lors de la prédiction de la quantité de substance active lorsque seule la masse du comprimé est connue.</p>
+                        ",
+                
+                    body_template: "components/charts/chart_scatter_line.html.twig",
+                    body_context: { id:"scatter_mdma_comprime", chart_data: estimate.mass_reg_purity | json_encode },
+                    chart_aspect_ratio: '1 / 1'
+                } %}
+            {% elseif needs_mass %}
+                <p class="estimator-result-label">
+                    Indique la masse du comprimé pour obtenir l'estimation.
+                </p>
+            {% endif %}
+        {% elseif estimate_type == 'cristal' and estimate %}
+            {% set lower = estimate.pred_interval is defined ? estimate.pred_interval.lower : null %}
+            {% set average = estimate.pred_interval is defined ? estimate.pred_interval.average : null %}
+            {% set upper = estimate.pred_interval is defined ? estimate.pred_interval.upper : null %}
+
+            <p class="estimator-result-label">
+                Estimation de la pureté de {{ molecule_label|default('molécule') }} sur {{ estimate.count }} échantillons
+            </p>
+            <div class="form-card estimator-result-card">
+                <div class="form-card__body">
+                    <div class="estimator-result-row">
+                        {% if lower is not null %}
+                            <small class="estimator-result-range estimator-result-range--low">
+                                {{ lower|number_format(2, '.', ' ') }} %
+                            </small>
+                        {% endif %}
+                        <strong>{{ average is not null ? average|number_format(2, '.', ' ') : '' }} %</strong>
+                        {% if upper is not null %}
+                            <small class="estimator-result-range estimator-result-range--high">
+                                {{ upper|number_format(2, '.', ' ') }} %
+                            </small>
+                        {% endif %}
+                    </div>
+                    <p class="estimator-result-caption">Intervalle de confiance à 95%</p>
+                </div>
+            </div>
+            <div class="estimator-warning" role="status">
+                <p>
+                    Au vu de la grandeur de l'intervalle de confiance, nous recommandons de
+                    fractionner la prise de molécule.
+                </p>
+                <p>
+                    Pour réduire les risques, faites tester votre produit dans un CAARUD ou via le service d'analyse à
+                    distance de Psychoactif :
+                    <a href="https://www.psychoactif.org/blogs/L-analyse-de-drogue-a-distance-Psychoactif-en-a-reve-et-l-a-fait_7273_1.html" target="_blank" rel="noopener">
+                        comment faire ?
+                    </a>
+                </p>
+            </div>
+
+            {% include "components/ui/analysis_card.html.twig" with {
+                title: "Évolution temporelle – Moyennes et écarts type",
+                description: "Visualisation de l'évolution de la moyenne de la pureté et de la zone représentant +/- 1 écart-type autour de cette moyenne. Calculée sur une fenêtre glissante de Δ jours autour de chaque échantillon (actuellement Δ = 15 jours).",
+                embed_chart: 'purity_temporal_mean',
+                body_template: "components/charts/chart_line.html.twig",
+                body_context: { id:"line_1", chart_data: estimate.temporal_purity_avg | json_encode, is_stacked:'false' }
+            } %}
+        {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block estimator_intro %}
+    Sélectionnez votre molécule, sa forme et sa provenance pour obtenir une estimation des risques liés à votre conso.
+{% endblock %}
+
+{% block estimator_page_scripts %}
+<script>
+    (function () {
+        const wizard = document.querySelector('[data-estimator-wizard]');
+        if (!wizard) {
+            return;
+        }
+
+        const fields = {
+            molecule: wizard.querySelector('[data-choice-field="molecule"]'),
+            form_type: wizard.querySelector('[data-choice-field="form_type"]'),
+            supply: wizard.querySelector('[data-choice-field="supply"]'),
+        };
+
+        const steps = {
+            molecule: wizard.querySelector('[data-step="molecule"]'),
+            form: wizard.querySelector('[data-step="form"]'),
+            supply: wizard.querySelector('[data-step="supply"]'),
+            details: wizard.querySelector('[data-step="details"]'),
+        };
+
+        const massField = wizard.querySelector('[data-mass-field]');
+        const cards = wizard.querySelectorAll('[data-choice]');
+        const formCards = wizard.querySelectorAll('[data-choice="form_type"]');
+        const backButtons = wizard.querySelectorAll('[data-back]');
+        const results = document.querySelector('[data-estimator-results]');
+        const headerBack = wizard.querySelector('.estimator-form-header [data-back]');
+
+        const updateCards = () => {
+            cards.forEach((card) => {
+                const key = card.dataset.choice;
+                const field = fields[key];
+                if (!field) {
+                    return;
+                }
+                card.classList.toggle('is-selected', field.value === card.dataset.value);
+            });
+        };
+
+        const updateSteps = () => {
+            const molecule = fields.molecule ? fields.molecule.value : '';
+            let formValue = fields.form_type ? fields.form_type.value : '';
+            const supplyValue = fields.supply ? fields.supply.value : '';
+            const needsMass = formValue === 'comprime';
+
+            formCards.forEach((card) => {
+                const allowedRaw = card.dataset.allowedMolecules;
+                const allowed = allowedRaw ? allowedRaw.split(',').map((value) => value.trim()).filter(Boolean) : null;
+                const shouldHide = allowed ? !allowed.includes(molecule) : false;
+                card.classList.toggle('is-hidden', shouldHide);
+                card.disabled = shouldHide;
+            });
+
+            const allowedForComprime = ['mdma', '2c-b'];
+            if (!allowedForComprime.includes(molecule) && formValue === 'comprime' && fields.form_type) {
+                fields.form_type.value = '';
+                formValue = '';
+            }
+
+            if (steps.molecule) {
+                steps.molecule.classList.toggle('is-hidden', Boolean(molecule));
+            }
+
+            if (steps.form) {
+                steps.form.classList.toggle('is-hidden', !molecule || Boolean(formValue));
+            }
+
+            const formReady = Boolean(molecule) && Boolean(formValue);
+            if (steps.supply) {
+                steps.supply.classList.toggle('is-hidden', !formReady || Boolean(supplyValue));
+            }
+
+            const supplyReady = formReady && Boolean(supplyValue);
+            if (steps.details) {
+                steps.details.classList.toggle('is-hidden', !needsMass || !supplyReady);
+            }
+
+            if (massField) {
+                massField.classList.toggle('is-hidden', !needsMass);
+            }
+
+            const massValue = massField ? (massField.querySelector('input')?.value.trim() ?? '') : '';
+            const isComplete = Boolean(molecule)
+                && Boolean(formValue)
+                && Boolean(supplyValue)
+                && (!needsMass || Boolean(massValue));
+
+            if (results) {
+                results.classList.toggle('is-hidden', !isComplete);
+            }
+
+            if (headerBack) {
+                let backTarget = '';
+                if (steps.molecule && !steps.molecule.classList.contains('is-hidden')) {
+                    headerBack.classList.add('estimator-hidden');
+                } else {
+                    headerBack.classList.remove('estimator-hidden');
+                    if (steps.form && !steps.form.classList.contains('is-hidden')) {
+                        backTarget = 'molecule';
+                    } else if (steps.supply && !steps.supply.classList.contains('is-hidden')) {
+                        backTarget = 'form';
+                    } else if (steps.details && !steps.details.classList.contains('is-hidden')) {
+                        backTarget = 'supply';
+                    } else if (results && !results.classList.contains('is-hidden')) {
+                        backTarget = needsMass && massValue ? 'details' : 'supply';
+                    }
+                    headerBack.dataset.back = backTarget;
+                }
+            }
+        };
+
+        const resetDependentFields = (key) => {
+            if (key === 'molecule') {
+                if (fields.form_type) {
+                    fields.form_type.value = '';
+                }
+                if (fields.supply) {
+                    fields.supply.value = '';
+                }
+                if (massField) {
+                    const input = massField.querySelector('input');
+                    if (input) {
+                        input.value = '';
+                    }
+                }
+            }
+            if (key === 'form_type') {
+                if (fields.supply) {
+                    fields.supply.value = '';
+                }
+                if (massField) {
+                    const input = massField.querySelector('input');
+                    if (input) {
+                        input.value = '';
+                    }
+                }
+            }
+        };
+
+        const maybeAutoSubmit = () => {
+            const molecule = fields.molecule ? fields.molecule.value : '';
+            if (!molecule) {
+                return;
+            }
+            const formValue = fields.form_type ? fields.form_type.value : '';
+            const supplyValue = fields.supply ? fields.supply.value : '';
+            const needsMass = formValue === 'comprime';
+            if (needsMass) {
+                return;
+            }
+            if (!supplyValue) {
+                return;
+            }
+            if (typeof wizard.requestSubmit === 'function') {
+                wizard.requestSubmit();
+            } else {
+                wizard.submit();
+            }
+        };
+
+        cards.forEach((card) => {
+            card.addEventListener('click', () => {
+                const key = card.dataset.choice;
+                const field = fields[key];
+                if (!field) {
+                    return;
+                }
+                resetDependentFields(key);
+                field.value = card.dataset.value;
+                updateSteps();
+                updateCards();
+                maybeAutoSubmit();
+            });
+        });
+
+        backButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const target = button.dataset.back;
+                if (target === 'molecule' && fields.molecule) {
+                    fields.molecule.value = '';
+                    resetDependentFields('molecule');
+                } else if (target === 'form') {
+                    if (fields.form_type) {
+                        fields.form_type.value = '';
+                        resetDependentFields('form_type');
+                    }
+                } else if (target === 'supply' && fields.supply) {
+                    fields.supply.value = '';
+                } else if (target === 'details') {
+                    if (massField) {
+                        const input = massField.querySelector('input');
+                        if (input) {
+                            input.value = '';
+                        }
+                    }
+                } else if (target === 'results') {
+                    const formValue = fields.form_type ? fields.form_type.value : '';
+                    const hasMass = formValue === 'comprime' && massField && massField.querySelector('input')?.value;
+                    if (hasMass) {
+                        const input = massField.querySelector('input');
+                        input.value = '';
+                    } else if (fields.supply) {
+                        fields.supply.value = '';
+                    }
+                }
+                updateSteps();
+                updateCards();
+                wizard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        updateSteps();
+        updateCards();
+    })();
+</script>
+{% endblock %}

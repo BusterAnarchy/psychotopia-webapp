@@ -24,11 +24,12 @@
             return legendItem.text.length != 0;
         };
 
-        window["{{ id }}_chart"] = new Chart(document.getElementById('{{ id }}').getContext('2d'), {
+        new Chart(document.getElementById('{{ id }}').getContext('2d'), {
             type: 'scatter',
             data: data,
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         labels: {

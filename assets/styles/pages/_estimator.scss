@@ -65,6 +65,282 @@
   margin: 0 auto;
 }
 
+.estimator-wizard {
+  display: flex;
+  flex-direction: column;
+}
+
+.estimator-hidden {
+  display: none;
+}
+
+.estimator-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.estimator-step__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.estimator-step.is-hidden {
+  display: none;
+}
+
+.estimator-step__title {
+  margin: var(--space-1) 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+.estimator-back {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--brand-600);
+  background: transparent;
+  border: 1px solid rgba(29, 120, 116, 0.2);
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.estimator-back:hover,
+.estimator-back:focus-visible {
+  color: var(--brand-900);
+  border-color: rgba(29, 120, 116, 0.45);
+  background-color: rgba(29, 120, 116, 0.08);
+}
+
+.estimator-back--light {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.estimator-back--light:hover,
+.estimator-back--light:focus-visible {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.estimator-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-1);
+}
+
+.estimator-choice-grid--supply {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.estimator-choice-card {
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  min-height: 92px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.estimator-choice-card.is-hidden {
+  display: none;
+}
+
+.estimator-choice-card--compact {
+  min-height: 64px;
+  padding: var(--space-1);
+}
+
+.estimator-choice-card:focus-visible {
+  outline: 3px solid rgba(62, 124, 115, 0.22);
+  outline-offset: 2px;
+}
+
+.estimator-choice-card.is-selected {
+  border-color: var(--brand-600);
+  background: rgba(29, 120, 116, 0.08);
+  box-shadow: 0 8px 18px rgba(17, 17, 17, 0.12);
+  transform: translateY(-2px);
+}
+
+.estimator-choice-card__emoji {
+  font-size: 1.4rem;
+}
+
+.estimator-choice-card__label {
+  font-weight: 600;
+  color: var(--neutral-900);
+}
+
+.estimator-mass-field.is-hidden {
+  display: none;
+}
+
+.estimator-summary {
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--neutral-200);
+  background: #fff;
+  color: var(--neutral-700);
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.estimator-summary strong {
+  color: var(--neutral-900);
+}
+
+.estimator-summary__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.estimator-summary__emoji {
+  font-size: 1.1rem;
+}
+
+.estimator-results.is-hidden {
+  display: none;
+}
+
+.estimator-result-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-2);
+}
+
+.estimator-page .form-select {
+  appearance: none;
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--brand-600) 50%),
+    linear-gradient(135deg, var(--brand-600) 50%, transparent 50%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12));
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%,
+    calc(100% - 2.5rem) 50%;
+  background-size: 6px 6px, 6px 6px, 1px 60%;
+  background-repeat: no-repeat;
+  padding-right: 3rem;
+  cursor: pointer;
+}
+
+.estimator-page .form-select:focus {
+  outline: 3px solid rgba(62, 124, 115, 0.22);
+}
+
+.estimator-form-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: calc(-1 * var(--space-2)) calc(-1 * var(--space-2)) var(--space-2);
+  padding: 12px var(--space-2);
+  background: var(--brand-600);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.estimator-form-header .estimator-back {
+  position: absolute;
+  left: var(--space-2);
+}
+
+.estimator-result-label {
+  margin: 0 0 var(--space-1);
+  font-weight: 600;
+  color: var(--neutral-700);
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.estimator-result-card {
+  background: var(--brand-600);
+  color: #fff;
+  border-color: transparent;
+  border-radius: 0;
+  margin: 0 auto;
+}
+
+.estimator-result-card .form-card__body {
+  font-size: 1.1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.estimator-result-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  flex-direction: row;
+}
+
+.estimator-result-range {
+  white-space: nowrap;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.estimator-result-caption {
+  margin: 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+
+.estimator-warning {
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  background: rgba(216, 86, 14, 0.12);
+  border: 1px solid rgba(216, 86, 14, 0.4);
+  box-shadow: 0 8px 20px rgba(17, 17, 17, 0.08);
+  color: var(--neutral-900);
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.estimator-warning a {
+  color: var(--brand-600);
+  font-weight: 700;
+}
+
+.estimator-section-title {
+  font-weight: 700;
+}
+
 @media (min-width: 768px) {
   .estimator-hero {
     margin: 0 var(--space-3);

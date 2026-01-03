@@ -3,9 +3,108 @@
 {% block title %}Estimateur de pureté{% endblock %}
 
 {% block estimator_form %}
-    {% include "components/estimator_purity.html.twig" with { id:"estimator_purity", data: results.mass_reg_purity | json_encode } %}
+
+    {{ form_start(form, { attr: { class: 'form-card__body', novalidate: true } }) }}
+        <div class="form-field">
+            {{ form_label(form.molecule, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.molecule) }}
+        </div>
+        {% if form.supply is defined %}
+            <div class="form-field">
+                {{ form_label(form.supply, null, { label_attr: { class: 'form-label' } }) }}
+                {{ form_widget(form.supply) }}
+            </div>
+        {% endif %}
+        {% if form.days is defined %}
+            <div class="form-field">
+                {{ form_label(form.days, null, { label_attr: { class: 'form-label' } }) }}
+                {{ form_widget(form.days) }}
+            </div>
+        {% endif %}
+        {{ form_widget(form.submit) }}
+    {{ form_end(form) }}
+
+    {% if estimate %}
+        {% set lower = estimate.pred_interval is defined ? estimate.pred_interval.lower : null %}
+        {% set average = estimate.pred_interval is defined ? estimate.pred_interval.average : null %}
+        {% set upper = estimate.pred_interval is defined ? estimate.pred_interval.upper : null %}
+
+        <p class="estimator-result-label">
+            Estimation de la purité de {{ molecule_label }} sur {{ estimate.count }} échantillons
+        </p>
+        <div class="form-card estimator-result-card">
+            <div class="form-card__body">
+                <div class="estimator-result-row">
+                    {% if lower is not null %}
+                        <small class="estimator-result-range estimator-result-range--low">
+                            {{ lower|number_format(2, '.', ' ') }} %
+                        </small>
+                    {% endif %}
+                    <strong>{{ average is not null ? average|number_format(2, '.', ' ') : '' }} %</strong>
+                    {% if upper is not null %}
+                        <small class="estimator-result-range estimator-result-range--high">
+                            {{ upper|number_format(2, '.', ' ') }} %
+                        </small>
+                    {% endif %}
+                </div>
+                <p class="estimator-result-caption">Intervalle de confiance à 95%</p>
+            </div>
+        </div>
+        <div class="estimator-warning" role="status">
+            <p>
+                Au vu de la grandeur de l'intervalle de confiance, nous recommandons de
+                fractionner la prise de molécule.
+            </p>
+            <p>
+                Pour réduire les risques, faites tester votre produit dans un CAARUD ou via le service d'analyse à
+                distance de Psychoactif :
+                <a href="https://www.psychoactif.org/blogs/L-analyse-de-drogue-a-distance-Psychoactif-en-a-reve-et-l-a-fait_7273_1.html" target="_blank" rel="noopener">
+                    comment faire ?
+                </a>
+            </p>
+        </div>
+
+        {% include "components/ui/analysis_card.html.twig" with {
+            title: "Évolution temporelle – Moyennes et écarts type",
+            description: "Visualisation de l'évolution de la moyenne de la pureté et de la zone représentant +/- 1 écart-type autour de cette moyenne. Calculée sur une fenêtre glissante de Δ jours autour de chaque échantillon (actuellement Δ = 15 jours).",
+            embed_chart: 'purity_temporal_mean',
+            body_template: "components/charts/chart_line.html.twig",
+            body_context: { id:"line_1", chart_data: estimate.temporal_purity_avg | json_encode, is_stacked:'false' }
+        } %}
+
+    {% endif %}
 {% endblock %}
 
 {% block estimator_intro %}
     Estimez la purete a partir de la molecule supposee et du mode d'approvisionnement.
+{% endblock %}
+
+{% block estimator_page_scripts %}
+<script>
+    (function () {
+        document.addEventListener('change', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLSelectElement)) {
+                return;
+            }
+            if (!target.matches('[data-auto-submit="molecule"]')) {
+                return;
+            }
+            const form = target.form;
+            if (!form) {
+                return;
+            }
+            const supplyField = form.querySelector('[data-supply-field]');
+            if (supplyField instanceof HTMLSelectElement) {
+                supplyField.value = '';
+                supplyField.selectedIndex = 0;
+            }
+            if (typeof form.requestSubmit === 'function') {
+                form.requestSubmit();
+            } else {
+                form.submit();
+            }
+        });
+    })();
+</script>
 {% endblock %}
