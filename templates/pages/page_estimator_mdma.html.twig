@@ -1,0 +1,11 @@
+{% extends "layouts/estimator.html.twig" %}
+
+{% block title %}Estimateur quantité de MDMA dans un comprimé{% endblock %}
+
+{% block estimator_form %}
+    {% include "components/MDMA_calculator.html.twig" with { id:"estimator_mdmda", data: results.mass_reg_purity | json_encode } %}
+{% endblock %}
+
+{% block estimator_intro %}
+    Estimez la quantite de MDMA dans un comprime a partir de son poids.
+{% endblock %}

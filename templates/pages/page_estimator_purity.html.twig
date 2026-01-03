@@ -1,0 +1,11 @@
+{% extends "layouts/estimator.html.twig" %}
+
+{% block title %}Estimateur de pureté{% endblock %}
+
+{% block estimator_form %}
+    {% include "components/estimator_purity.html.twig" with { id:"estimator_purity", data: results.mass_reg_purity | json_encode } %}
+{% endblock %}
+
+{% block estimator_intro %}
+    Estimez la purete a partir de la molecule supposee et du mode d'approvisionnement.
+{% endblock %}

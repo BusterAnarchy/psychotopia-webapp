@@ -1,0 +1,76 @@
+/* -------------------------------------------
+   Estimator layout
+------------------------------------------- */
+
+.estimator-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3) 0 calc(var(--space-4) + 70px);
+}
+
+.estimator-hero {
+  position: relative;
+  margin: 0 var(--space-2);
+  border-radius: var(--radius);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: linear-gradient(
+    135deg,
+    rgba(29, 120, 116, 0.12) 0%,
+    rgba(255, 254, 252, 0.96) 55%,
+    rgba(29, 120, 116, 0.08) 100%
+  );
+  box-shadow: 0 12px 24px rgba(16, 24, 40, 0.08);
+}
+
+.estimator-hero__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+}
+
+.estimator-hero__label {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand-600);
+}
+
+.estimator-hero__title {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  color: var(--neutral-900);
+}
+
+.estimator-hero__intro {
+  margin: 0;
+  max-width: 720px;
+  color: var(--neutral-700);
+}
+
+.estimator-page__content {
+  padding: 0 var(--space-2);
+}
+
+.estimator-frame {
+  display: block;
+  width: 100%;
+}
+
+.estimator-form {
+  width: min(560px, 100%);
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .estimator-hero {
+    margin: 0 var(--space-3);
+  }
+
+  .estimator-page__content {
+    padding: 0 var(--space-3);
+  }
+}

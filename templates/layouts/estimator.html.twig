@@ -1,0 +1,25 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<section class="estimator-page">
+    <header class="estimator-hero">
+        <div class="container estimator-hero__inner">
+            <p class="estimator-hero__label">Estimateur</p>
+            <h1 class="estimator-hero__title">
+                {% block estimator_title %}{{ block('title') }}{% endblock %}
+            </h1>
+            <p class="estimator-hero__intro">
+                {% block estimator_intro %}{% endblock %}
+            </p>
+        </div>
+    </header>
+
+    <div class="container estimator-page__content">
+        <turbo-frame id="{% block estimator_frame_id %}estimator-form{% endblock %}" class="estimator-frame">
+            <div class="estimator-form form-card">
+                {% block estimator_form %}{% endblock %}
+            </div>
+        </turbo-frame>
+    </div>
+</section>
+{% endblock %}
