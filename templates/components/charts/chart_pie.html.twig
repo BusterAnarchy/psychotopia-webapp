@@ -22,10 +22,11 @@
         new Chart(document.getElementById('{{ id }}').getContext('2d'), {
             type: 'pie',
             data: {
-                labels: data.labels,
+                labels: data.labels.slice().reverse(),
                 datasets: [{
-                    data: data.data,
-                    backgroundColor: Chart.defaults.colorPalette
+                    data: data.data.slice().reverse(),
+                    backgroundColor: Chart.defaults.colorPalette.map(color => color + 'BB'),
+                    borderColor: Chart.defaults.colorPalette,
                 }]
             },
             options: {

@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class AnalysisPurityController extends AbstractController
 {
-    public function __construct(private readonly RRunnerCached $runner, private readonly FilterService $filterService) {}
+    public function __construct(private readonly RRunner $runner, private readonly FilterService $filterService) {}
 
     #[Route('/content/{slug}', name: 'app_content')]
     #[Route('/purity/{slug}', name: 'app_purity')]

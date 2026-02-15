@@ -25,21 +25,16 @@ function applyChartDefaults() {
   chart.defaults.plugins.legend.labels.color = '#000';
 
   chart.defaults.colorPalette = [
-    '#D3C2CD', // Lilac Grey
-    '#849E15', // Spring Leaves
-    '#92A2A6', // Good Surf
-    '#B28622', // Gold Velvet
-    '#F8CABA', // Brink of Pink
-    '#D8560E', // Poppy
-    '#EFCE7B', // Butter Yellow
-    '#E1903E', // Florida Oranges
-    '#6777B6', // Pea Flower
-    '#2B2B23', // Night Forest
-    '#D17089', // Dusty Berry
-    '#CBD183', // Pistachio
-    '#7E4F2F', // Walnut Brown (warmer dark neutral)
-    '#A1B6D6', // Powder Blue (cool pastel)
-    '#F4A6A0', // Coral Pink (soft warm)
+  '#4E79A7', // Blue
+  '#F28E2B', // Orange
+  '#E15759', // Red
+  '#76B7B2', // Teal
+  '#59A14F', // Green
+  '#EDC948', // Yellow
+  '#B07AA1', // Purple
+  '#FF9DA7', // Pink
+  '#9C755F', // Brown
+  '#BAB0AC', // Grey
   ];
 
   return true;
