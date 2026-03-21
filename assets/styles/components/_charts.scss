@@ -80,6 +80,56 @@
   background: #fff;
 }
 
+.chart-wrapper__legend {
+  border: 1px solid var(--neutral-200);
+  border-radius: calc(var(--radius) - 2px);
+  background: #fff;
+  padding: var(--space-1);
+}
+
+.chart-html-legend__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chart-html-legend__entry {
+  margin: 0;
+}
+
+.chart-html-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--neutral-900);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.chart-html-legend__item.is-hidden .chart-html-legend__label {
+  text-decoration: line-through;
+  color: var(--neutral-500);
+}
+
+.chart-html-legend__marker {
+  width: 12px;
+  height: 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.chart-html-legend__label {
+  line-height: 1.2;
+}
+
 .chart-data-table {
   display: flex;
   flex-direction: column;

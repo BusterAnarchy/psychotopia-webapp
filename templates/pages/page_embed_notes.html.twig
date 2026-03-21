@@ -329,7 +329,7 @@
                     <span class="embed-notes__form">{{ form_label }}</span>
                 {% endif %}
             </div>
-            <p class="embed-notes__subtitle">Synthèse rapide concernant cette molecule.</p>
+            <p class="embed-notes__subtitle">Synthèse rapide concernant cette molécule.</p>
         </header>
 
         <div class="embed-notes__stats">
@@ -361,7 +361,7 @@
         {% if is_weight_unit %}
             <p class="embed-notes__context">En pratique, dans un comprimé, la quantité de psychoactif peut passer du simple au <strong>{{ results.variability_factor.factor |number_format(1, '.', ' ') }}</strong> -uple, soit de  <strong>{{ results.variability_factor.lower_bound |number_format(0, '.', ' ') }}&nbspmg</strong> a <strong>{{ results.variability_factor.upper_bound |number_format(0, '.', ' ') }}&nbspmg</strong> de quantité.</p>
         {% else %}
-            <p class="embed-notes__context">En pratique, a quantité égale, l'echantillion peut passer du simple au <strong>{{ results.variability_factor.factor |number_format(1, '.', ' ') }}</strong> - uple en teneur psychoactive, soit de <strong>{{ results.variability_factor.lower_bound |number_format(0, '.', ' ') }}%</strong> a <strong>{{ results.variability_factor.upper_bound |number_format(0, '.', ' ') }}%</strong> de {{ analysis_label }}.</p>
+            <p class="embed-notes__context">En pratique, à quantité égale, l'échantillon peut passer du simple au <strong>{{ results.variability_factor.factor |number_format(1, '.', ' ') }}</strong> - uple en teneur psychoactive, soit de <strong>{{ results.variability_factor.lower_bound |number_format(0, '.', ' ') }}%</strong> a <strong>{{ results.variability_factor.upper_bound |number_format(0, '.', ' ') }}%</strong> de {{ analysis_label }}.</p>
         {% endif %}
 
         <footer class="embed-notes__footer">

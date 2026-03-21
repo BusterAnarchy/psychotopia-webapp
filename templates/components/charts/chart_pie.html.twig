@@ -1,7 +1,10 @@
+{% set legend_id = id ~ '_legend' %}
+
 <div class="chart-wrapper">
     <div class="chart-wrapper__canvas">
         <canvas id="{{ id }}" class="chart-canvas"></canvas>
     </div>
+    <div id="{{ legend_id }}" class="chart-html-legend chart-wrapper__legend" aria-label="Legende du graphique"></div>
     {% include "components/charts/chart_data_table.html.twig" with {
         chart_id: id,
         chart_data_json: chart_data,
@@ -17,10 +20,75 @@
 
 <script>
     (function() {
-        
+        const legendId = '{{ legend_id }}';
         const data = {{ chart_data | raw }};
+
+        const getOrCreateLegendList = (containerId) => {
+            const legendContainer = document.getElementById(containerId);
+            if (!legendContainer) {
+                return null;
+            }
+
+            let listContainer = legendContainer.querySelector('ul');
+            if (!listContainer) {
+                listContainer = document.createElement('ul');
+                listContainer.className = 'chart-html-legend__list';
+                legendContainer.appendChild(listContainer);
+            }
+
+            return listContainer;
+        };
+
+        const htmlLegendPlugin = {
+            id: 'htmlLegend',
+            afterUpdate(chart, args, options) {
+                const listContainer = getOrCreateLegendList(options.containerID);
+                if (!listContainer) {
+                    return;
+                }
+
+                while (listContainer.firstChild) {
+                    listContainer.firstChild.remove();
+                }
+
+                const items = chart.options.plugins.legend.labels.generateLabels(chart);
+
+                items.forEach((item) => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'chart-html-legend__entry';
+
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'chart-html-legend__item';
+                    button.onclick = () => {
+                        chart.toggleDataVisibility(item.index);
+                        chart.update();
+                    };
+
+                    const marker = document.createElement('span');
+                    marker.className = 'chart-html-legend__marker';
+                    marker.style.background = item.fillStyle;
+                    marker.style.borderColor = item.strokeStyle;
+
+                    const label = document.createElement('span');
+                    label.className = 'chart-html-legend__label';
+                    label.textContent = item.text;
+
+                    if (item.hidden) {
+                        button.classList.add('is-hidden');
+                    }
+
+                    button.appendChild(marker);
+                    button.appendChild(label);
+                    listItem.appendChild(button);
+                    listContainer.appendChild(listItem);
+                });
+            }
+        };
+
         new Chart(document.getElementById('{{ id }}').getContext('2d'), {
             type: 'pie',
+            plugins: [htmlLegendPlugin],
             data: {
                 labels: data.labels.slice().reverse(),
                 datasets: [{
@@ -31,9 +99,13 @@
             },
             options: {
                 responsive : true,
+                maintainAspectRatio: false,
                 plugins: {
+                    htmlLegend: {
+                        containerID: legendId
+                    },
                     legend: {
-                        display: true,
+                        display: false,
                         position: 'bottom',
                         align: 'center',
                         labels: {
