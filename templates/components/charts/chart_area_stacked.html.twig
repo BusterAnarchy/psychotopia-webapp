@@ -1,8 +1,10 @@
 {% set table_value_heading = mode == 'absolu' ? "Nombre d'échantillons" : 'Proportion (%)' %}
+{% set legend_id = id ~ '_legend' %}
 <div class="chart-wrapper">
     <div class="chart-wrapper__canvas">
         <canvas id="{{ id }}" class="chart-canvas"></canvas>
     </div>
+    <div id="{{ legend_id }}" class="chart-html-legend chart-wrapper__legend" aria-label="Legende du graphique" hidden></div>
     {% include "components/charts/chart_data_table.html.twig" with {
         chart_id: id,
         chart_data_json: chart_data,
@@ -20,9 +22,13 @@
 <script>
     (function() {
 
+        const legendId = '{{ legend_id }}';
         const data = {{ chart_data | raw }};
         const mode = '{{mode}}'
         const y_axis_label = '{{ table_value_heading|e('js') }}';
+        const htmlLegendPlugin = typeof window.createChartHtmlLegendPlugin === 'function'
+            ? window.createChartHtmlLegendPlugin()
+            : null;
 
         data.datasets_area.forEach((dataset, i) => {
             dataset.borderColor = Chart.defaults.colorPalette[i % Chart.defaults.colorPalette.length];
@@ -37,6 +43,7 @@
 
         new Chart(document.getElementById('{{ id }}').getContext('2d'), {
             type: 'line',
+            plugins: htmlLegendPlugin ? [htmlLegendPlugin] : [],
             data: {
                 labels: data.labels_area,
                 datasets: data.datasets_area
@@ -62,8 +69,11 @@
                     }
                 },
                 plugins: {
+                    htmlLegend: {
+                        containerID: legendId
+                    },
                     legend: {
-                        display: true,
+                        display: !htmlLegendPlugin,
                         position: 'bottom',
                         align: 'start',
                         labels: {

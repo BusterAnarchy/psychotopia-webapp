@@ -1,7 +1,9 @@
+{% set legend_id = id ~ '_legend' %}
 <div class="chart-wrapper">
     <div class="chart-wrapper__canvas">
         <canvas id="{{ id }}" class="chart-canvas"></canvas>
     </div>
+    <div id="{{ legend_id }}" class="chart-html-legend chart-wrapper__legend" aria-label="Legende du graphique" hidden></div>
     {% include "components/charts/chart_data_table.html.twig" with {
         chart_id: id,
         chart_data_json: chart_data,
@@ -18,7 +20,11 @@
 <script>
     (function() {
 
+        const legendId = '{{ legend_id }}';
         const data = {{ chart_data | raw }};
+        const htmlLegendPlugin = typeof window.createChartHtmlLegendPlugin === 'function'
+            ? window.createChartHtmlLegendPlugin()
+            : null;
 
         const filterLegendEntries = (legendItem, chartInstance) => {
             return legendItem.text.length != 0;
@@ -26,12 +32,17 @@
 
         new Chart(document.getElementById('{{ id }}').getContext('2d'), {
             type: 'scatter',
+            plugins: htmlLegendPlugin ? [htmlLegendPlugin] : [],
             data: data,
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
+                    htmlLegend: {
+                        containerID: legendId
+                    },
                     legend: {
+                        display: !htmlLegendPlugin,
                         labels: {
                             filter: filterLegendEntries
                         }

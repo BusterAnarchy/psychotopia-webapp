@@ -41,7 +41,7 @@
             embed_chart: 'supply_timeline',
 
             title: "Évolution temporelle par voie d'approvisionnement",
-            description: "Proportion des échantillons par voie d'approvisionnement, regroupée par bimestre.",
+            description: "Proportion des échantillons par voie d'approvisionnement, regroupés par bimestre.",
             
             body_template: "components/charts/chart_area_stacked.html.twig",
             body_context: { id:"area_chart", chart_data: results.temporal_supply | json_encode, is_stacked:'true', mode:'relatif' }
