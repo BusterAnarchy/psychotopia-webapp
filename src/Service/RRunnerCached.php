@@ -25,6 +25,13 @@ class RRunnerCached
 
         $result = $this->runner->run($args);
 
+        if ($cached) {
+            $cached->setResult($result);
+            $cached->setCreatedAt(new \DateTimeImmutable());
+            $this->em->flush();
+            return $result;
+        }
+
         $entity = new RCache($hash, $result);
         $this->em->persist($entity);
         $this->em->flush();
