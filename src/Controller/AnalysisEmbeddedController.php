@@ -11,12 +11,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 final class AnalysisEmbeddedController extends AbstractController
 {
     public function __construct(
         private readonly RRunnerCached $runner,
         private readonly FilterService $filterService,
-        private readonly MoleculeRepository $moleculeRepository
+        private readonly MoleculeRepository $moleculeRepository,
+        private readonly TranslatorInterface $translator
     ) {}
 
     private $charts = [
@@ -292,6 +295,12 @@ final class AnalysisEmbeddedController extends AbstractController
 
         if ($results['histo_purity']) {
             $results["histo_purity"]["ratio_base_sel"] = $molecule->getRatioBaseSel();
+        }
+
+        if ($results['supply_reg_purity']) {
+            foreach ($results["supply_reg_purity"]["data"] as $key => $value){
+                $results["supply_reg_purity"]["data"][$key]["label"] = $this->translator->trans($value["label"]);
+            }
         }
 
         $data = $results[$config['result_key']];

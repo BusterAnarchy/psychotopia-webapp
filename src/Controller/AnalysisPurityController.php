@@ -12,9 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 final class AnalysisPurityController extends AbstractController
 {
-    public function __construct(private readonly RRunner $runner, private readonly FilterService $filterService) {}
+    public function __construct(private readonly RRunnerCached $runner, private readonly FilterService $filterService, private readonly TranslatorInterface $translator ) {}
 
     #[Route('/content/{slug}', name: 'app_content')]
     #[Route('/purity/{slug}', name: 'app_purity')]
@@ -63,6 +65,10 @@ final class AnalysisPurityController extends AbstractController
         $results = $this->runner->run($rRequest);
 
         $results["histo_purity"]["ratio_base_sel"] = $molecule->getRatioBaseSel();
+
+        foreach ($results["supply_reg_purity"]["data"] as $key => $value){
+            $results["supply_reg_purity"]["data"][$key]["label"] = $this->translator->trans($value["label"]);
+        }
 
         return $this->render('pages/page_purity.html.twig', [
             'molecule' => $molecule,
