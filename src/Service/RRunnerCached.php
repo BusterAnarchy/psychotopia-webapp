@@ -18,7 +18,7 @@ class RRunnerCached
     {
         $hash = md5(json_encode($args->build()));
 
-        $cached = $this->cachedRepository->findOneBy(['hash' => $hash]);
+        $cached = $this->cachedRepository->findOneBy(['hash' => $hash], ['createdAt' => 'DESC']);
         if ($cached && $cached->getCreatedAt() > (new \DateTime('-24 hours'))) {
            return $cached->getResult();
         }
